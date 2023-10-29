@@ -1,0 +1,31 @@
+.kotak{
+    width: 492px;
+    padding-top: 20;
+    height: 170px;
+    flex-shrink: 0;
+    border-radius: 7px;
+border: 1px solid rgba(172, 172, 172, 0.50);
+background: #F4F1F1;
+}
+.kotak2{
+    width: 489px;
+    height: 108px;
+flex-shrink: 0;
+border-radius: 0px 0px 7px 7px;
+border: 1px solid rgba(172, 172, 172, 0.50);
+background: #FFF;
+}
+.kotak3{
+    width: 489px;
+height: 107px;
+border-radius: 0px 0px 7px 7px;
+flex-shrink: 0;
+background: #D9EDF7;
+}
+.teks1{
+    padding-left: 20;
+    padding-right: 20;
+}
+.teks2{
+    padding: 17;
+}
