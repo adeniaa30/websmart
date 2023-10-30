@@ -1,5 +1,5 @@
 @extends('template.template')
-@extends('template.sidebar')
+@extends('template.sidebaradmin')
 
 @section('konten')
         <!-- START FORM -->

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// ADMIN
 Route::get('/', function () {
     return view('admin.dashboard');
 });
@@ -35,6 +36,15 @@ Route::get('/nilai', function () {
 
 Route::get('/spk', function () {
     return view('admin.spk');
+});
+
+// MAHASISWA
+Route::get('/dashboard', function () {
+    return view('mahasiswa.dashMahasiswa');
+});
+
+Route::get('/formlab', function () {
+    return view('mahasiswa.formlab');
 });
 
 Auth::routes();

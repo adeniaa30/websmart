@@ -1,4 +1,4 @@
-@extends('template.sidebaradmin')
+@extends('template.sidebarmhs')
 @extends('template.template')
 
 @section('konten')
@@ -17,17 +17,6 @@
                 <input type="text" class="form-control" name='nama' id="nama">
             </div>
         </div>
-        {{-- <div class="mb-3 row">
-            <label for="prodi" class="col-sm-2 col-form-label">Program Studi</label>
-            <div class="col-sm-10">
-                <select name="prodi" id="prodi" class="form-control">
-                    <option disable selected>Pilih Program Studi</option>
-                    <option value="si">Sistem Informasi</option>
-                    <option value="ti">Teknologi Informasi</option>
-                    <option value="if">Informatika</option>
-                </select>
-            </div>
-        </div> --}}
         <div class="mb-3 row">
             <label for="submit" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10"><button type="submit" class="btn btn-primary" name="submit">SUBMIT</button></div>
@@ -104,6 +93,19 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
+                    <label for="lab" class="col-sm-2 col-form-label">Pilih Laboratorium</label>
+                    <div class="col-sm-10">
+                        <select name="lab" id="lab" class="form-control">
+                            <option disable selected>Pilih Laboratorium</option>
+                            <option value="lab1">Lab 1</option>
+                            <option value="lab2">Lab 2</option>
+                            <option value="lab3">Lab 3</option>
+                            <option value="lab4">Lab 4</option>
+                            <option value="lab5">Lab 5</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3 row">
                     <label for="sp" class="col-sm-2 col-form-label">Upload Sertifikat Prestasi</label>
                     <div class="col-sm-10">
                         <input type="file" class="form-control" name='sp' id="sp">
@@ -116,15 +118,15 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="testulis" class="col-sm-2 col-form-label">Nilai Tes Tulis</label>
+                    <label for="alasan" class="col-sm-2 col-form-label">Alasan Mendaftar</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name='testulis' id="testulis">
+                        <input type="text" class="form-control" name='alasan' id="alasan">
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="teswawancara" class="col-sm-2 col-form-label">Nilai Tes Wawancara</label>
+                    <label for="motivasi" class="col-sm-2 col-form-label">Motivasi Mendaftar</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name='teswawancara' id="teswawancara">
+                        <input type="text" class="form-control" name='motivasi' id="motivasi">
                     </div>
                 </div>
                 <div class="mb-3 row">

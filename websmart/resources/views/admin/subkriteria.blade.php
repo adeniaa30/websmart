@@ -1,4 +1,4 @@
-@extends('template.sidebar')
+@extends('template.sidebaradmin')
 @extends('template.template')
 
 @section('konten')
