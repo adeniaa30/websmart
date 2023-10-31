@@ -62,6 +62,17 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
+
+    // public function index()
+    // {
+    //     return view('register', [
+            
+    //     ]);
+    // }
+
+    // public function store (Request $request) {
+    //     return $request->all();
+    // }
     protected function create(array $data)
     {
         return User::create([
