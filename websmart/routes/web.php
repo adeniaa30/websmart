@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,21 +15,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/login', function () {
-    return view('login');
+Route::get('/', function () {
+    return view('auth.login');
 });
 
 Route::get('/register', function () {
     return view('register');
 });
 
-Route::post('/register', [RegisterController::class, 'store']
-);
+// Route::get(RegisterController::class)->group(function(){
+//     Route::get('/register', 'register')->name('register');
+//     Route::post('/store', 'store')->name('store');
+//     Route::post('/authenticate', 'authenticate')->name('authenticate');
+//     Route::get('/dashboard', 'dashboard')->name('dashboard');
+//     Route::post('/logout', 'logout')->name('logout');
+// });
+
+
+Route::post('/store', [RegisterController::class, 'store'])->name('store');
+Route::get('/register',[ RegisterController::class, 'register'])->name('register');
+Route::post('/authenticate',[LoginController::class, 'authenticate'])->name('authenticate');
+Route::post('/logout',[LoginController::class, 'logout'])->name('logout');
+
 
 // ADMIN
-Route::get('/dashboard', function () {
+Route::get('/dashboardadmin', function () {
     return view('admin.dashboard');
-});
+})->name('dashboardadmin');
 
 Route::get('/kriteria', function () {
     return view('admin.kriteria');
@@ -51,7 +64,7 @@ Route::get('/spk', function () {
 });
 
 // MAHASISWA
-Route::get('/dashboard', function () {
+Route::get('/dashboardmhs', function () {
     return view('mahasiswa.dashMahasiswa');
 });
 
