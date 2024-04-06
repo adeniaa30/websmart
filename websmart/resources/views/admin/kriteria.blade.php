@@ -3,12 +3,13 @@
 
 @section('konten')
         <!-- START FORM -->
-<form action='' method='post'>
+<form action='{{ url('store_kriteria') }}' method='post'>
+@csrf
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="mb-3 row">
             <label for="kriteria" class="col-sm-2 col-form-label">Kriteria</label>
             <div class="col-sm-10">
-                <input type="number" class="form-control" name='kriteria' id="kriteria">
+                <input type="text" class="form-control" name='kriteria' id="kriteria">
             </div>
         </div>
         <div class="mb-3 row">
@@ -21,22 +22,17 @@
             <label for="submit" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10"><button type="submit" class="btn btn-primary" name="submit">SIMPAN</button></div>
         </div>
-      </form>
+</form>
     </div>
     <!-- AKHIR FORM -->
         <!-- START DATA -->
         <div class="my-3 p-3 bg-body rounded shadow-sm">
                 <!-- FORM PENCARIAN -->
-                {{-- <div class="pb-3">
-                  <form class="d-flex" action="" method="get">
+                <div class="pb-3">
+                  <form class="d-flex" action="{{ url('kriteria') }}" method="get">
                       <input class="form-control me-1" type="search" name="katakunci" value="{{ Request::get('katakunci') }}" placeholder="Masukkan kata kunci" aria-label="Search">
                       <button class="btn btn-secondary" type="submit">Cari</button>
                   </form>
-                </div> --}}
-                
-                <!-- TOMBOL TAMBAH DATA -->
-                <div class="pb-3">
-                  <a href='' class="btn btn-primary">+ Tambah Data</a>
                 </div>
           
                 <table class="table table-striped">
@@ -49,15 +45,24 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $i = $data->firstItem() ?>
+                        @foreach ($data as $item)
+                            
                         <tr>
-                            <td>1</td>
-                            <td>IPK</td>
-                            <td>90</td>
+                            <td>{{ $i }}</td>
+                            <td>{{ $item->kriteria }}</td>
+                            <td>{{ $item->bobot }}</td>
                             <td>
-                                <a href='' class="btn btn-warning btn-sm">Edit</a>
-                                <a href='' class="btn btn-danger btn-sm">Del</a>
+                                <a href='{{ url('admin/'.$item->kriteria.'/edit_kriteria') }}' class="btn btn-warning btn-sm">Edit</a>
+                                <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->kriteria.'/del_kriteria') }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
+                                </form>
                             </td>
                         </tr>
+                        <?php $i++ ?>
+                        @endforeach
                     </tbody>
                 </table>
                

@@ -68,6 +68,7 @@
             </div>
         </div>
         <div class="col py-3">
+            @include('komponen.alert')
             @yield('konten')
         </div>
     </div>

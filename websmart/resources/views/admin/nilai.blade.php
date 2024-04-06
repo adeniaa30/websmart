@@ -69,6 +69,7 @@
                             <th class="">Nama</th>
                             <th class="">Nilai IPK</th>
                             <th class="">Nilai Sertif Prestasi/Porto</th>
+                            <th class="">Nilai Sertif Organisasi</th>
                             <th class="">Nilai Tes Tulis</th>
                             <th class="">Nilai Tes Wawancara</th>
                             <th class="">Nilai Matkul</th>
@@ -79,6 +80,7 @@
                         <tr>
                             <td>1</td>
                             <td>Nurul Hapsari Adenia</td>
+                            <td>90</td>
                             <td>90</td>
                             <td>90</td>
                             <td>90</td>

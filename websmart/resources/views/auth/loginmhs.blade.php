@@ -10,19 +10,18 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('authenticate') }}">
+                    <form method="POST" action="{{ route('authmhs') }}">
                         @csrf
-
                         <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">
+                            <label for="nim" class="col-md-4 col-form-label text-md-end">
                                 {{-- {{ __('Email Address') }} --}}
-                                Email
+                                NIM
                             </label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="nim" type="text" class="form-control @error('nim') is-invalid @enderror" name="nim"  autofocus>
 
-                                @error('email')
+                                @error('nim')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -34,7 +33,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password">
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -62,7 +61,7 @@
                                     {{ __('Login') }}
                                 </button>
 
-                                <a class="btn btn-link" href="{{ url('/') }}">Login as Mahasiswa</a>
+                                <a class="btn btn-link" href="{{ url('/admin') }}">Login as Aslab</a>
 
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">

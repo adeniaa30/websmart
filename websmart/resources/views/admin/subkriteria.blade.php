@@ -55,7 +55,8 @@
                             <td>>5</td>
                             <td>120</td>
                             <td>
-                                <a href='' class="btn btn-warning btn-sm">Tambahkan Mahasiswa</a>
+                                <a href='' class="btn btn-warning btn-sm">Edit</a>
+                                <a href='' class="btn btn-danger btn-sm">Del</a>
                             </td>
                         </tr>
                     </tbody>
