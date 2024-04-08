@@ -3,17 +3,17 @@
 
 @section('konten')
     <!-- START FORM -->
-<form action='' method='post'>
+<form action='{{ url('store_nilai') }}' method='post'>
+@csrf
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="mb-3 row">
             <label for="nama" class="col-sm-2 col-form-label">Nama</label>
             <div class="col-sm-10">
                 <select name="nama" id="nama" class="form-control">
                     <option disable selected>Pilih Nama</option>
-                    <option value="nama1">Nama 1</option>
-                    <option value="nama1">Nama 2</option>
-                    <option value="nama1">Nama 3</option>
-                    <option value="nama1">Nama 4</option>
+                    @foreach ($data as $item)
+                    <option value="{{ $item }}">{{ $item }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -38,7 +38,7 @@
         <div class="mb-3 row">
             <label for="nilai_testulis" class="col-sm-2 col-form-label">Nilai Tes Tulis</label>
             <div class="col-sm-10">
-                <input type="number" class="form-control" name='nilai_testulis' id="nilai_testulis">
+                <input type="number" class="form-control" name='nilai_tulis' id="nilai_testulis">
             </div>
         </div>
         <div class="mb-3 row">

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\alternatif;
+use App\Models\usermhs;
 
 class LoginMhsController extends Controller
 {
@@ -17,7 +19,8 @@ class LoginMhsController extends Controller
     }
 
     public function dashmhs(){
-        return view('mahasiswa.dashMahasiswa');
+        $data = usermhs::where('nim', 12345)->first();
+        return view('mahasiswa.dashMahasiswa',['data'=>$data]);
     }
 
     public function loginmhs(){

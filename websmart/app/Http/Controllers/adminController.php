@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\alternatif;
 use App\Models\data_alternatif;
 use App\Models\kriteria;
+use App\Models\subkriteria;
 use Illuminate\Http\Request;
 
 class adminController extends Controller
@@ -23,8 +24,24 @@ class adminController extends Controller
         return view('admin.kriteria', ['data' => $data]);
     }
 
-    public function subkriteria(){
-        return view('admin.subkriteria');
+    public function subkriteria(Request $request){
+        // Fetch distinct values from the 'kriteria' column
+        $distinct_kriteria = Kriteria::distinct('kriteria')->pluck('kriteria');
+        $subkriteria = $request->input('subkriteria');
+
+        // Fetch paginated results from the 'subkriteria' model
+        $katakunci = $request->katakunci;
+        $jumlahbaris = 10;
+
+        if (strlen($katakunci)) {
+            $data = Subkriteria::where('kriteria', 'like', '%' . $katakunci . '%')
+                ->orWhere('subkriteria', 'like', '%' . $katakunci . '%')
+                ->orWhere('nilai', 'like', '%' . $katakunci . '%')
+                ->paginate($jumlahbaris);
+        } else {
+            $data = Subkriteria::paginate($jumlahbaris);
+        }
+        return view('admin.subkriteria', ['data' => $data, 'subkriteria'=>$subkriteria, 'distinct_kriteria' => $distinct_kriteria]);
     }
 
     public function index(){
@@ -50,7 +67,8 @@ class adminController extends Controller
     }
 
     public function nilai(){
-        return view('admin.nilai');
+        $data = alternatif::distinct('nama')->pluck('nama');
+        return view('admin.nilai', ['data' => $data]);
     }
 
     public function spk(){
@@ -185,5 +203,94 @@ class adminController extends Controller
     public function del_kriteria($id){
         kriteria::where('kriteria',$id)->delete();
         return redirect()->route('kriteria')->with('success', 'Data Berhasil dihapus!');
+    }
+
+    public function store_sub(Request $request){
+        // $distinct_kriteria = Kriteria::distinct('kriteria')->pluck('kriteria');
+        // $subkriteria = $request->input('subkriteria');
+        $request->validate([
+            'kriteria'=>'required',
+            'subkriteria'=>'required',
+            'nilai'=>'required|numeric'
+        ],[
+            'kriteria.required'=>'Kriteria wajib diisi',
+            'subkriteria.required'=>'Subkriteria wajib diisi',
+            'nilai.required'=>'nilai wajib diisi',
+            'nilai.numeric'=>'nilai harus dalam angka'
+        ]);
+        $data = [
+            'kriteria'=>$request->kriteria,
+            'subkriteria'=>$request->subkriteria,
+            'nilai'=>$request->nilai
+        ];
+        subkriteria::create($data);
+        // return view('admin.subkriteria', ['subkriteria'=>$subkriteria, 'distinct_kriteria'=>$distinct_kriteria])->with('success', 'Data Berhasil Ditambahkan!');
+        return redirect()->route('subkriteria')->with('success', 'Data Berhasil Ditambahkan!');
+    }
+
+    public function edit_sub($id){
+        $data = subkriteria::where('id',$id)->first();
+        return view('admin.editsub', ['data' => $data]);
+        
+    }
+
+    public function update_sub(Request $request, $id){
+        $request->validate([
+            'kriteria'=>'required',
+            'subkriteria'=>'required',
+            'nilai'=>'required|numeric'
+        ],[
+            'kriteria.required'=>'Kriteria wajib diisi',
+            'subkriteria.required'=>'Subkriteria wajib diisi',
+            'nilai.required'=>'nilai wajib diisi',
+            'nilai.numeric'=>'nilai harus dalam angka'
+        ]);
+        $data = [
+            'kriteria'=>$request->kriteria,
+            'subkriteria'=>$request->subkriteria,
+            'nilai'=>$request->nilai
+        ];
+        subkriteria::where('subkriteria',$id)->update($data);
+        return redirect()->route('subkriteria')->with('success', 'Data Berhasil Diupdate!');
+    }
+
+    public function del_sub($id){
+        subkriteria::where('subkriteria',$id)->delete();
+        return redirect()->route('subkriteria')->with('success', 'Data Berhasil dihapus!');
+    }
+
+    public function store_nilai(Request $request){
+        //KOK MANUAL??
+        
+        // $request->validate([
+        //     'nama'=>'required',
+        //     'nilai_ipk'=>'required|numeric',
+        //     'nilai_sertif_prestasi'=>'required|numeric',
+        //     'nilai_sertif_organisasi'=>'required|numeric',
+        //     'nilai_tulis'=>'required|numeric',
+        //     'nilai_wawancara'=>'required|numeric',
+        //     'nilai_matkul'=>'required|numeric',
+        // ],[
+        //     'nama.required'=>'Nama wajib diisi',
+        //     'nilai_ipk.required'=>'nilai_ipk wajib diisi',
+        //     'nilai_ipk.numeric'=>'nilai harus dalam angka',
+        //     'nilai_sertif_prestasi.required'=>'nilai sertif prestasi wajib diisi',
+        //     'nilai_sertif_prestasi.numeric'=>'nilai sertif prestasi harus dalam angka',
+        //     'nilai_sertif_organisasi.required'=>'nilai sertif organisasi wajib diisi',
+        //     'nilai_sertif_organisasi.numeric'=>'nilai harus dalam angka',
+        //     'nilai_tulis.required'=>'nilai_ipk wajib diisi',
+        //     'nilai_tulis.numeric'=>'nilai harus dalam angka',
+        //     'nilai_wawancara.required'=>'nilai_ipk wajib diisi',
+        //     'nilai_wawancara.numeric'=>'nilai harus dalam angka',
+        //     'nilai_matkul.required'=>'nilai_ipk wajib diisi',
+        //     'nilai_matkul.numeric'=>'nilai harus dalam angka',
+        // ]);
+        // $data = [
+        //     'kriteria'=>$request->kriteria,
+        //     'subkriteria'=>$request->subkriteria,
+        //     'nilai'=>$request->nilai
+        // ];
+        // subkriteria::create($data);
+        // return redirect()->route('subkriteria')->with('success', 'Data Berhasil Ditambahkan!');
     }
 }

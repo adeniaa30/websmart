@@ -4,6 +4,7 @@ use App\Http\Controllers\adminController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LoginMhsController;
+use App\Http\Controllers\mahasiswaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,9 +61,7 @@ Route::get('/dashboardadmin', function () {
 
 Route::get('/kriteria', [adminController::class, 'kriteria'])->name('kriteria');
 
-Route::get('/subkriteria', function () {
-    return view('admin.subkriteria');
-});
+Route::get('/subkriteria', [adminController::class, 'subkriteria'])->name('subkriteria');
 
 Route::get('/alternatif', [adminController::class, 'alternatif'])->name('alternatif');
 
@@ -78,9 +77,17 @@ Route::get('admin/{id}/edit_kriteria', [AdminController::class, 'edit_kriteria']
 
 Route::delete('admin/{id}/del_kriteria', [AdminController::class, 'del_kriteria']);
 
-Route::get('/nilai', function () {
-    return view('admin.nilai');
-});
+Route::post('/store_sub', [adminController::class, 'store_sub'])->name('store_sub');
+
+Route::get('admin/{id}/edit_sub', [AdminController::class, 'edit_sub']);
+
+Route::put('/update_sub/{id}', [adminController::class, 'update_sub'])->name('update_sub');
+
+Route::delete('admin/{id}/del_sub', [AdminController::class, 'del_sub']);
+
+Route::get('/nilai', [adminController::class, 'nilai'])->name('nilai');
+
+Route::post('/store_nilai', [adminController::class, 'store_nilai'])->name('store_nilai');
 
 Route::get('/spk', function () {
     return view('admin.spk');
@@ -91,9 +98,7 @@ Route::get('/dashboardmhs', function () {
     return view('mahasiswa.dashMahasiswa');
 });
 
-Route::get('/formlab', function () {
-    return view('mahasiswa.formlab');
-});
+Route::GET('/formlab', [mahasiswaController::class, 'formlab'])->name('formlab');
 
 //CREATE DATA MAHASISWA
 // Route::resource("/alternatif", adminController::class);

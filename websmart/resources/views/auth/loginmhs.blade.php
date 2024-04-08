@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('authmhs') }}">
+                    <form method="POST" action="{{ url('authmhs') }}">
                         @csrf
                         <div class="row mb-3">
                             <label for="nim" class="col-md-4 col-form-label text-md-end">
@@ -19,7 +19,7 @@
                             </label>
 
                             <div class="col-md-6">
-                                <input id="nim" type="text" class="form-control @error('nim') is-invalid @enderror" name="nim"  autofocus>
+                                <input id="nim" type="number" class="form-control @error('nim') is-invalid @enderror" name="nim"  autofocus>
 
                                 @error('nim')
                                     <span class="invalid-feedback" role="alert">
@@ -57,11 +57,11 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary" value="Login">
-                                    {{ __('Login') }}
-                                </button>
+                                    <button type="submit" class="btn btn-primary" value="Login">
+                                        {{ __('Login') }}
+                                    </button>
 
-                                <a class="btn btn-link" href="{{ url('/admin') }}">Login as Aslab</a>
+                                <a class="btn btn-link" href="{{ url('/login') }}">Login as Aslab</a>
 
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">

@@ -65,7 +65,7 @@
                         @endforeach
                     </tbody>
                 </table>
-               
+                {{ $data->links() }}
           </div>
           <!-- AKHIR DATA -->
 @endsection

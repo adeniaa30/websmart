@@ -3,30 +3,30 @@
 
 @section('konten')
     <!-- START FORM -->
-<form action='' method='post'>
+<form action='{{ url('store_sub') }}' method='post'>
+@csrf
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="mb-3 row">
             <label for="kriteria" class="col-sm-2 col-form-label">Kriteria</label>
             <div class="col-sm-10">
                 <select name="kriteria" id="kriteria" class="form-control">
                     <option disable selected>Pilih Kriteria</option>
-                    <option value="ipk">IPK</option>
-                    <option value="prestasi">Prestasi/Portofolio</option>
-                    <option value="organisasi">Pengalaman Organisasi</option>
-                    <option value="matkul">Nilai Mata Kuliah</option>
+                    @foreach ($distinct_kriteria as $kriteria)
+                    <option value="{{ $kriteria }}">{{ $kriteria }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="nama" class="col-sm-2 col-form-label">Keterangan Subkriteria</label>
+            <label for="subkriteria" class="col-sm-2 col-form-label">Keterangan Subkriteria</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name='subkriteria' id="subkriteria">
+                <input type="text" class="form-control" name='subkriteria' value="{{ $subkriteria }}" id="subkriteria">
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="nama" class="col-sm-2 col-form-label">Nilai</label>
+            <label for="nilai" class="col-sm-2 col-form-label">Nilai</label>
             <div class="col-sm-10">
-                <input type="number" class="form-control" name='nilai_subkriteria' id="nilai_subkriteria">
+                <input type="text" class="form-control" name='nilai' id="nilai">
             </div>
         </div>
         <div class="mb-3 row">
@@ -49,18 +49,26 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $i = $data->firstItem() ?>
+                        @foreach ($data as $item)
                         <tr>
-                            <td>1</td>
-                            <td>IPK</td>
-                            <td>>5</td>
-                            <td>120</td>
+                            <td>{{ $i }}</td>
+                            <td>{{ $item->kriteria }}</td>
+                            <td>>{{ $item->subkriteria }}</td>
+                            <td>{{ $item->nilai }}</td>
                             <td>
-                                <a href='' class="btn btn-warning btn-sm">Edit</a>
-                                <a href='' class="btn btn-danger btn-sm">Del</a>
+                                <a href='{{ url('admin/'.$item->id.'/edit_sub') }}' class="btn btn-warning btn-sm">Edit</a>
+                                <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->subkriteria.'/del_sub') }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
+                                </form>
                             </td>
                         </tr>
+                        <?php $i++ ?>
+                        @endforeach
                     </tbody>
                 </table>
-               
+                {{ $data->links() }}
           </div>
 @endsection
