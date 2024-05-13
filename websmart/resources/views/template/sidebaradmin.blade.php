@@ -39,7 +39,7 @@
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Nilai Alternatif</span> </a>
                     </li>   
                     <li>
-                        <a href="{{ url('spk') }}" class="nav-link px-0 align-middle">
+                        <a href="{{ url('smart') }}" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
                     </li>
                 </ul>

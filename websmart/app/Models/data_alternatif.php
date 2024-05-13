@@ -17,7 +17,10 @@ class data_alternatif extends Model
         'da_sertif_prestasi',
         'da_sertif_organisasi',
         'da_nilai_tulis',
-        'da_nilai_wawancara'
+        'da_nilai_wawancara',
+        'da_nilai_matkulx',
+        'da_nilai_matkuly',
+        'da_nilai_matkulz',
     ];
     protected $table = 'tb_data_alternatif';
     public $timestamps = false;

@@ -3,7 +3,7 @@
 
 @section('konten')
 
-<form action='{{ url('update_alternatif') }}' method='post'>
+<form action='{{ url('update_alternatif') }}' method='post' enctype="multipart/form-data">
 @csrf
 @method('PUT')
     <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -36,24 +36,22 @@
             <div class="col-sm-10">
                 <select name="lab" id="lab" class="form-control">
                     <option disable selected>Pilih Laboratorium</option>
-                    <option value="lab1">Lab 1</option>
-                    <option value="lab2">Lab 2</option>
-                    <option value="lab3">Lab 3</option>
-                    <option value="lab4">Lab 4</option>
-                    <option value="lab5">Lab 5</option>
+                    @foreach ($distinct_nama_lab as $nama_lab)
+                    <option value="{{ $nama_lab }}">{{ $nama_lab }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
         <div class="mb-3 row">
             <label for="sp" class="col-sm-2 col-form-label">Upload Sertifikat Prestasi</label>
             <div class="col-sm-10">
-                <input type="file" class="form-control" name='sertif_prestasi' id="sp">
+                <input type="file" class="form-control" name='sertif_prestasi[]' id="sp" multiple accept=".pdf">
             </div>
         </div>
         <div class="mb-3 row">
             <label for="so" class="col-sm-2 col-form-label">Upload Sertifikat Organisasi/Kepanitiaan</label>
             <div class="col-sm-10">
-                <input type="file" class="form-control" name='sertif_organisasi' id="so">
+                <input type="file" class="form-control" name='sertif_organisasi' id="so" >
             </div>
         </div>
         <div class="mb-3 row">
@@ -66,6 +64,24 @@
             <label for="teswawancara" class="col-sm-2 col-form-label">Nilai Tes Wawancara</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" name='nilai_wawancara' id="teswawancara">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="nilai_matkulx" class="col-sm-2 col-form-label">Nilai Mata Kuliah X</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name='nilai_matkulx' id="nilai_matkulx">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="nilai_matkuly" class="col-sm-2 col-form-label">Nilai Mata Kuliah Y</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name='nilai_matkuly' id="nilai_matkuly">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="nilai_matkulz" class="col-sm-2 col-form-label">Nilai Mata Kuliah Z</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name='nilai_matkulz' id="nilai_matkulz">
             </div>
         </div>
         <div class="mb-3 row">

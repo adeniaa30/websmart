@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LoginMhsController;
 use App\Http\Controllers\mahasiswaController;
+use App\Http\Controllers\smartController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -85,6 +86,8 @@ Route::put('/update_sub/{id}', [adminController::class, 'update_sub'])->name('up
 
 Route::delete('admin/{id}/del_sub', [AdminController::class, 'del_sub']);
 
+Route::delete('admin/{id}/del_calon', [AdminController::class, 'del_calon']);
+
 Route::get('/nilai', [adminController::class, 'nilai'])->name('nilai');
 
 Route::post('/store_nilai', [adminController::class, 'store_nilai'])->name('store_nilai');
@@ -99,6 +102,12 @@ Route::get('/dashboardmhs', function () {
 });
 
 Route::GET('/formlab', [mahasiswaController::class, 'formlab'])->name('formlab');
+
+Route::GET('/showform', [mahasiswaController::class, 'showform'])->name('showform');
+
+Route::GET('/smart', [smartController::class, 'smart'])->name('smart');
+
+Route::GET('/test', [smartController::class, 'test'])->name('test');
 
 //CREATE DATA MAHASISWA
 // Route::resource("/alternatif", adminController::class);

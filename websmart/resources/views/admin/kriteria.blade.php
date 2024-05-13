@@ -34,7 +34,7 @@
                       <button class="btn btn-secondary" type="submit">Cari</button>
                   </form>
                 </div>
-          
+                <a href='{{ url('smart') }}' class="btn btn-warning btn-sm">Generate</a>
                 <table class="table table-striped">
                     <thead>
                         <tr>

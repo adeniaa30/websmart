@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\alternatif;
+use App\Models\lab;
 use App\Models\usermhs;
 
 class LoginMhsController extends Controller
@@ -20,7 +21,8 @@ class LoginMhsController extends Controller
 
     public function dashmhs(){
         $data = usermhs::where('nim', 12345)->first();
-        return view('mahasiswa.dashMahasiswa',['data'=>$data]);
+        $distinct_nama_lab = lab::distinct('nama_lab')->pluck('nama_lab');
+        return view('mahasiswa.dashMahasiswa',['data'=>$data,'distinct_nama_lab' => $distinct_nama_lab]);
     }
 
     public function loginmhs(){

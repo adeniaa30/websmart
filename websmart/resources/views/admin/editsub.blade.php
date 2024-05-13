@@ -3,9 +3,9 @@
 
 @section('konten')
 
-<form action='{{ url('update_sub/') }}' method='post'>
-    @csrf
-    @method('PUT')
+<form action='{{ url('update_sub/'. $data->subkriteria) }}' method='post'>
+@csrf
+@method('PUT')
         <div class="my-3 p-3 bg-body rounded shadow-sm">
             <div class="mb-3 row">
                 <label for="kriteria" class="col-sm-2 col-form-label">Kriteria</label>

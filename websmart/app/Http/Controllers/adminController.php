@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\alternatif;
 use App\Models\data_alternatif;
 use App\Models\kriteria;
+use App\Models\lab;
+use App\Models\normalisasi;
 use App\Models\subkriteria;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,7 @@ class adminController extends Controller
 {
     public function kriteria(Request $request){
         $katakunci = $request->katakunci;
-        $jumlahbaris = 4;
+        $jumlahbaris = 10;
         if (strlen($katakunci)) {
             $data = kriteria::where('kriteria', 'like', '%' . $katakunci . '%')
                         ->orWhere('bobot', 'like', '%' . $katakunci . '%')
@@ -50,7 +52,7 @@ class adminController extends Controller
 
     public function alternatif(Request $request){
         $katakunci = $request->katakunci;
-        $jumlahbaris = 4;
+        $jumlahbaris = 10;
 
         if (strlen($katakunci)) {
             $data = alternatif::where('nim', 'like', '%' . $katakunci . '%')
@@ -59,9 +61,10 @@ class adminController extends Controller
                         ->paginate($jumlahbaris);
         } else {
             $data = alternatif::paginate($jumlahbaris);
+            $data_calon = data_alternatif::paginate($jumlahbaris);
         }
 
-        return view('admin.alternatif', ['data' => $data]);
+        return view('admin.alternatif', ['data' => $data, 'data_calon' => $data_calon]);
         
         // return view('admin.alternatif');
     }
@@ -72,7 +75,8 @@ class adminController extends Controller
     }
 
     public function spk(){
-        return view('admin.spk');
+        $data = normalisasi::all();
+        return view('admin.spk', ['data'=>$data]);
     }
 
     /**
@@ -110,7 +114,8 @@ class adminController extends Controller
      */
     public function edit($id){
         $data2 = alternatif::where('nim',$id)->first();
-        return view('admin.editalternatif',['data2' => $data2]);
+        $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
+        return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);
     }
 
     /**
@@ -119,16 +124,19 @@ class adminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request){
+
         $request->validate([
             'nim'=>'required|numeric|unique:tb_data_alternatif,da_nim',
             'nama'=>'required',
             'prodi'=>'required',
             'ipk'=>'required',
             'lab'=>'required',
-            'sertif_prestasi'=>'required',
-            'sertif_organisasi'=>'required',
+            'sertif_prestasi.*' => 'required|file|mimes:pdf|max:2048',
             'nilai_tulis'=>'required',
             'nilai_wawancara'=>'required',
+            'nilai_matkulx'=>'required',
+            'nilai_matkuly'=>'required',
+            'nilai_matkulz'=>'required'
         ],[
             'nim.required'=>'NIM wajib diisi',
             'nim.numeric'=>'NIM wajib dalam angka',
@@ -137,24 +145,45 @@ class adminController extends Controller
             'prodi.required'=>'Program Studi wajib diisi',
             'ipk.required'=>'IPK wajib diisi',
             'lab.required'=>'Laboratorium wajib diisi',
-            'sertif_prestasi.required'=>'Sertifikat Prestasi wajib diisi',
-            'sertif_organisasi.required'=>'Sertifikat Organisasi wajib diisi',
             'nilai_tulis.required'=>'Nilai Tes Tulis wajib diisi',
             'nilai_wawancara.required'=>'Nilai Tes Wawancara wajib diisi',
+            'nilai_matkulx.required'=>'Nilai Mata Kuliah X wajib diisi',
+            'nilai_matkuly.required'=>'Nilai Mata Kuliah Y wajib diisi',
+            'nilai_matkulz.required'=>'Nilai Mata Kuliah Z wajib diisi',
         ]);
+        
+        // Handle file uploads
+        if ($request->hasFile('sertif_prestasi')) {
+            foreach ($request->file('sertif_prestasi') as $file) {
+                // Store each uploaded file
+                $filename = $file->store('sertif_prestasi'); // Store the file in the storage/app/sertif_prestasi directory
+                $filenames[] = $filename;
+            }
+        }
+
         $data3 = [
             'da_nim'=>$request->nim,
             'da_nama'=>$request->nama,
             'da_prodi'=>$request->prodi,
             'da_ipk'=>$request->ipk,
             'da_lab'=>$request->lab,
+            // 'da_sertif_prestasi'=>json_encode($filenames),
             'da_sertif_prestasi'=>$request->sertif_prestasi,
             'da_sertif_organisasi'=>$request->sertif_organisasi,
             'da_nilai_tulis'=>$request->nilai_tulis,
             'da_nilai_wawancara'=>$request->nilai_wawancara,
+            'da_nilai_matkulx'=>$request->nilai_matkulx,
+            'da_nilai_matkuly'=>$request->nilai_matkuly,
+            'da_nilai_matkulz'=>$request->nilai_matkulz
         ];
+
         data_alternatif::create($data3);
         return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
+    }
+
+    public function del_calon($id){
+        data_alternatif::where('da_nim',$id)->delete();
+        return redirect()->route('alternatif')->with('success', 'Data Berhasil dihapus!');
     }
     
     public function storeKriteria(Request $request){
