@@ -8,6 +8,12 @@
 @method('PUT')
         <div class="my-3 p-3 bg-body rounded shadow-sm">
             <div class="mb-3 row">
+                <label for="lab" class="col-sm-2 col-form-label">Laboratorium</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="{{ $data->lab }}"  name='lab' id="lab" readonly>
+                </div>
+            </div>
+            <div class="mb-3 row">
                 <label for="kriteria" class="col-sm-2 col-form-label">Kriteria</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" value="{{ $data->kriteria }}"  name='kriteria' id="kriteria" readonly>

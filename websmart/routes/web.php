@@ -49,6 +49,7 @@ Route::post('/logout',[LoginController::class, 'logout'])->name('logout');
 
 Route::get('/loginmhs',[ LoginMhsController::class, 'loginmhs'])->name('loginmhs');
 Route::post('/authmhs',[ LoginMhsController::class, 'authmhs'])->name('authmhs');
+
 Route::post('/logoutmhs',[LoginMhsController::class, 'logoutmhs'])->name('logoutmhs');
 Route::get('/',[LoginMhsController::class, 'loginmhs'])->name('loginmhs');
 Route::get('/dashboardMahasiswa',[LoginMhsController::class, 'dashmhs'])->name('dashmhs');
@@ -104,6 +105,15 @@ Route::get('/dashboardmhs', function () {
 Route::GET('/formlab', [mahasiswaController::class, 'formlab'])->name('formlab');
 
 Route::GET('/showform', [mahasiswaController::class, 'showform'])->name('showform');
+
+Route::GET('/view_form', [mahasiswaController::class, 'view_form'])->name('view_form');
+
+Route::put('/submitform', [mahasiswaController::class, 'submitform'])->name('submitform');
+
+Route::get('/pdf/sp/{id}', [adminController::class, 'showpdf_sertifprestasi'])->name('showpdf_sertifprestasi');
+
+Route::get('/pdf/so/{id}', [adminController::class, 'showpdf_sertiforganisasi'])->name('showpdf_sertiforganisasi');
+
 
 Route::GET('/smart', [smartController::class, 'smart'])->name('smart');
 

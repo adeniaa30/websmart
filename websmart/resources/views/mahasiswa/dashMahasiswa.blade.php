@@ -31,13 +31,11 @@
         <div class="card h-100">
           <img src="..." class="card-img-top" alt="...">
           <div class="card-body">
-            <h5 class="card-title">Laboratorium Pertanian Cerdas</h5>
+            <h5 class="card-title">{{ $lab_pc }}</h5>
+            {{-- <h5 class="card-title">LAB PC</h5> --}}
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             <!-- Button to open the modal -->
-            <button type="button" class="btn btn-primary" id="fetchDataButton" data-bs-toggle="modal" data-bs-target="#detailsModal">
-                Daftar
-            </button>
-  
+            <a href='{{ url('/formlab') }}' class="btn btn-warning btn-sm">Daftar</a>
           </div>
         </div>
       </div>

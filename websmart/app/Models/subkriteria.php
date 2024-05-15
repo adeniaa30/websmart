@@ -11,7 +11,8 @@ class subkriteria extends Model
     protected $fillable = [
         'kriteria',
         'subkriteria',
-        'nilai'
+        'nilai',
+        's_lab'
     ];
     protected $table = 'tb_subkriteria';
     public $timestamps = false;

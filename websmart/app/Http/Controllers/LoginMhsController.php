@@ -19,10 +19,17 @@ class LoginMhsController extends Controller
         return $users->email;
     }
 
-    public function dashmhs(){
-        $data = usermhs::where('nim', 12345)->first();
+    public function dashmhs(Request $request){
+        $nim = $request->input('nim');
+        $data = usermhs::where('nim', $nim)->value('nim');
         $distinct_nama_lab = lab::distinct('nama_lab')->pluck('nama_lab');
-        return view('mahasiswa.dashMahasiswa',['data'=>$data,'distinct_nama_lab' => $distinct_nama_lab]);
+        $lab_pc = lab::where('nama_lab', 'Laboratorium Pertanian Cerdas')->value('nama_lab');
+        return view('mahasiswa.dashMahasiswa',[
+            'data'=>$data,
+            'distinct_nama_lab' => $distinct_nama_lab,
+            'lab_pc' => $lab_pc, 
+            'nim' => $nim
+        ]);
     }
 
     public function loginmhs(){
@@ -33,28 +40,30 @@ class LoginMhsController extends Controller
     {   
         $nim = $request->input('nim');
         // $pw = $request->input('password');
-        $query = DB::table('usermhs')->where('nim', '12345')->value('nim');
+        $query = DB::table('usermhs')->where('nim', $nim)->value('nim');
         // return $query;
         if($query == $nim){
             $request->session()->regenerate();
-            return redirect()->route('dashmhs')
+            return redirect()->route('dashmhs', ['nim'=>$nim])
                 ->withSuccess('You have successfully logged in!');
         }
+
         // $credentials = $request->validate([
-        //     'nim' => [$query],
+        //     'nim' => 'required',
+        //     'password' => 'required'
         // ]);
 
-        // if(Auth::attempt($credentials))
+        // if(Auth::guard('usermhs')->attempt($credentials))
         // {
         //     $request->session()->regenerate();
-        //     return redirect()->route('loginmhs')
+        //     return redirect()->route('dashmhs')
         //         ->withSuccess('You have successfully logged in!');
         // }
 
-        return back()->withErrors([
-            'nim' => 'Your provided credentials do not match in our records.',
-            'password' => 'Your provided credentials do not match in our records.',
-        ]);
+        // return back()->withErrors([
+        //     'nim' => 'Your provided credentials do not match in our records.',
+        //     'password' => 'Your provided credentials do not match in our records.',
+        // ]);
 
     } 
 

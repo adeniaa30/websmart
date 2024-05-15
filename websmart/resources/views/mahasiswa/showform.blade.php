@@ -11,7 +11,8 @@
       </div>
     <!-- AKHIR FORM -->
           <!-- AKHIR DATA -->
-          <form action='' method='post'>
+          <form action='{{ url('view_form') }}' method='get'>
+            @csrf
             <div class="my-3 p-3 bg-body rounded shadow-sm">
                 @foreach ($alternatifData as $alternatif)
                 <div class="mb-3 row">
@@ -52,35 +53,10 @@
                         
                     </div>
                 </div>
-                <div class="mb-3 row">
-                    <label for="sp" class="col-sm-2 col-form-label">Upload Sertifikat Prestasi</label>
-                    <div class="col-sm-10">
-                        <input type="file" class="form-control" name='sp[]' id="sp" multiple>
-                        <div id="file-preview"></div>
-                    </div>
-                </div>
-
-                <div class="mb-3 row">
-                    <label for="so" class="col-sm-2 col-form-label">Upload Sertifikat Organisasi/Kepanitiaan</label>
-                    <div class="col-sm-10">
-                        <input type="file" class="form-control" name='so[]' id="so" multiple>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="alasan" class="col-sm-2 col-form-label">Alasan Mendaftar</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name='alasan' id="alasan">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="motivasi" class="col-sm-2 col-form-label">Motivasi Mendaftar</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name='motivasi' id="motivasi">
-                    </div>
-                </div>
+                
                 <div class="mb-3 row">
                     <label for="submit" class="col-sm-2 col-form-label"></label>
-                    <div class="col-sm-10"><button type="submit" class="btn btn-primary" name="submit">SUBMIT</button></div>
+                    <div class="col-sm-10"><button type="submit" class="btn btn-primary" name="submit">Berikutnya</button></div>
                 </div>
               </form>
             </div>

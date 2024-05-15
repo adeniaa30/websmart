@@ -86,74 +86,151 @@
                 {{ $data->links() }}
           </div>
 
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <div>
-                <h4>Data Calon Aslab</h2>
+          <!-- Display Laboratory Name Based on User Name -->
+        @if (Auth::check() && Auth::user()->name === 'aslab pc')
+        <div>
+            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                <div>
+                    <h4>Data Calon Aslab</h2>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="">No</th>
+                            <th class="">NIM</th>
+                            <th class="">Nama</th>
+                            <th class="">Program Studi</th>
+                            <th class="">IPK</th>
+                            <th class="">Lab Pilihan</th>
+                            <th class="">Sertif Prestasi</th>
+                            <th class="">Sertif Organisasi</th>
+                            <th class="">Nilai Tes Tulis</th>
+                            <th class="">Nilai Wawancara</th>
+                            <th class="">Nilai Matkul X</th>
+                            <th class="">Nilai Matkul Y</th>
+                            <th class="">Nilai Matkul Z</th>
+                            <th class="">Ide Project</th>
+                            <th class="">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        @foreach ($data_lab_pc as $index => $item)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item->da_nim }}</td>
+                            <td>{{ $item->da_nama }}</td>
+                            <td>{{ $item->da_prodi }}</td>
+                            <td>{{ $item->da_ipk }}</td>
+                            <td>{{ $item->da_lab }}</td>
+                            <td>
+                                @if ($item->da_sertif_prestasi)
+                                <a href="{{ asset($item->da_sertif_prestasi) }}" target="_blank">{{ basename($item->da_sertif_prestasi) }}</a>
+                            @else
+                                No PDF file available
+                            @endif
+                            </td>
+                            <td>
+                                @if ($item->da_sertif_organisasi)
+                                <a href="{{ asset($item->da_sertif_organisasi) }}" target="_blank">{{ basename($item->da_sertif_organisasi) }}</a>
+                            @else
+                                No PDF file available
+                            @endif
+                            </td>
+                            <td>{{ $item->da_nilai_tulis }}</td>
+                            <td>{{ $item->da_nilai_wawancara }}</td>
+                            <td>{{ $item->da_nilai_matkulx }}</td>
+                            <td>{{ $item->da_nilai_matkuly}}</td>
+                            <td>{{ $item->da_nilai_matkulz }}</td>
+                            <td>{{ $item->ide_project }}</td>
+                            <td>
+                                <a href='{{ url('admin/'.$item->da_nim.'/edit') }}' class="btn btn-warning btn-sm">Edit</a>
+                            </td>
+                            <td>
+                                <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nim.'/del_calon') }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                        
+                    </tbody>
+                </table>
+                {{ $data_lab_pc->links() }}
             </div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="">No</th>
-                        <th class="">NIM</th>
-                        <th class="">Nama</th>
-                        <th class="">Program Studi</th>
-                        <th class="">IPK</th>
-                        <th class="">Lab Pilihan</th>
-                        <th class="">Sertif Prestasi</th>
-                        <th class="">Sertif Organisasi</th>
-                        <th class="">Nilai Tes Tulis</th>
-                        <th class="">Nilai Wawancara</th>
-                        <th class="">Nilai Matkul X</th>
-                        <th class="">Nilai Matkul Y</th>
-                        <th class="">Nilai Matkul Z</th>
-                        <th class="">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    <?php $i = $data_calon->firstItem() ?>
-                    @foreach ($data_calon as $item)
-                    <tr>
-                        <td>{{ $i }}</td>
-                        <td>{{ $item->da_nim }}</td>
-                        <td>{{ $item->da_nama }}</td>
-                        <td>{{ $item->da_prodi }}</td>
-                        <td>{{ $item->da_ipk }}</td>
-                        <td>{{ $item->da_lab }}</td>
-                        <td>
-                            @if ($item->da_sertif_prestasi)
-                            <a href="{{ asset($item->da_sertif_prestasi) }}" target="_blank">{{ basename($item->da_sertif_prestasi) }}</a>
-                        @else
-                            No PDF file available
-                        @endif
-                        </td>
-                        <td>
-                            @if ($item->da_sertif_organisasi)
-                            <a href="{{ asset($item->da_sertif_organisasi) }}" target="_blank">{{ basename($item->da_sertif_organisasi) }}</a>
-                        @else
-                            No PDF file available
-                        @endif
-                        </td>
-                        <td>{{ $item->da_nilai_tulis }}</td>
-                        <td>{{ $item->da_nilai_wawancara }}</td>
-                        <td>{{ $item->da_nilai_matkulx }}</td>
-                        <td>{{ $item->da_nilai_matkuly}}</td>
-                        <td>{{ $item->da_nilai_matkulz }}</td>
-                        <td>
-                            <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nim.'/del_calon') }}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <?php $i++ ?>
-                    @endforeach
-                    
-                </tbody>
-            </table>
-            {{ $data_calon->links() }}
         </div>
+        @elseif (Auth::check() && Auth::user()->name === 'aslab ai')
+        <div>
+            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                <div>
+                    <h4>Data Calon Aslab</h2>
+                </div>
+                <table class="table table-striped" style="width: 100vw;">
+                    <thead>
+                        <tr>
+                            <th class="">No</th>
+                            <th class="">NIM</th>
+                            <th class="">Nama</th>
+                            <th class="">Program Studi</th>
+                            <th class="">IPK</th>
+                            <th class="">Lab Pilihan</th>
+                            <th class="">Sertif Prestasi</th>
+                            <th class="">Sertif Organisasi</th>
+                            <th class="">Nilai Tes Tulis</th>
+                            <th class="">Nilai Wawancara</th>
+                            <th class="">Nilai Matkul X</th>
+                            <th class="">Nilai Matkul Y</th>
+                            <th class="">Nilai Matkul Z</th>
+                            <th class="">Ide Project</th>
+                            <th class="">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        @foreach ($data_lab_ai as $index => $item)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item->da_nim }}</td>
+                            <td>{{ $item->da_nama }}</td>
+                            <td>{{ $item->da_prodi }}</td>
+                            <td>{{ $item->da_ipk }}</td>
+                            <td>{{ $item->da_lab }}</td>
+                            <td>
+                                {{ $item->da_sertif_prestasi}}
+                                <a href="{{ route('showpdf_sertifprestasi', ['id' => $item->id]) }}" target="_blank">Preview</a>                            </td>
+                            <td>
+                                {{ $item->da_sertif_organisasi}}
+                                <a href="{{ route('showpdf_sertiforganisasi', ['id' => $item->id]) }}" target="_blank">Preview</a>                            </td>
+                            </td>
+                            <td>{{ $item->da_nilai_tulis }}</td>
+                            <td>{{ $item->da_nilai_wawancara }}</td>
+                            <td>{{ $item->da_nilai_matkulx }}</td>
+                            <td>{{ $item->da_nilai_matkuly}}</td>
+                            <td>{{ $item->da_nilai_matkulz }}</td>
+                            <td>{{ $item->ide_project }}</td>
+                            <td>
+                                <a href='{{ url('admin/'.$item->da_nim.'/edit') }}' class="btn btn-warning btn-sm">Edit</a>
+                            </td>
+                            <td>
+                                <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nim.'/del_calon') }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                        
+                    </tbody>
+                </table>
+                {{ $data_lab_ai->links() }}
+            </div>
+        </div>
+        @endif
+
+        
 
 
           <!-- AKHIR DATA -->

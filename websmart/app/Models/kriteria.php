@@ -11,6 +11,7 @@ class kriteria extends Model
     protected $fillable = [
         'kriteria',
         'bobot',
+        'lab'
     ];
     protected $table = 'tb_kriteria';
     public $timestamps = false;

@@ -14,6 +14,7 @@ class adminController extends Controller
 {
     public function kriteria(Request $request){
         $katakunci = $request->katakunci;
+        $nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
         $jumlahbaris = 10;
         if (strlen($katakunci)) {
             $data = kriteria::where('kriteria', 'like', '%' . $katakunci . '%')
@@ -21,14 +22,22 @@ class adminController extends Controller
                         ->paginate($jumlahbaris);
         } else {
             $data = kriteria::paginate($jumlahbaris);
+            $data_lab_pc = kriteria::where('lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
+            $data_lab_ai = kriteria::where('lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
         }
 
-        return view('admin.kriteria', ['data' => $data]);
+        return view('admin.kriteria', [
+            'data' => $data,
+            'nama_lab' => $nama_lab,
+            'data_lab_pc' => $data_lab_pc,
+            'data_lab_ai' => $data_lab_ai
+        ]);
     }
 
     public function subkriteria(Request $request){
         // Fetch distinct values from the 'kriteria' column
-        $distinct_kriteria = Kriteria::distinct('kriteria')->pluck('kriteria');
+        $krit_pc = Kriteria::where('lab', 'Laboratorium Pertanian Cerdas')->pluck('kriteria');
+        $krit_ai = Kriteria::where('lab', 'Laboratorium Artificial Intelligence')->pluck('kriteria');
         $subkriteria = $request->input('subkriteria');
 
         // Fetch paginated results from the 'subkriteria' model
@@ -42,8 +51,19 @@ class adminController extends Controller
                 ->paginate($jumlahbaris);
         } else {
             $data = Subkriteria::paginate($jumlahbaris);
+            $data_lab_pc = subkriteria::where('s_lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
+            $data_lab_ai = subkriteria::where('s_lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
+
         }
-        return view('admin.subkriteria', ['data' => $data, 'subkriteria'=>$subkriteria, 'distinct_kriteria' => $distinct_kriteria]);
+        return view('admin.subkriteria', [
+            'data' => $data, 
+            'subkriteria'=>$subkriteria, 
+            'krit_pc' => $krit_pc,
+            'krit_ai' => $krit_ai,
+            'data_lab_pc' => $data_lab_pc,
+            'data_lab_ai' => $data_lab_ai
+
+        ]);
     }
 
     public function index(){
@@ -62,11 +82,34 @@ class adminController extends Controller
         } else {
             $data = alternatif::paginate($jumlahbaris);
             $data_calon = data_alternatif::paginate($jumlahbaris);
-        }
+            $data_lab_pc = data_alternatif::where('da_lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
+            $data_lab_ai = data_alternatif::where('da_lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
 
-        return view('admin.alternatif', ['data' => $data, 'data_calon' => $data_calon]);
+        }
+        return view('admin.alternatif', [
+            'data' => $data, 
+            'data_calon' => $data_calon,
+            'data_lab_pc' => $data_lab_pc,
+            'data_lab_ai' => $data_lab_ai
+        ]);
         
         // return view('admin.alternatif');
+    }
+
+    public function showpdf_sertifprestasi($id)
+    {
+        $pdf = data_alternatif::findOrFail($id);
+        $filePath = storage_path('app/' . $pdf->da_sertif_prestasi);
+
+        return response()->file($filePath);
+    }
+
+    public function showpdf_sertiforganisasi($id)
+    {
+        $pdf = data_alternatif::findOrFail($id);
+        $filePath = storage_path('app/' . $pdf->da_sertif_organisasi);
+
+        return response()->file($filePath);
     }
 
     public function nilai(){
@@ -118,39 +161,18 @@ class adminController extends Controller
         return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);
     }
 
+    public function edit_da($id){
+        $data2 = data_alternatif::where('nim',$id)->first();
+        $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
+        return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request){
-
-        $request->validate([
-            'nim'=>'required|numeric|unique:tb_data_alternatif,da_nim',
-            'nama'=>'required',
-            'prodi'=>'required',
-            'ipk'=>'required',
-            'lab'=>'required',
-            'sertif_prestasi.*' => 'required|file|mimes:pdf|max:2048',
-            'nilai_tulis'=>'required',
-            'nilai_wawancara'=>'required',
-            'nilai_matkulx'=>'required',
-            'nilai_matkuly'=>'required',
-            'nilai_matkulz'=>'required'
-        ],[
-            'nim.required'=>'NIM wajib diisi',
-            'nim.numeric'=>'NIM wajib dalam angka',
-            'nim.unique'=>'NIM tidak boleh sama',
-            'nama.required'=>'Nama wajib diisi',
-            'prodi.required'=>'Program Studi wajib diisi',
-            'ipk.required'=>'IPK wajib diisi',
-            'lab.required'=>'Laboratorium wajib diisi',
-            'nilai_tulis.required'=>'Nilai Tes Tulis wajib diisi',
-            'nilai_wawancara.required'=>'Nilai Tes Wawancara wajib diisi',
-            'nilai_matkulx.required'=>'Nilai Mata Kuliah X wajib diisi',
-            'nilai_matkuly.required'=>'Nilai Mata Kuliah Y wajib diisi',
-            'nilai_matkulz.required'=>'Nilai Mata Kuliah Z wajib diisi',
-        ]);
         
         // Handle file uploads
         if ($request->hasFile('sertif_prestasi')) {
@@ -176,9 +198,17 @@ class adminController extends Controller
             'da_nilai_matkuly'=>$request->nilai_matkuly,
             'da_nilai_matkulz'=>$request->nilai_matkulz
         ];
-
-        data_alternatif::create($data3);
-        return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
+        $exist = data_alternatif::where('da_nim', $request->nim)->first();
+        if(!$exist){
+            data_alternatif::create($data3);
+            return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
+        }elseif($exist){
+            data_alternatif::where('da_nim', $request->nim)->update($data3);
+            return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
+        }
+        return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
+        
+        
     }
 
     public function del_calon($id){
@@ -189,15 +219,18 @@ class adminController extends Controller
     public function storeKriteria(Request $request){
         $request->validate([
             'kriteria'=>'required',
-            'bobot'=>'required|numeric'
+            'bobot'=>'required|numeric',
+            'lab'=>'required'
         ],[
             'kriteria.required'=>'Kriteria wajib diisi',
             'bobot.required'=>'Bobot wajib diisi',
-            'bobot.numeric'=>'Bobot harus dalam angka'
+            'bobot.numeric'=>'Bobot harus dalam angka',
+            'lab.required'=>'Laboratorium wajib diisi'
         ]);
         $data = [
             'kriteria'=>$request->kriteria,
-            'bobot'=>$request->bobot
+            'bobot'=>$request->bobot,
+            'lab'=>$request->lab
         ];
         kriteria::create($data);
         return redirect()->route('kriteria')->with('success', 'Data Berhasil Ditambahkan!');
@@ -214,16 +247,15 @@ class adminController extends Controller
 
     public function update_kriteria(Request $request, $id){
         $request->validate([
-            'kriteria'=>'required',
-            'bobot'=>'required|numeric'
+            'bobot'=>'required|numeric',
         ],[
-            'kriteria.required'=>'Kriteria wajib diisi',
             'bobot.required'=>'Bobot wajib diisi',
             'bobot.numeric'=>'Bobot harus dalam angka'
         ]);
         $data = [
             'kriteria'=>$request->kriteria,
-            'bobot'=>$request->bobot
+            'bobot'=>$request->bobot,
+            'lab'=>$request->lab
         ];
         kriteria::where('kriteria',$id)->update($data);
         return redirect()->route('kriteria')->with('success', 'Data Berhasil Diupdate!');
@@ -237,6 +269,7 @@ class adminController extends Controller
     public function store_sub(Request $request){
         // $distinct_kriteria = Kriteria::distinct('kriteria')->pluck('kriteria');
         // $subkriteria = $request->input('subkriteria');
+        $s_lab = kriteria::where('kriteria', $request->kriteria)->value('lab');
         $request->validate([
             'kriteria'=>'required',
             'subkriteria'=>'required',
@@ -250,7 +283,8 @@ class adminController extends Controller
         $data = [
             'kriteria'=>$request->kriteria,
             'subkriteria'=>$request->subkriteria,
-            'nilai'=>$request->nilai
+            'nilai'=>$request->nilai,
+            's_lab'=>$s_lab
         ];
         subkriteria::create($data);
         // return view('admin.subkriteria', ['subkriteria'=>$subkriteria, 'distinct_kriteria'=>$distinct_kriteria])->with('success', 'Data Berhasil Ditambahkan!');
@@ -277,7 +311,8 @@ class adminController extends Controller
         $data = [
             'kriteria'=>$request->kriteria,
             'subkriteria'=>$request->subkriteria,
-            'nilai'=>$request->nilai
+            'nilai'=>$request->nilai,
+            's_lab'=>$request->s_lab
         ];
         subkriteria::where('subkriteria',$id)->update($data);
         return redirect()->route('subkriteria')->with('success', 'Data Berhasil Diupdate!');

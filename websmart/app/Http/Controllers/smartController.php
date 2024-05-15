@@ -240,6 +240,7 @@ class smartController extends Controller
 
     public function insertnilai(){
         //INSERT DATA NILAI ALTERNATIF
+
         $baris = data_alternatif::all();
         $jmlbaris = count($baris);
         $data = data_alternatif::paginate($jmlbaris);

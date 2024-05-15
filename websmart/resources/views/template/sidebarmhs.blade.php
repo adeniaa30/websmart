@@ -8,7 +8,7 @@
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     
                     <li>
-                        <a href="{{ url('/dashboardmhs') }}" class="nav-link px-0 align-middle">
+                        <a href="{{ url('/dashboardMahasiswa') }}" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span></a>
                     </li>
                     <li>
@@ -17,10 +17,10 @@
                     </li>
                 </ul>
                 <hr>
-                <div class="dropdown pb-4">\
+                <div class="dropdown pb-4">
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                        <span class="d-none d-sm-inline mx-1">Mahasiswa </span>
+                        <span class="d-none d-sm-inline mx-1">Mahasiswa</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a class="dropdown-item" href="#">Settings</a></li>

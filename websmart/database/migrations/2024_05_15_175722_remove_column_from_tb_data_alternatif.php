@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tb_data_alternatif', function (Blueprint $table) {
-            $table->string('da_sertif_prestasi')->change();
+            $table->dropColumn('da_sertif_prestasi');
+            $table->dropColumn('da_sertif_organisasi');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tb_data_alternatif', function (Blueprint $table) {
-            //
+            $table->string('da_sertif_prestasi');
+            $table->string('da_sertif_organisasi');
         });
     }
 };
