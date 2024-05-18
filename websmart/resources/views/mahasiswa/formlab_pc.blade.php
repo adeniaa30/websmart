@@ -38,7 +38,6 @@
                             <input type="text" class="form-control" name='lab' id="lab" value="{{ $lab }}" aria-label="readonly input example" readonly>
                         </div>
                     </div>
-
                     <div class="mb-3 row">
                         <label for="khs" class="col-sm-2 col-form-label">Upload KHS</label>
                         <div class="col-sm-10">
@@ -46,52 +45,61 @@
                             <div id="file-preview"></div>
                         </div>
                     </div>
-
                 <div class="mb-3 row">
                     <label for="sertif_lomba" class="col-sm-2 col-form-label">Upload Sertifikat Lomba</label>
                     <div class="col-sm-10">
-                        <input type="file" class="form-control" name='sertif_lomba[]' id="sertif_lomba" multiple accept=".pdf" >
+                        <input type="file" class="form-control" name='sertif_lomba[]' id="sertif_lomba" multiple accept=".pdf">
                         <div id="file-preview"></div>
                     </div>
                 </div>
-
                 <div class="mb-3 row">
-                    <label for="so" class="col-sm-2 col-form-label">Upload Sertifikat Organisasi/Kepanitiaan</label>
-                    <div class="col-sm-10">
-                        <input type="file" class="form-control" name='sertif_organisasi[]' id="sertif_organisasi" multiple accept=".pdf">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="nilai_keckom" class="col-sm-2 col-form-label">Nilai Matkul Kecerdasan Komputasional</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name='nilai_keckom' id="nilai_keckom">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="nilai_kb" class="col-sm-2 col-form-label">Nilai Matkul Kecerdasan Buatan</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name='nilai_kb' id="nilai_kb">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="nilai_pkb" class="col-sm-2 col-form-label">Nilai Matkul Pengantar Kecerdasan Buatan</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name='nilai_pkb' id="nilai_pkb">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="nilai_datmin" class="col-sm-2 col-form-label">Nilai Matkul Data Mining</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name='nilai_datmin' id="nilai_datmin">
-                    </div>
-                </div>
-
-                <div class="mb-3 row">
-                    <label for="ide" class="col-sm-2 col-form-label">Kontribusi Ide Project</label>
+                    <label for="link_project" class="col-sm-2 col-form-label">Link Portofolio Project</label>
                     <div class="col-sm-10" id="idea-container">
                         <div class="input-group mb-2">
-                            <input type="text" class="form-control" name="ide[]" id="ide">
+                            <input type="text" class="form-control" name="link_project[]" id="link_project">
                             <button type="button" class="btn btn-success add-idea">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="nilai_matkul_ppla" class="col-sm-2 col-form-label">Nilai Mata Kuliah PPL Agro</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name='nilai_matkul_ppla' id="nilai_matkulx">
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="nilai_matkul_sd" class="col-sm-2 col-form-label">Nilai Mata Kuliah Sistem Digital</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name='nilai_matkul_sd' id="nilai_matkuly">
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="nilai_matkul_ppa" class="col-sm-2 col-form-label">Nilai Mata Kuliah PAA</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name='nilai_matkul_paa' id="nilai_matkulz">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="tanggung_jawab" class="col-sm-2 col-form-label">Bagaimana bentuk tanggung jawab anda (ganti dengan pertanyaan asli)</label>
+                    <div class="col-sm-10" id="idea-container">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tanggung_jawab" id="ya" value="Ya" required>
+                            <label class="form-check-label" for="ya">
+                                Ya
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tanggung_jawab" id="tidak" value="Tidak" required>
+                            <label class="form-check-label" for="tidak">
+                                Tidak
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tanggung_jawab" id="mungkin" value="Mungkin" required>
+                            <label class="form-check-label" for="mungkin">
+                                Mungkin
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -106,7 +114,7 @@
                             // Create a new input element
                             const input = document.createElement('input');
                             input.type = 'text';
-                            input.name = 'ide[]';
+                            input.name = 'link_project[]';
                             input.className = 'form-control';
                             
                             // Create a remove button

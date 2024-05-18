@@ -12,6 +12,7 @@ class normalisasi extends Model
         'norm_kriteria',
         'norm_bobot',
         'normalisasi',
+        'lab'
     ];
     protected $table = 'tb_normalisasi';
     public $timestamps = false;

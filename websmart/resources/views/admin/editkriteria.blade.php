@@ -16,7 +16,7 @@
             <div class="mb-3 row">
                 <label for="kriteria" class="col-sm-2 col-form-label">Kriteria</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" value="{{ $data->kriteria }}"  name='kriteria' id="kriteria" readonly>
+                    <input type="text" class="form-control" value="{{ $data->kriteria }}"  name='kriteria' id="kriteria">
                 </div>
             </div>
             <div class="mb-3 row">

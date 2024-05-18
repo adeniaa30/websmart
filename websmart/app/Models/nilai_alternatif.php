@@ -15,9 +15,11 @@ class nilai_alternatif extends Model
         'nilai_sertif_organisasi',
         'nilai_tulis',
         'nilai_wawancara',
-        'nilai_matkulx',
-        'nilai_matkuly',
-        'nilai_matkulz'
+        'nilai_keckom',
+        'nilai_kb',
+        'nilai_pkb',
+        'lab',
+        'nilai_kontribusi_ide'
     ];
     protected $table = 'tb_nilai_alternatif';
     public $timestamps = false;

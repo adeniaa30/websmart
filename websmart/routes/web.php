@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LoginMhsController;
 use App\Http\Controllers\mahasiswaController;
 use App\Http\Controllers\smartController;
+use App\Http\Controllers\smartpcController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,7 +70,7 @@ Route::get('/alternatif', [adminController::class, 'alternatif'])->name('alterna
 
 Route::post('/store_alternatif', [adminController::class, 'store'])->name('store_alternatif');
 
-Route::put('/update_alternatif', [adminController::class, 'update'])->name('update_alternatif');
+Route::put('/update_alternatif/{id}', [adminController::class, 'update'])->name('update_alternatif');
 
 Route::post('/store_kriteria', [adminController::class, 'storeKriteria'])->name('store_kriteria');
 
@@ -114,10 +115,15 @@ Route::get('/pdf/sp/{id}', [adminController::class, 'showpdf_sertifprestasi'])->
 
 Route::get('/pdf/so/{id}', [adminController::class, 'showpdf_sertiforganisasi'])->name('showpdf_sertiforganisasi');
 
+Route::get('/pdf/khs/{id}', [adminController::class, 'showpdf_khs'])->name('showpdf_khs');
 
 Route::GET('/smart', [smartController::class, 'smart'])->name('smart');
 
+Route::GET('/smartpc', [smartpcController::class, 'smart'])->name('smartpc');
+
 Route::GET('/test', [smartController::class, 'test'])->name('test');
+
+Route::GET('/testpc', [smartpcController::class, 'testpc'])->name('testpc');
 
 //CREATE DATA MAHASISWA
 // Route::resource("/alternatif", adminController::class);

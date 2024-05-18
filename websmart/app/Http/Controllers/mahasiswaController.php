@@ -81,7 +81,7 @@ class mahasiswaController extends Controller
                 'lab'=>$lab
             ]);
         }elseif($lab == 'Laboratorium Pertanian Cerdas'){
-            return view('mahasiswa.formlab_ai', [
+            return view('mahasiswa.formlab_pc', [
                 'nim'=>$nim,
                 'nama'=>$nama,
                 'prodi'=>$prodi,
@@ -100,20 +100,41 @@ class mahasiswaController extends Controller
             $request->validate([
                 'sertif_lomba.*' => 'required|mimes:pdf|max:2048',
                 'sertif_organisasi.*' => 'required|mimes:pdf|max:2048',
+                'khs' => 'required|mimes:pdf|max:2048',
             ]);
 
             $pdfPathsLomba = [];
             $pdfPathsOrganisasi = [];
-            if ($request->hasFile('sertif_lomba') && $request->hasFile('sertif_organisasi')) {
+            // $pdfPathsKHS = [];
+
+            // Collect paths for sertif_lomba
+            if ($request->hasFile('sertif_lomba')) {
                 foreach ($request->file('sertif_lomba') as $file) {
                     $path = $file->store('sertif_prestasi');
                     $pdfPathsLomba[] = $path;
                 }
+            }
+
+            // Collect paths for sertif_organisasi
+            if ($request->hasFile('sertif_organisasi')) {
                 foreach ($request->file('sertif_organisasi') as $file) {
                     $path = $file->store('sertif_organisasi');
                     $pdfPathsOrganisasi[] = $path;
                 }
-                foreach (array_map(null, $pdfPathsLomba, $pdfPathsOrganisasi) as [$sertifLomba, $sertifOrganisasi]){
+            }
+
+            if ($request->hasFile('khs')) {
+                    $path = $file->store('khs');
+                    $pdfPathsKHS = $path;
+                
+            }
+
+            $maxCount = max(count($pdfPathsLomba), count($pdfPathsOrganisasi), count($request->ide));
+            for ($index = 0; $index < $maxCount; $index++) {
+
+                $sertifLomba = $pdfPathsLomba[$index] ?? null;
+                $sertifOrganisasi = $pdfPathsOrganisasi[$index] ?? null;
+                $ide = $request->ide[$index] ?? null;
                     
                     $data = [
                         'da_nim'=>$request->nim,
@@ -124,57 +145,64 @@ class mahasiswaController extends Controller
                         // 'da_sertif_prestasi'=>json_encode($filenames),
                         'da_sertif_prestasi'=>$sertifLomba,
                         'da_sertif_organisasi'=>$sertifOrganisasi,
-                        'da_nilai_matkulx'=>$request->nilai_matkulx,
-                        'da_nilai_matkuly'=>$request->nilai_matkuly,
-                        'da_nilai_matkulz'=>$request->nilai_matkulz,
-                        'ide_project'=>$request->ide
+                        'khs'=>$pdfPathsKHS,
+                        'nilai_keckom'=>$request->nilai_keckom,
+                        'nilai_kb'=>$request->nilai_kb,
+                        'nilai_pkb'=>$request->nilai_pkb,
+                        'nilai_datmin'=>$request->nilai_datmin,
+                        'ide_project'=>$ide
                     ];
                 data_alternatif::create($data);
-                    
-                }
-                return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');
+                
             }
+                return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');
+            
                 
         }elseif($request->lab == 'Laboratorium Pertanian Cerdas'){
             $request->validate([
                 'sertif_lomba.*' => 'required|mimes:pdf|max:2048',
-                'sertif_organisasi.*' => 'required|mimes:pdf|max:2048',
             ]);
 
             $pdfPathsLomba = [];
-            $pdfPathsOrganisasi = [];
-            if ($request->hasFile('sertif_lomba') && $request->hasFile('sertif_organisasi')) {
+
+            // Collect paths for sertif_lomba
+            if ($request->hasFile('sertif_lomba')) {
                 foreach ($request->file('sertif_lomba') as $file) {
                     $path = $file->store('sertif_prestasi');
                     $pdfPathsLomba[] = $path;
                 }
-                foreach ($request->file('sertif_organisasi') as $file) {
-                    $path = $file->store('sertif_organisasi');
-                    $pdfPathsOrganisasi[] = $path;
-                }
-                foreach (array_map(null, $pdfPathsLomba, $pdfPathsOrganisasi) as [$sertifLomba, $sertifOrganisasi]){
-                    
+            }
+            if ($request->hasFile('khs')) {
+                $path = $file->store('khs');
+                $pdfPathsKHS = $path;
+            }
+                // Ensure we don't go out of bounds for the arrays
+                $maxCount = max(count($pdfPathsLomba), count($request->link_project));
+                for ($index = 0; $index < $maxCount; $index++) {
+                    $sertifLomba = $pdfPathsLomba[$index] ?? null;
+                    $link_project = $request->link_project[$index] ?? null;
+                    //kolom bisa berubah sesuai kriteria lab
                     $data = [
                         'da_nim'=>$request->nim,
                         'da_nama'=>$request->nama,
                         'da_prodi'=>$request->prodi,
                         'da_ipk'=>$request->ipk,
                         'da_lab'=>$request->lab,
-                        // 'da_sertif_prestasi'=>json_encode($filenames),
+                        'khs'=>$pdfPathsKHS,
                         'da_sertif_prestasi'=>$sertifLomba,
-                        'da_sertif_organisasi'=>$sertifOrganisasi,
-                        'da_nilai_matkulx'=>$request->nilai_matkulx,
-                        'da_nilai_matkuly'=>$request->nilai_matkuly,
-                        'da_nilai_matkulz'=>$request->nilai_matkulz,
-                        'ide_project'=>$request->ide
+                        'pc_link_project'=>$link_project,
+                        'pc_ppla'=>$request->nilai_matkul_ppla,
+                        'pc_sd'=>$request->nilai_matkul_sd,
+                        'pc_paa'=>$request->nilai_matkul_paa,
+                        'pc_tanggung_jawab'=>$request->tanggung_jawab,
                     ];
                 data_alternatif::create($data);
-                    
                 }
                 return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');
             }
+            
         }
-    }
+    
 
     
 }

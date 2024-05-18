@@ -15,9 +15,17 @@ class utilitas extends Model
         'uti_sertif_organisasi',
         'uti_tulis',
         'uti_wawancara',
-        'uti_matkulx',
-        'uti_matkuly',
-        'uti_matkulz',
+        'uti_keckom',
+        'uti_kb',
+        'uti_pkb',
+        'uti_datmin',
+        'uti_kontribusi_ide',
+        'lab',
+        'utipc_ppla',
+        'utipc_sd',
+        'utipc_paa',
+        'utipc_tanggung_jawab',
+        'utipc_project'
     ];
     protected $table = 'tb_utilitas';
     public $timestamps = false;

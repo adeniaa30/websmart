@@ -5,11 +5,10 @@
             
 
       {{-- TABEL Nilai Akhir --}}
-      
-    @if (Auth::check() && Auth::user()->name === 'aslab ai')
-    <div>
-        <h4>Tabel Hasil Seleksi Laboratorium AI</h2>
+      <div>
+        <h4>Tabel Hasil Seleksi Aslab Laboratorium Artificial Intelligence</h2>
     </div>
+    @if (Auth::check() && Auth::user()->name === 'aslab ai')
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <table class="table table-striped">
             <thead>
@@ -63,7 +62,6 @@
                 <thead>
                     <tr>
                         <th class="col-md-1">No</th>
-                        <th class="col-md-1">Laboratorium</th>
                         <th class="col-md-3">Nama Kriteria</th>
                         <th class="col-md-1">Bobot</th>
                         <th class="col-md-1">Normalisasi</th>
@@ -74,7 +72,6 @@
                     @foreach ($data as $item)
                     <tr>
                         <td>{{ $i }}</td>
-                        <td>{{ $item->lab }}</td>
                         <td>{{ $item->norm_kriteria }}</td>
                         <td>{{ $item->norm_bobot }}</td>
                         <td>{{ $item->normalisasi }}</td>
@@ -82,7 +79,6 @@
                     <?php $i++ ?>
                     @endforeach
                     <tr>
-                        <td></td>
                         <td>Total</td>
                         <td></td>
                         <td>{{ $totalSum }}</td>
@@ -102,16 +98,15 @@
                 <thead>
                     <tr>
                         <th class="">No</th>
-                        <th class="">Laboratorium</th>
                         <th class="">Nama</th>
-                        <th class="">Nilai Sertif Lomba</th>
+                        <th class="">Nilai IPK</th>
+                        <th class="">Nilai Sertif Prestasi/Porto</th>
                         <th class="">Nilai Sertif Organisasi</th>
+                        <th class="">Nilai Tes Tulis</th>
                         <th class="">Nilai Wawancara</th>
-                        <th class="">Nilai Matkul Kec.Kom</th>
-                        <th class="">Nilai Matkul KB</th>
-                        <th class="">Nilai Matkul PKB</th>
-                        <th class="">Nilai Matkul Datmin</th>
-                        <th class="">Nilai Kontribusi Ide</th>
+                        <th class="">Nilai Matkul X</th>
+                        <th class="">Nilai Matkul Y</th>
+                        <th class="">Nilai Matkul Z</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,45 +114,42 @@
                     @foreach ($nilai_alt as $item)
                     <tr>
                         <td>{{ $i }}</td>
-                        <td>{{ $item->lab }}</td>
                         <td>{{ $item->nama }}</td>
+                        <td>{{ $item->nilai_ipk }}</td>
                         <td>{{ $item->nilai_sertif_prestasi }}</td>
                         <td>{{ $item->nilai_sertif_organisasi }}</td>
+                        <td>{{ $item->nilai_tulis }}</td>
                         <td>{{ $item->nilai_wawancara }}</td>
-                        <td>{{ $item->nilai_keckom }}</td>
-                        <td>{{ $item->nilai_kb }}</td>
-                        <td>{{ $item->nilai_pkb }}</td>
-                        <td>{{ $item->nilai_datmin }}</td>
-                        <td>{{ $item->nilai_kontribusi_ide }}</td>
+                        <td>{{ $item->nilai_matkulx }}</td>
+                        <td>{{ $item->nilai_matkuly }}</td>
+                        <td>{{ $item->nilai_matkulz }}</td>
                     </tr>
                     <?php $i++ ?>
                     @endforeach
                     <tr>
                         <td></td>
                         <td>Cmin</td>
-                        <td></td>
+                        <td>{{ $cmin->min_ipk }}</td>
                         <td>{{ $cmin->min_sp }}</td>
                         <td>{{ $cmin->min_so }}</td>
+                        <td>{{ $cmin->min_tulis }}</td>
                         <td>{{ $cmin->min_wawancara }}</td>
-                        <td>{{ $cmin->min_keckom }}</td>
-                        <td>{{ $cmin->min_kb }}</td>
-                        <td>{{ $cmin->min_pkb }}</td>
-                        <td>{{ $cmin->min_datmin }}</td>
-                        <td>{{ $cmin->min_ide }}</td>
+                        <td>{{ $cmin->min_x }}</td>
+                        <td>{{ $cmin->min_y }}</td>
+                        <td>{{ $cmin->min_z }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>Cmax</td>
-                        <td></td>
+                        <td>{{ $cmax->max_ipk }}</td>
                         <td>{{ $cmax->max_sp }}</td>
                         <td>{{ $cmax->max_so }}</td>
+                        <td>{{ $cmax->max_tulis }}</td>
                         <td>{{ $cmax->max_wawancara }}</td>
-                        <td>{{ $cmax->max_keckom }}</td>
-                        <td>{{ $cmax->max_kb }}</td>
-                        <td>{{ $cmax->max_pkb }}</td>
-                        <td>{{ $cmax->max_datmin }}</td>
-                        <td>{{ $cmax->max_ide }}</td>
+                        <td>{{ $cmax->max_x }}</td>
+                        <td>{{ $cmax->max_y }}</td>
+                        <td>{{ $cmax->max_z }}</td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -175,16 +167,15 @@
             <thead>
                 <tr>
                     <th class="">No</th>
-                    <th class="">Laboratorium</th>
                     <th class="">Nama</th>
+                    <th class="">IPK</th>
                     <th class="">Sertif Prestasi/Porto</th>
                     <th class="">Sertif Organisasi</th>
+                    <th class="">Tes Tulis</th>
                     <th class="">Tes Wawancara</th>
-                    <th class="">Matkul Kec.Kom</th>
-                    <th class="">Matkul KB</th>
-                    <th class="">Matkul PKB</th>
-                    <th class="">Matkul Datmin</th>
-                    <th class="">Kontribusi Ide</th>
+                    <th class="">Matkul X</th>
+                    <th class="">Matkul Y</th>
+                    <th class="">Matkul Z</th>
                 </tr>
             </thead>
             <tbody>
@@ -192,16 +183,15 @@
                 @foreach ($uti as $item)
                 <tr>
                     <td>{{ $i }}</td>
-                    <td>{{ $item->lab }}</td>
                     <td>{{ $item->nama }}</td>
+                    <td>{{ $item->uti_ipk }}</td>
                     <td>{{ $item->uti_sertif_prestasi }}</td>
                     <td>{{ $item->uti_sertif_organisasi }}</td>
+                    <td>{{ $item->uti_tulis }}</td>
                     <td>{{ $item->uti_wawancara }}</td>
-                    <td>{{ $item->uti_keckom }}</td>
-                    <td>{{ $item->uti_kb }}</td>
-                    <td>{{ $item->uti_pkb }}</td>
-                    <td>{{ $item->uti_datmin }}</td>
-                    <td>{{ $item->uti_kontribusi_ide }}</td>
+                    <td>{{ $item->uti_matkulx }}</td>
+                    <td>{{ $item->uti_matkuly }}</td>
+                    <td>{{ $item->uti_matkulz }}</td>
                 </tr>
                 <?php $i++ ?>
                 @endforeach
@@ -218,16 +208,13 @@
             <thead>
                 <tr>
                     <th class="">No</th>
-                    <th class="">Laboratorium</th>
                     <th class="">Nama</th>
+                    <th class="">IPK</th>
                     <th class="">Sertif Prestasi</th>
                     <th class="">Sertif Organisasi</th>
+                    <th class="">Tes Tulis</th>
                     <th class="">Tes Wawancara</th>
-                    <th class="">Matkul Kec.Kom</th>
-                    <th class="">Matkul KB</th>
-                    <th class="">Matkul PKB</th>
-                    <th class="">Matkul Datmin</th>
-                    <th class="">Kontribusi Ide</th>
+                    <th class="">Matkul X</th>
                     {{-- <th class="">Matkul Y</th>
                     <th class="">Matkul Z</th> --}}
                     <th class="">TOTAL</th>
@@ -239,16 +226,13 @@
                 @foreach ($na as $item)
                 <tr>
                     <td>{{ $i }}</td>
-                    <td>{{ $item->lab }}</td>
                     <td>{{ $item->nama }}</td>
+                    <td>{{ $item->na_ipk }}</td>
                     <td>{{ $item->na_sertif_prestasi }}</td>
                     <td>{{ $item->na_sertif_organisasi }}</td>
+                    <td>{{ $item->na_tulis }}</td>
                     <td>{{ $item->na_wawancara }}</td>
-                    <td>{{ $item->na_keckom }}</td>
-                    <td>{{ $item->na_kb }}</td>
-                    <td>{{ $item->na_pkb }}</td>
-                    <td>{{ $item->na_datmin }}</td>
-                    <td>{{ $item->na_kontribusi_ide }}</td>
+                    <td>{{ $item->na_matkulx }}</td>
                     {{-- <td>{{ $item->na_matkuly }}</td>
                     <td>{{ $item->na_matkulz }}</td> --}}
                     <td>

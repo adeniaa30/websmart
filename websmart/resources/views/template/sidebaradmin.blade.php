@@ -38,10 +38,17 @@
                         <a href="{{ url('nilai') }}" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Nilai Alternatif</span> </a>
                     </li>   
+                    @if (Auth::check() && Auth::user()->name === 'aslab ai')
                     <li>
                         <a href="{{ url('smart') }}" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
                     </li>
+                    @elseif (Auth::check() && Auth::user()->name === 'aslab pc')
+                    <li>
+                        <a href="{{ url('smartpc') }}" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
+                    </li>
+                    @endif
                 </ul>
                 <hr>
                 <div class="dropdown pb-4">

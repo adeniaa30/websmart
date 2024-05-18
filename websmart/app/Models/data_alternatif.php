@@ -16,11 +16,19 @@ class data_alternatif extends Model
         'da_lab',
         'da_sertif_prestasi',
         'da_sertif_organisasi',
+        'khs',
         'da_nilai_tulis',
         'da_nilai_wawancara',
-        'da_nilai_matkulx',
-        'da_nilai_matkuly',
-        'da_nilai_matkulz',
+        'nilai_keckom',
+        'nilai_kb',
+        'nilai_pkb',
+        'nilai_datmin',
+        'ide_project',
+        'pc_tanggung_jawab',
+        'pc_link_project',
+        'pc_ppla',
+        'pc_sd',
+        'pc_paa'
     ];
     protected $table = 'tb_data_alternatif';
     public $timestamps = false;

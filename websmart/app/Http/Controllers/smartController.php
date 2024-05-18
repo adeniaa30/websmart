@@ -10,6 +10,7 @@ use App\Models\normalisasi;
 use App\Models\subkriteria;
 use App\Models\utilitas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -18,15 +19,18 @@ class smartController extends Controller
     public function smart(Request $request){
         //BIKIN LOG
         
-        //NORMALISASI KRITERIA
+        //user
+        if (Auth::check() && Auth::user()->name === 'aslab ai'){
+            //NORMALISASI KRITERIA
         $jumlahbaris = 10;
-        $totalSum = kriteria::sum('bobot');
-        $kriterias = kriteria::all();
+        $totalSum = kriteria::where('lab', 'Laboratorium Artificial Intelligence')->sum('bobot');
+        $kriterias = kriteria::where('lab', 'Laboratorium Artificial Intelligence')->get();
 
         foreach ($kriterias as $kriteria) {
             $normBobot = $kriteria->bobot;
             $normKriteria = $kriteria->kriteria;
             $normalisasi = $kriteria->bobot / $totalSum;
+            $lab = kriteria::where('kriteria', $normKriteria)->value('lab');
             $existingRecord = Normalisasi::where('norm_kriteria', $normKriteria)->first();
 
             if (!$existingRecord) {
@@ -35,6 +39,7 @@ class smartController extends Controller
                     'norm_kriteria' => $normKriteria,
                     'norm_bobot' => $normBobot,
                     'normalisasi' => $normalisasi,
+                    'lab' => $lab
                 ];
                 Normalisasi::create($isi);
             } else {
@@ -43,26 +48,23 @@ class smartController extends Controller
                 // Log::info('Duplicate record found for norm_kriteria: ' . $normKriteria);
             }
         }
-        $data = normalisasi::paginate($jumlahbaris);
-
-        $this->insertnilai();
-        $nilai_alt = nilai_alternatif::paginate($jumlahbaris);
-        
-        $this->utilitas();
-        $uti = utilitas::paginate($jumlahbaris);
-
-        $this->nilai_akhir();
-        $na = nilai_akhir::paginate($jumlahbaris);
+        $data = normalisasi::where('lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
+        $this->ai_insertnilai();
+        $nilai_alt = nilai_alternatif::where('lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
+        $this->ai_utilitas();
+        $uti = utilitas::where('lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
+        $this->ai_nilai_akhir();
+        $na = nilai_akhir::where('lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
 
         $final = 0;
         $rank = [];
         $result = [];
         $hasil = [];
-        $nilai = nilai_akhir::all(); // Fetch all rows from the table
+        $nilai = nilai_akhir::where('lab', 'Laboratorium Artificial Intelligence')->get(); // Fetch all rows from the table
         // $i = $nilai->firstItem();
 
         foreach ($nilai as $index => $item) {
-            $final = $item->na_ipk + $item->na_sertif_prestasi + $item->na_sertif_organisasi + $item->na_tulis + $item->na_wawancara + $item->na_matkulx;
+            $final = $item->na_sertif_prestasi + $item->na_wawancara + $item->na_keckom + $item->na_kb + $item->na_pkb + $item->na_datmin + $item->na_kontribusi_ide;
             // $i+=1;
             $result[$index] = $final;
         }
@@ -86,23 +88,25 @@ class smartController extends Controller
         // $totalSum now contains the sum of values from the specified columns in all rows
 
 
-        $cmin = nilai_alternatif::select(DB::raw('MIN(nilai_ipk) as min_ipk'))
-        ->selectRaw('MIN(nilai_sertif_prestasi) as min_sp')
-        ->selectRaw('MIN(nilai_sertif_organisasi) as min_so')
+        $cmin = nilai_alternatif::select(DB::raw('MIN(nilai_sertif_prestasi) as min_sp'))
+        // ->selectRaw('MIN(nilai_sertif_organisasi) as min_so')
         ->selectRaw('MIN(nilai_tulis) as min_tulis')
         ->selectRaw('MIN(nilai_wawancara) as min_wawancara')
-        ->selectRaw('MIN(nilai_matkulx) as min_x')
-        ->selectRaw('MIN(nilai_matkuly) as min_y')
-        ->selectRaw('MIN(nilai_matkulz) as min_z')
+        ->selectRaw('MIN(nilai_keckom) as min_keckom')
+        ->selectRaw('MIN(nilai_kb) as min_kb')
+        ->selectRaw('MIN(nilai_pkb) as min_pkb')
+        ->selectRaw('MIN(nilai_datmin) as min_datmin')
+        ->selectRaw('MIN(nilai_kontribusi_ide) as min_ide')
         ->first();
-        $cmax = nilai_alternatif::select(DB::raw('MAX(nilai_ipk) as max_ipk'))
-        ->selectRaw('MAX(nilai_sertif_prestasi) as max_sp')
-        ->selectRaw('MAX(nilai_sertif_organisasi) as max_so')
+        $cmax = nilai_alternatif::select(DB::raw('MAX(nilai_sertif_prestasi) as max_sp'))
+        // ->selectRaw('MAX(nilai_sertif_organisasi) as max_so')
         ->selectRaw('MAX(nilai_tulis) as max_tulis')
         ->selectRaw('MAX(nilai_wawancara) as max_wawancara')
-        ->selectRaw('MAX(nilai_matkulx) as max_x')
-        ->selectRaw('MAX(nilai_matkuly) as max_y')
-        ->selectRaw('MAX(nilai_matkulz) as max_z')
+        ->selectRaw('MAX(nilai_keckom) as max_keckom')
+        ->selectRaw('MAX(nilai_kb) as max_kb')
+        ->selectRaw('MAX(nilai_pkb) as max_pkb')
+        ->selectRaw('MAX(nilai_datmin) as max_datmin')
+        ->selectRaw('MAX(nilai_kontribusi_ide) as max_ide')
         ->first();
 
         return view('admin.spk', [
@@ -116,207 +120,177 @@ class smartController extends Controller
             'result' => $result,
             'rank' => $rank,
         ]);
+
+        // return 'insert berhasil';
+        //LANJUTIN PROSES CEK KONTRIBUSI IDE
+        
+
+        // $data = normalisasi::paginate($jumlahbaris);
+        
+        }
     }
 
-    public function cekipk($a)
-    {
-        // CEK NILAI IPK
-        // $alldata = data_alternatif::all();
-
-        // foreach ($alldata as $data) {
-            // $ipk = $data->da_ipk;
-
-            if ($a < 3) {
-                $hasil = subkriteria::where('kriteria', 'IP')
-                                    ->where('subkriteria', '<', 3)
-                                    ->value('nilai');
-            } elseif ($a >= 3 && $a < 3.5) {
-                $hasil = subkriteria::where('kriteria', 'IP')
-                                    ->where('subkriteria', '3,1-3,5')
-                                    ->value('nilai');
-            } elseif ($a >= 3.5 && $a <= 4) {
-                $hasil = subkriteria::where('subkriteria', '3,6-4')
-                                    ->value('nilai');
+    //START FUNCTION KHUSUS UNTUK LAB AI
+    
+    public function ai_cek_ide($ide,$jmlBaris){
+            if($ide == null){
+                $hasil = subkriteria::where('kriteria', 'Kontribusi Ide Project')
+                                    ->where('subkriteria', '<1')->value('nilai');
+            }elseif($ide !== null && $jmlBaris>=1 && $jmlBaris<=2 ){
+                $hasil = subkriteria::where('kriteria', 'Kontribusi Ide Project')
+                                    ->where('subkriteria', '1-2')->value('nilai');
+            }elseif($ide !== null && $jmlBaris>2){
+                $hasil = subkriteria::where('kriteria', 'Kontribusi Ide Project')
+                                    ->where('subkriteria', '>2')->value('nilai');
             }
-            return $hasil;
-        // }
-
-        // return $hasil;
-
-            
+        return $hasil;
     }
 
+    public function ai_cek_keckom($keckom){
 
-    public function ceknilaisertifprestasi($b){
+            if($keckom == 'A'){
+                $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
+                                    ->where('subkriteria', 'A')->value('nilai');
+                return $hasil;
+            }
+            if($keckom == 'AB'){
+                $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
+                                    ->where('subkriteria', 'AB')->value('nilai');
+                return $hasil;
+            }
+        
+    }
 
-            if ($b) {
-                $hasil= subkriteria::where('kriteria', 'Prestasi/Portofolio')
-                                        ->where('subkriteria', '1-5')->value('nilai');
-            } else{
-                $hasil= subkriteria::where('kriteria', 'Prestasi/Portofolio')
-                                        ->where('subkriteria', 'krg dr 1')->value('nilai');
+    public function ai_cek_kb($kb){
+            if($kb == 'A'){
+                $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
+                                    ->where('subkriteria', 'A')->value('nilai');
+                return $hasil;
+            }
+            if($kb == 'AB'){
+                $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
+                                    ->where('subkriteria', 'AB')->value('nilai');
+                return $hasil;
+            }
+    }
+
+    public function ai_cek_pkb($pkb){
+            if($pkb == 'A'){
+                $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
+                                    ->where('subkriteria', 'A')->value('nilai');
+                return $hasil;
+            }
+            if($pkb == 'AB'){
+                $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
+                                    ->where('subkriteria', 'AB')->value('nilai');
+                return $hasil;
+            }
+    }
+
+    public function ai_cek_datmin($datmin){
+        if($datmin == 'A'){
+            $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
+                                ->where('subkriteria', 'A')->value('nilai');
+            return $hasil;
+        }
+        if($datmin == 'AB'){
+            $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
+                                ->where('subkriteria', 'AB')->value('nilai');
+            return $hasil;
+        }
+}
+
+    public function ai_cek_sertiflomba($sertiflomba,$jmlBaris){
+            if ($sertiflomba == null) {
+                $hasil= subkriteria::where('kriteria', 'Mengikuti Kompetisi/Lomba')
+                                        ->where('subkriteria', '<1')->value('nilai');
+            } elseif($sertiflomba !== null && $jmlBaris>=1 && $jmlBaris<=2){
+                $hasil= subkriteria::where('kriteria', 'Mengikuti Kompetisi/Lomba')
+                                        ->where('subkriteria', '1-2')->value('nilai');
+            }elseif($sertiflomba !== null && $jmlBaris>2){
+                $hasil= subkriteria::where('kriteria', 'Mengikuti Kompetisi/Lomba')
+                                        ->where('subkriteria', '>2')->value('nilai');
             }
         
         return $hasil; 
+        
     }
 
-    public function ceknilaisertiforganisasi($c){
-            // Check if the sertif_prestasi field is not null
-            if ($c) {
-                $hasil = subkriteria::where('kriteria', 'Pengalaman Organisasi')
-                                        ->where('subkriteria', '1-5')->value('nilai');
-                // File exists in the column
-                return $hasil;
-            } else{
-                $hasil = subkriteria::where('kriteria', 'Pengalaman Organisasi')
-                                        ->where('subkriteria', 'krg dr 1')->value('nilai');
-                // File exists in the column
-                return $hasil;
-            }
-    }
-
-    public function ceknilaitestulis(){
-        $record = data_alternatif::first();
-        $hasil = $record->da_nilai_tulis;
-        return $hasil;
-    }
-
-    public function ceknilaiteswawancara(){
-        $record = data_alternatif::first();
-        $hasil = $record->da_nilai_wawancara;
-        return $hasil;
-    }
-
-    public function ceknilaimatkulx($f){
-
-        if($f == 'A'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'A')->value('nilai');
-            return $nilai_sub;
-        }elseif($f == 'AB'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'AB')->value('nilai');
-            return $nilai_sub;
-        }elseif($f == 'B'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'B')->value('nilai');
-            return $nilai_sub;
-        }
-    }
-
-    public function ceknilaimatkuly($g){
-
-        if($g == 'A'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'A')->value('nilai');
-            return $nilai_sub;
-        }elseif($g == 'AB'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'AB')->value('nilai');
-            return $nilai_sub;
-        }elseif($g == 'B'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'B')->value('nilai');
-            return $nilai_sub;
-        }
-    }
-
-    public function ceknilaimatkulz($h){
-
-        if($h == 'A'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'A')->value('nilai');
-            return $nilai_sub;
-        }elseif($h == 'AB'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'AB')->value('nilai');
-            return $nilai_sub;
-        }elseif($h == 'B'){
-            $nilai_sub = subkriteria::where('kriteria','Nilai Matkul')
-                                    ->where('subkriteria', 'B')->value('nilai');
-            return $nilai_sub;
-        }
-    }
-
-    public function insertnilai(){
-        //INSERT DATA NILAI ALTERNATIF
-
-        $baris = data_alternatif::all();
-        $jmlbaris = count($baris);
-        $data = data_alternatif::paginate($jmlbaris);
-        $i = $data->firstItem();
-        $nilai = [];
-
+    public function ai_insertnilai(){
+        $data = data_alternatif::where('da_lab', 'Laboratorium Artificial Intelligence')->get();
+        $da_lab = data_alternatif::where('da_lab', 'Laboratorium Artificial Intelligence')->value('da_lab');
+        $da_ide = data_alternatif::where('da_lab', 'Laboratorium Artificial Intelligence')->value('ide_project');
+        
+        $processedNames = [];
         foreach($data as $item){
             $nama = $item->da_nama;
-            $a = $item->da_ipk;
-            $nilai_ipk = $this->cekipk($a);
-            $b = $item->da_sertif_prestasi;
-            $nilai_sp = $this->ceknilaisertifprestasi($b);
-            $c = $item->da_sertif_organisasi;
-            $nilai_so = $this->ceknilaisertiforganisasi($c);
-            $d = $item->da_nilai_tulis;
-            $e = $item->da_nilai_wawancara;
-            $f = $item->da_nilai_matkulx;
-            $nilai_matkulx = $this->ceknilaimatkulx($f);
-            $g = $item->da_nilai_matkuly;
-            $nilai_matkuly = $this->ceknilaimatkuly($g);
-            $h = $item->da_nilai_matkulz;
-            $nilai_matkulz = $this->ceknilaimatkulz($h);
-            $existingRecord = nilai_alternatif::where('nama', $nama)->first();
+            $jmlData = data_alternatif::where('da_nama', $nama)->get();
+            $jmlBaris = count($jmlData);
+            if (in_array($nama, $processedNames)) {
+                continue;
+            }
+            $processedNames[] = $nama;
+            $sertiflomba = $item->da_sertif_prestasi;
+            $nilai_lomba = $this->ai_cek_sertiflomba($sertiflomba,$jmlBaris);
+            $nilai_tulis = $item->da_nilai_tulis;
+            $nilai_wawancara = $item->da_nilai_wawancara;
+            $keckom = $item->nilai_keckom;
+            $nilai_keckom = $this->ai_cek_keckom($keckom);
+            $kb = $item->nilai_kb;
+            $nilai_kb = $this->ai_cek_kb($kb);
+            $pkb = $item->nilai_pkb;
+            $nilai_pkb = $this->ai_cek_pkb($pkb);
+            $datmin = $item->nilai_datmin;
+            $nilai_datmin = $this->ai_cek_datmin($datmin);
+            $lab = $da_lab;
+            $ide = $da_ide;
+            $nilai_ide = $this->ai_cek_ide($ide,$jmlBaris);
+
+            $existingRecord = nilai_alternatif::where('nama',$nama)->first();
+            $data = [
+                'nama'=>$nama,
+                'nilai_sertif_prestasi'=>$nilai_lomba,
+                // 'nilai_sertif_organisasi'=>
+                'nilai_tulis'=>$nilai_tulis,
+                'nilai_wawancara'=>$nilai_wawancara,
+                'nilai_keckom'=>$nilai_keckom,
+                'nilai_kb'=>$nilai_kb,
+                'nilai_pkb'=>$nilai_pkb,
+                'nilai_datmin'=>$nilai_datmin,
+                'lab'=>$lab,
+                'nilai_kontribusi_ide'=>$nilai_ide
+            ];
 
             if(!$existingRecord){
-                $data = [
-                    'nama'=>$nama,
-                    'nilai_ipk'=>$nilai_ipk,
-                    'nilai_sertif_prestasi'=>$nilai_sp,
-                    'nilai_sertif_organisasi'=>$nilai_so,
-                    'nilai_tulis'=>$d,
-                    'nilai_wawancara'=>$e,
-                    'nilai_matkulx'=>$nilai_matkulx,
-                    'nilai_matkuly'=>$nilai_matkuly,
-                    'nilai_matkulz'=>$nilai_matkulz
-                ];
-                    nilai_alternatif::create($data);
-            }else{
-                // return 'data sudah ada';
+                nilai_alternatif::create($data);
+            }elseif($existingRecord){
+                $existingRecord->update($data);
             }
-            // $nilai2[] = $nama.$nilai_ipk.$nilai_sp.$nilai_so.$d.$e.$nilai_matkulx.$nilai_matkuly.$nilai_matkulz;
-            $i+=1;
         }
-            // return 'insert data berhasil';
     }
 
-    public function utilitas(){
-        $baris = nilai_alternatif::all();
-        $jmlbaris = count($baris);
-        $data = nilai_alternatif::paginate($jmlbaris);
-        $i = $data->firstItem();
-        $hasil = [];
-
-        foreach($data as $item){
+    public function ai_utilitas(){
+        $baris = nilai_alternatif::where('lab', 'Laboratorium Artificial Intelligence')->get();
+        foreach($baris as $item){
             $nama = $item->nama;
-            $nilai_ipk = $item->nilai_ipk;
             $nilai_sp = $item->nilai_sertif_prestasi;
             $nilai_so = $item->nilai_sertif_organisasi;
             $nilai_tulis = $item->nilai_tulis;
             $nilai_wawancara = $item->nilai_wawancara;
-            $nilai_matkulx = $item->nilai_matkulx;
-            $nilai_matkuly = $item->nilai_matkuly;
-            $nilai_matkulz = $item->nilai_matkulz;
-            $this->rumus_uti($nama, $nilai_ipk, $nilai_sp, $nilai_so, $nilai_tulis, $nilai_wawancara, $nilai_matkulx, $nilai_matkuly, $nilai_matkulz);
-            
-            // $hasil[] = $i.' '.$nilai_uti;
-            $i+=1;
+            $nilai_keckom = $item->nilai_keckom;
+            $nilai_kb = $item->nilai_kb;
+            $nilai_pkb = $item->nilai_pkb;
+            $nilai_datmin = $item->nilai_datmin;
+            $nilai_kontribusi_ide = $item->nilai_kontribusi_ide;
+            $lab = $item->lab;
+            $this->ai_rumus_uti($nama, $nilai_sp, $nilai_so, $nilai_tulis, $nilai_wawancara, $nilai_keckom, $nilai_kb, $nilai_pkb, $nilai_datmin, $nilai_kontribusi_ide,$lab);
         }
         return 'isert data berhasil';
     }
 
-    public function rumus_uti($nama, $nilai_ipk, $nilai_sp, $nilai_so, $nilai_tulis, $nilai_wawancara, $nilai_matkulx, $nilai_matkuly, $nilai_matkulz){
+    public function ai_rumus_uti($nama, $nilai_sp, $nilai_so, $nilai_tulis, $nilai_wawancara, $nilai_keckom, $nilai_kb, $nilai_pkb, $nilai_datmin, $nilai_kontribusi_ide,$lab){
         // Retrieve the minimum and maximum values of each column in a single query
         $minMaxValues = nilai_alternatif::select(
-            DB::raw('MIN(nilai_ipk) as min_ipk'),
-            DB::raw('MAX(nilai_ipk) as max_ipk'),
             DB::raw('MIN(nilai_sertif_prestasi) as min_sp'),
             DB::raw('MAX(nilai_sertif_prestasi) as max_sp'),
             DB::raw('MIN(nilai_sertif_organisasi) as min_so'),
@@ -325,19 +299,21 @@ class smartController extends Controller
             DB::raw('MAX(nilai_tulis) as max_tulis'),
             DB::raw('MIN(nilai_wawancara) as min_wawancara'),
             DB::raw('MAX(nilai_wawancara) as max_wawancara'),
-            DB::raw('MIN(nilai_matkulx) as min_matkulx'),
-            DB::raw('MAX(nilai_matkulx) as max_matkulx'),
-            DB::raw('MIN(nilai_matkuly) as min_matkuly'),
-            DB::raw('MAX(nilai_matkuly) as max_matkuly'),
-            DB::raw('MIN(nilai_matkulz) as min_matkulz'),
-            DB::raw('MAX(nilai_matkulz) as max_matkulz'),
+            DB::raw('MIN(nilai_keckom) as min_keckom'),
+            DB::raw('MAX(nilai_keckom) as max_keckom'),
+            DB::raw('MIN(nilai_kb) as min_kb'),
+            DB::raw('MAX(nilai_kb) as max_kb'),
+            DB::raw('MIN(nilai_pkb) as min_pkb'),
+            DB::raw('MAX(nilai_pkb) as max_pkb'),
+            DB::raw('MIN(nilai_datmin) as min_datmin'),
+            DB::raw('MAX(nilai_datmin) as max_datmin'),
+            DB::raw('MIN(nilai_kontribusi_ide) as min_ide'),
+            DB::raw('MAX(nilai_kontribusi_ide) as max_ide'),
             // Add more columns as needed
         )->first();
 
         if ($minMaxValues) {
             // Extract min and max values for each column
-            $min_ipk = $minMaxValues->min_ipk;
-            $max_ipk = $minMaxValues->max_ipk;
             $min_sp = $minMaxValues->min_sp;
             $max_sp = $minMaxValues->max_sp;
             $min_so = $minMaxValues->min_so;
@@ -346,147 +322,122 @@ class smartController extends Controller
             $max_tulis = $minMaxValues->max_tulis;
             $min_wawancara = $minMaxValues->min_wawancara;
             $max_wawancara = $minMaxValues->max_wawancara;
-            $min_matkulx = $minMaxValues->min_matkulx;
-            $max_matkulx = $minMaxValues->max_matkulx;
-            $min_matkuly = $minMaxValues->min_matkuly;
-            $max_matkuly = $minMaxValues->max_matkuly;
-            $min_matkulz = $minMaxValues->min_matkulz;
-            $max_matkulz = $minMaxValues->max_matkulz;
+            $min_keckom = $minMaxValues->min_keckom;
+            $max_keckom = $minMaxValues->max_keckom;
+            $min_kb = $minMaxValues->min_kb;
+            $max_kb = $minMaxValues->max_kb;
+            $min_pkb = $minMaxValues->min_pkb;
+            $max_pkb = $minMaxValues->max_pkb;
+            $min_datmin = $minMaxValues->min_datmin;
+            $max_datmin = $minMaxValues->max_datmin;
+            $min_ide = $minMaxValues->min_ide;
+            $max_ide = $minMaxValues->max_ide;
             // Extract min and max values for other columns similarly
 
-            // Calculate the normalized values for each column
-            $uti_ipk = ($max_ipk != $min_ipk) ? ($nilai_ipk - $min_ipk) / ($max_ipk - $min_ipk) : 0;
             $uti_sp = ($max_sp != $min_sp) ? ($nilai_sp - $min_sp) / ($max_sp - $min_sp) : 0;
             $uti_so = ($max_so != $min_so) ? ($nilai_so - $min_so) / ($max_so - $min_so) : 0;
             $uti_tulis = ($max_tulis != $min_tulis) ? ($nilai_tulis - $min_tulis) / ($max_tulis - $min_tulis) : 0;
             $uti_wawancara = ($max_wawancara != $min_wawancara) ? ($nilai_wawancara - $min_wawancara) / ($max_wawancara - $min_wawancara) : 0;
-            $uti_matkulx = ($max_matkulx != $min_matkulx) ? ($nilai_matkulx - $min_matkulx) / ($max_matkulx - $min_matkulx) : 0;
-            $uti_matkuly = ($max_matkuly != $min_matkuly) ? ($nilai_matkuly - $min_matkuly) / ($max_matkuly - $min_matkuly) : 0;
-            $uti_matkulz = ($max_matkulz != $min_matkulz) ? ($nilai_matkulz - $min_matkulz) / ($max_matkulz - $min_matkulz) : 0;
-            // Calculate the normalized values for other columns similarly
+            $uti_keckom = ($max_keckom != $min_keckom) ? ($nilai_keckom - $min_keckom) / ($max_keckom - $min_keckom) : 0;
+            $uti_kb = ($max_kb != $min_kb) ? ($nilai_kb - $min_kb) / ($max_kb - $min_kb) : 0;
+            $uti_pkb = ($max_pkb != $min_pkb) ? ($nilai_pkb - $min_pkb) / ($max_pkb - $min_pkb) : 0;
+            $uti_datmin = ($max_datmin != $min_datmin) ? ($nilai_datmin - $min_datmin) / ($max_datmin - $min_datmin) : 0;
+            $uti_kontribusi_ide = ($max_ide != $min_ide) ? ($nilai_kontribusi_ide - $min_ide) / ($max_ide - $min_ide) : 0;
 
+            // Calculate the normalized values for other columns similarly
             $existingRecord = utilitas::where('nama', $nama)->first();
+            $data = [
+                'nama'=>$nama,
+                'uti_sertif_prestasi'=>$uti_sp,
+                'uti_sertif_organisasi'=>$uti_so,
+                'uti_tulis'=>$uti_tulis,
+                'uti_wawancara'=>$uti_wawancara,
+                'uti_keckom'=>$uti_keckom,
+                'uti_kb'=>$uti_kb,
+                'uti_pkb'=>$uti_pkb,
+                'uti_datmin'=>$uti_datmin,
+                'uti_kontribusi_ide'=>$uti_kontribusi_ide,
+                'lab'=>$lab
+            ];
 
             if(!$existingRecord){
-                $data = [
-                    'nama'=>$nama,
-                    'uti_ipk'=>$uti_ipk,
-                    'uti_sertif_prestasi'=>$uti_sp,
-                    'uti_sertif_organisasi'=>$uti_so,
-                    'uti_tulis'=>$uti_tulis,
-                    'uti_wawancara'=>$uti_wawancara,
-                    'uti_matkulx'=>$uti_matkulx,
-                    'uti_matkuly'=>$uti_matkuly,
-                    'uti_matkulz'=>$uti_matkulz,
-                ];
                     utilitas::create($data);
             }else{
-                return 'data sudah ada';
+                $existingRecord->update($data);
             }
         } else {
-            // Handle case where no records are found
-            $uti_ipk = $uti_sp = 0; // Set default values
-            // Set default values for other columns similarly
         }
         // Now you have the normalized values for each column
     }
 
-    public function nilai_akhir(){
-        // $baris = normalisasi::all();
-        // $jmlbaris = count($baris);
-        // $data = normalisasi::paginate($jmlbaris);
-        $norm_ipk = normalisasi::where('norm_kriteria', 'IP')->value('normalisasi');
-        $norm_sp = normalisasi::where('norm_kriteria', 'Prestasi/Portofolio')->value('normalisasi');
-        $norm_so = normalisasi::where('norm_kriteria', 'Pengalaman Organisasi')->value('normalisasi');
-        $norm_tulis = normalisasi::where('norm_kriteria', 'Tes Tulis')->value('normalisasi');
-        $norm_wawancara = normalisasi::where('norm_kriteria', 'Tes Wawancara')->value('normalisasi');
-        $norm_matkul = normalisasi::where('norm_kriteria', 'Nilai Matkul')->value('normalisasi');
+    public function ai_nilai_akhir(){
+        $norm_sp = normalisasi::where('norm_kriteria', 'Mengikuti Kompetisi/Lomba')
+                            ->where('lab', 'Laboratorium Artificial Intelligence')->value('normalisasi');
+        // $norm_so = normalisasi::where('norm_kriteria', 'Pengalaman Organisasi')->value('normalisasi');
+        // $norm_tulis = normalisasi::where('norm_kriteria', 'Tes Tulis')->value('normalisasi');
+        $norm_wawancara = normalisasi::where('norm_kriteria', 'Tes Wawancara')
+                                        ->where('lab', 'Laboratorium Artificial Intelligence')->value('normalisasi');
+        $norm_matkul = normalisasi::where('norm_kriteria', 'Nilai Mata Kuliah')
+                                    ->where('lab', 'Laboratorium Artificial Intelligence')->value('normalisasi');
+        $norm_ide = normalisasi::where('norm_kriteria', 'Kontribusi Ide Project')
+                                ->where('lab', 'Laboratorium Artificial Intelligence')->value('normalisasi');
 
-        $baris2 = utilitas::all();
-        $jmlbaris2 = count($baris2);
-        $data2 = utilitas::paginate($jmlbaris2);
 
-        $j = $data2->firstItem();
+        $data = utilitas::where('lab', 'Laboratorium Artificial Intelligence')->get();
+        // $jmlbaris2 = count($baris2);
+        // $data2 = utilitas::paginate($jmlbaris2);
 
-        foreach($data2 as $item2){
+        // $j = $data->firstItem();
+
+        foreach($data as $item2){
             $nama = $item2->nama;
-            $ipk = $item2->uti_ipk;
-            $na_ipk = $ipk * $norm_ipk;
             $sp = $item2->uti_sertif_prestasi;
             $na_sp = $sp * $norm_sp;
-            $so = $item2->uti_sertif_organisasi;
-            $na_so = $so * $norm_so;
-            $tulis = $item2->uti_tulis;
-            $na_tulis = $tulis * $norm_tulis;
+            // $so = $item2->uti_sertif_organisasi;
+            // $na_so = $so * $norm_so;
             $wawancara = $item2->uti_wawancara;
             $na_wawancara = $wawancara * $norm_wawancara;
-            $x = $item2->uti_matkulx;
-            $na_matkulx = $x * $norm_matkul;
-            $y = $item2->uti_matkuly;
-            $na_matkuly = $y * $norm_matkul;
-            $z = $item2->uti_matkulz;
-            $na_matkulz = $z * $norm_matkul;
+            $keckom = $item2->uti_keckom;
+            $na_keckom = $keckom * $norm_matkul;
+            $kb = $item2->uti_kb;
+            $na_kb = $kb * $norm_matkul;
+            $pkb = $item2->uti_pkb;
+            $na_pkb = $pkb * $norm_matkul;
+            $datmin = $item2->uti_datmin;
+            $na_datmin = $datmin * $norm_matkul;
+            $ide = $item2->uti_kontribusi_ide;
+            $na_ide = $ide * $norm_ide;
+            $lab = $item2->lab;
+
             
             $existingRecord = nilai_akhir::where('nama', $nama)->first();
+            $data = [
+                'nama'=>$nama,
+                'na_sertif_prestasi'=>$na_sp,
+                // 'na_sertif_organisasi'=>$na_so,
+                // 'na_tulis'=>$na_tulis,
+                'na_wawancara'=>$na_wawancara,
+                'na_keckom'=>$na_keckom,
+                'na_kb'=>$na_kb,
+                'na_pkb'=>$na_pkb,
+                'na_datmin'=>$na_datmin,
+                'na_kontribusi_ide'=>$na_ide,
+                'lab'=>$lab
+            ];
             if(!$existingRecord){
-                $data3 = [
-                    'nama'=>$nama,
-                    'na_ipk'=>$na_ipk,
-                    'na_sertif_prestasi'=>$na_sp,
-                    'na_sertif_organisasi'=>$na_so,
-                    'na_tulis'=>$na_tulis,
-                    'na_wawancara'=>$na_wawancara,
-                    'na_matkulx'=>$na_matkulx,
-                    'na_matkuly'=>$na_matkuly,
-                    'na_matkulz'=>$na_matkulz
-                ];
-                try{
-                    nilai_akhir::create($data3);
-                    Log::info('New record inserted for ' . $nama);
-                }catch (\Exception $e) {
-                    Log::error('Error inserting record for ' . $nama . ': ' . $e->getMessage());
-                    return 'Error inserting record for ' . $nama;
-                }
-            }else{
-                return 'data sudah ada';
+                nilai_akhir::create($data);
+            }elseif($existingRecord){
+                $existingRecord->update($data);
             }
             
-            $j+=1;
+            // $j+=1;
         }
     }
 
+    //END FUNCTION KHUSUS LAB AI
+
+    
     public function test(){
-        $final = 0;
-        $rank = [];
-        $result = [];
-        $hasil = [];
-        $baris = count($result);
-        $nilai = nilai_akhir::all(); // Fetch all rows from the table
-        // $i = $nilai->firstItem();
-
-        foreach ($nilai as $index => $item) {
-            $final = $item->na_ipk + $item->na_sertif_prestasi + $item->na_sertif_organisasi + $item->na_tulis + $item->na_wawancara + $item->na_matkulx;
-            // $i+=1;
-            $result[$index] = $final;
-        }
-
-        arsort($result); 
-
-        $prevValue = null;
-        $prevRank = 0;
-        foreach ($result as $index => $value) {
-            if ($value !== $prevValue) {
-                $prevRank++;
-            }
-            $rank[$index] = $prevRank;
-            $prevValue = $value;
-        }
-
-        foreach ($result as $index => $value) {
-            $hasil[] = "Index: $index, Result: $value, Rank: " . $rank[$index];
-        }
         
-        return $hasil;
-
     }
 }

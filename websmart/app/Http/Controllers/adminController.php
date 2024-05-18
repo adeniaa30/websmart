@@ -6,9 +6,13 @@ use App\Models\alternatif;
 use App\Models\data_alternatif;
 use App\Models\kriteria;
 use App\Models\lab;
+use App\Models\nilai_akhir;
+use App\Models\nilai_alternatif;
 use App\Models\normalisasi;
 use App\Models\subkriteria;
+use App\Models\utilitas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class adminController extends Controller
 {
@@ -112,6 +116,14 @@ class adminController extends Controller
         return response()->file($filePath);
     }
 
+    public function showpdf_khs($id)
+    {
+        $pdf = data_alternatif::findOrFail($id);
+        $filePath = storage_path('app/' . $pdf->khs);
+
+        return response()->file($filePath);
+    }
+
     public function nilai(){
         $data = alternatif::distinct('nama')->pluck('nama');
         return view('admin.nilai', ['data' => $data]);
@@ -156,7 +168,7 @@ class adminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id){
-        $data2 = alternatif::where('nim',$id)->first();
+        $data2 = data_alternatif::where('da_nim',$id)->first();
         $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
         return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);
     }
@@ -172,47 +184,44 @@ class adminController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request){
-        
-        // Handle file uploads
-        if ($request->hasFile('sertif_prestasi')) {
-            foreach ($request->file('sertif_prestasi') as $file) {
-                // Store each uploaded file
-                $filename = $file->store('sertif_prestasi'); // Store the file in the storage/app/sertif_prestasi directory
-                $filenames[] = $filename;
-            }
-        }
+    public function update(Request $request, $id){
+        if(Auth::check() && Auth::user()->name === 'aslab ai'){
 
-        $data3 = [
-            'da_nim'=>$request->nim,
-            'da_nama'=>$request->nama,
-            'da_prodi'=>$request->prodi,
-            'da_ipk'=>$request->ipk,
-            'da_lab'=>$request->lab,
-            // 'da_sertif_prestasi'=>json_encode($filenames),
-            'da_sertif_prestasi'=>$request->sertif_prestasi,
-            'da_sertif_organisasi'=>$request->sertif_organisasi,
-            'da_nilai_tulis'=>$request->nilai_tulis,
+        $data = [
             'da_nilai_wawancara'=>$request->nilai_wawancara,
-            'da_nilai_matkulx'=>$request->nilai_matkulx,
-            'da_nilai_matkuly'=>$request->nilai_matkuly,
-            'da_nilai_matkulz'=>$request->nilai_matkulz
         ];
-        $exist = data_alternatif::where('da_nim', $request->nim)->first();
+        $exist = data_alternatif::where('da_nim', $id)->get();
         if(!$exist){
-            data_alternatif::create($data3);
+            data_alternatif::create($data);
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
         }elseif($exist){
-            data_alternatif::where('da_nim', $request->nim)->update($data3);
+            data_alternatif::where('da_nim', $id)->update($data);
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
         }
         return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
-        
+    }elseif(Auth::check() && Auth::user()->name === 'aslab pc'){
+        $data = [
+            'da_nilai_wawancara'=>$request->nilai_wawancara,
+            'da_nilai_tulis'=>$request->nilai_tulis,
+        ];
+        $exist = data_alternatif::where('da_nim', $id)->get();
+        if(!$exist){
+            data_alternatif::create($data);
+            return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
+        }elseif($exist){
+            data_alternatif::where('da_nim', $id)->update($data);
+            return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
+        }
+        return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
+    }
         
     }
 
     public function del_calon($id){
-        data_alternatif::where('da_nim',$id)->delete();
+        data_alternatif::where('da_nama',$id)->delete();
+        nilai_alternatif::where('nama',$id)->delete();
+        utilitas::where('nama',$id)->delete();
+        nilai_akhir::where('nama',$id)->delete();
         return redirect()->route('alternatif')->with('success', 'Data Berhasil dihapus!');
     }
     
@@ -308,11 +317,12 @@ class adminController extends Controller
             'nilai.required'=>'nilai wajib diisi',
             'nilai.numeric'=>'nilai harus dalam angka'
         ]);
+        $lab = subkriteria::where('kriteria', $request->kriteria)->where('subkriteria',$id)->value('s_lab');
         $data = [
             'kriteria'=>$request->kriteria,
             'subkriteria'=>$request->subkriteria,
             'nilai'=>$request->nilai,
-            's_lab'=>$request->s_lab
+            's_lab'=>$lab
         ];
         subkriteria::where('subkriteria',$id)->update($data);
         return redirect()->route('subkriteria')->with('success', 'Data Berhasil Diupdate!');

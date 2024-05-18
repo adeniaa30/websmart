@@ -15,9 +15,17 @@ class nilai_akhir extends Model
         'na_sertif_organisasi',
         'na_tulis',
         'na_wawancara',
-        'na_matkulx',
-        'na_matkuly',
-        'na_matkulz'
+        'na_keckom',
+        'na_kb',
+        'na_pkb',
+        'na_datmin',
+        'na_kontribusi_ide',
+        'lab',
+        'napc_ppla',
+        'napc_sd',
+        'napc_paa',
+        'napc_project',
+        'napc_tanggung_jawab'
     ];
     protected $table = 'tb_nilai_akhir';
     public $timestamps = false;
