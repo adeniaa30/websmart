@@ -15,7 +15,8 @@ class data_alternatif extends Model
         'da_ipk',
         'da_lab',
         'da_sertif_prestasi',
-        'da_sertif_organisasi',
+        'da_organisasi',
+        'status_org',
         'khs',
         'da_nilai_tulis',
         'da_nilai_wawancara',
@@ -28,7 +29,15 @@ class data_alternatif extends Model
         'pc_link_project',
         'pc_ppla',
         'pc_sd',
-        'pc_paa'
+        'pc_paa',
+        'it_pengalaman',
+        'itnilai_sop',
+        'itnilai_jarkom',
+        'itnilai_dmj',
+        'itnilai_rns',
+        'itnilai_mengajar',
+        'itnilai_probsolv',
+        'itnilai_timemj'
     ];
     protected $table = 'tb_data_alternatif';
     public $timestamps = false;

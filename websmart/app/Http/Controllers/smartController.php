@@ -33,16 +33,18 @@ class smartController extends Controller
             $lab = kriteria::where('kriteria', $normKriteria)->value('lab');
             $existingRecord = Normalisasi::where('norm_kriteria', $normKriteria)->first();
 
+            $isi = [
+                'norm_kriteria' => $normKriteria,
+                'norm_bobot' => $normBobot,
+                'normalisasi' => $normalisasi,
+                'lab' => $lab
+            ];
+
             if (!$existingRecord) {
                 // If no existing record found, proceed with insertion
-                $isi = [
-                    'norm_kriteria' => $normKriteria,
-                    'norm_bobot' => $normBobot,
-                    'normalisasi' => $normalisasi,
-                    'lab' => $lab
-                ];
                 Normalisasi::create($isi);
             } else {
+                $existingRecord->update($isi);
                 // Handle duplication: Skip insertion, log, or perform other actions
                 // For example, you can log the duplication or skip the insertion
                 // Log::info('Duplicate record found for norm_kriteria: ' . $normKriteria);
@@ -61,25 +63,31 @@ class smartController extends Controller
         $result = [];
         $hasil = [];
         $nilai = nilai_akhir::where('lab', 'Laboratorium Artificial Intelligence')->get(); // Fetch all rows from the table
-        // $i = $nilai->firstItem();
+        $total = nilai_akhir::where('lab', 'Laboratorium Artificial Intelligence')
+        ->orderBy('total', 'desc')
+        ->get();
 
-        foreach ($nilai as $index => $item) {
-            $final = $item->na_sertif_prestasi + $item->na_wawancara + $item->na_keckom + $item->na_kb + $item->na_pkb + $item->na_datmin + $item->na_kontribusi_ide;
-            // $i+=1;
-            $result[$index] = $final;
-        }
+        // // $i = $nilai->firstItem();
 
-        arsort($result); 
+        // foreach ($nilai as $index => $item) {
+        //     $final = $item->na_sertif_prestasi + $item->na_wawancara + $item->na_keckom + $item->na_kb + $item->na_pkb + $item->na_datmin + $item->na_kontribusi_ide;
+        //     // $i+=1;
+        //     $result[$index] = $final;
+        // }
+        // $total = nilai_akhir::where('lab',  'Laboratorium Artificial Intelligence')->pluck('total');
+        // arsort($total);
 
-        $prevValue = null;
-        $prevRank = 0;
-        foreach ($result as $index => $value) {
-            if ($value !== $prevValue) {
-                $prevRank++;
-            }
-            $rank[$index] = $prevRank;
-            $prevValue = $value;
-        }
+        // arsort($result); 
+
+        // $prevValue = null;
+        // $prevRank = 0;
+        // foreach ($result as $index => $value) {
+        //     if ($value !== $prevValue) {
+        //         $prevRank++;
+        //     }
+        //     $rank[$index] = $prevRank;
+        //     $prevValue = $value;
+        // }
 
         // foreach ($result as $index => $value) {
         //     $hasil[] = "Index: $index, Result: $value, Rank: " . $rank[$index];
@@ -88,8 +96,9 @@ class smartController extends Controller
         // $totalSum now contains the sum of values from the specified columns in all rows
 
 
-        $cmin = nilai_alternatif::select(DB::raw('MIN(nilai_sertif_prestasi) as min_sp'))
-        // ->selectRaw('MIN(nilai_sertif_organisasi) as min_so')
+        $cmin = nilai_alternatif::where('lab', 'Laboratorium Artificial Intelligence')
+        ->selectRaw('MIN(nilai_sertif_prestasi) as min_sp')
+        ->selectRaw('MIN(nilai_sertif_organisasi) as min_so')
         ->selectRaw('MIN(nilai_tulis) as min_tulis')
         ->selectRaw('MIN(nilai_wawancara) as min_wawancara')
         ->selectRaw('MIN(nilai_keckom) as min_keckom')
@@ -98,8 +107,9 @@ class smartController extends Controller
         ->selectRaw('MIN(nilai_datmin) as min_datmin')
         ->selectRaw('MIN(nilai_kontribusi_ide) as min_ide')
         ->first();
-        $cmax = nilai_alternatif::select(DB::raw('MAX(nilai_sertif_prestasi) as max_sp'))
-        // ->selectRaw('MAX(nilai_sertif_organisasi) as max_so')
+        $cmax = nilai_alternatif::where('lab', 'Laboratorium Artificial Intelligence')
+        ->selectRaw('MAX(nilai_sertif_prestasi) as max_sp')
+        ->selectRaw('MAX(nilai_sertif_organisasi) as max_so')
         ->selectRaw('MAX(nilai_tulis) as max_tulis')
         ->selectRaw('MAX(nilai_wawancara) as max_wawancara')
         ->selectRaw('MAX(nilai_keckom) as max_keckom')
@@ -117,7 +127,7 @@ class smartController extends Controller
             'cmax'=> $cmax,
             'uti' => $uti,
             'na' => $na,
-            'result' => $result,
+            'total' => $total,
             'rank' => $rank,
         ]);
 
@@ -157,6 +167,9 @@ class smartController extends Controller
                 $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
                                     ->where('subkriteria', 'AB')->value('nilai');
                 return $hasil;
+            }else{
+                $hasil = 0;
+                return $hasil;
             }
         
     }
@@ -171,6 +184,9 @@ class smartController extends Controller
                 $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
                                     ->where('subkriteria', 'AB')->value('nilai');
                 return $hasil;
+            }else{
+                $hasil = 0;
+                return $hasil;
             }
     }
 
@@ -183,6 +199,9 @@ class smartController extends Controller
             if($pkb == 'AB'){
                 $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
                                     ->where('subkriteria', 'AB')->value('nilai');
+                return $hasil;
+            }else{
+                $hasil = 0;
                 return $hasil;
             }
     }
@@ -197,8 +216,11 @@ class smartController extends Controller
             $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah')
                                 ->where('subkriteria', 'AB')->value('nilai');
             return $hasil;
+        }else{
+            $hasil = 0;
+            return $hasil;
         }
-}
+    }
 
     public function ai_cek_sertiflomba($sertiflomba,$jmlBaris){
             if ($sertiflomba == null) {
@@ -210,11 +232,30 @@ class smartController extends Controller
             }elseif($sertiflomba !== null && $jmlBaris>2){
                 $hasil= subkriteria::where('kriteria', 'Mengikuti Kompetisi/Lomba')
                                         ->where('subkriteria', '>2')->value('nilai');
+            }else{
+                $hasil = 0;
             }
         
         return $hasil; 
         
     }
+
+    public function ai_cek_organisasi($org){
+        if($org == 'Bukan Pengurus'){
+            $hasil = subkriteria::where('kriteria', 'Mengikuti Organisasi/Kepanitiaan')
+                                ->where('subkriteria', 'Bukan Pengurus')->value('nilai');
+            return $hasil;
+        }
+        if($org == 'Sebagai Pengurus'){
+            $hasil = subkriteria::where('kriteria', 'Mengikuti Organisasi/Kepanitiaan')
+                                ->where('subkriteria', 'Sebagai Pengurus')->value('nilai');
+            return $hasil;
+        }else{
+            $hasil = 0;
+            return $hasil;
+        }
+    }
+
 
     public function ai_insertnilai(){
         $data = data_alternatif::where('da_lab', 'Laboratorium Artificial Intelligence')->get();
@@ -232,6 +273,8 @@ class smartController extends Controller
             $processedNames[] = $nama;
             $sertiflomba = $item->da_sertif_prestasi;
             $nilai_lomba = $this->ai_cek_sertiflomba($sertiflomba,$jmlBaris);
+            $org = $item->status_org;
+            $nilai_organisasi = $this->ai_cek_organisasi($org);
             $nilai_tulis = $item->da_nilai_tulis;
             $nilai_wawancara = $item->da_nilai_wawancara;
             $keckom = $item->nilai_keckom;
@@ -246,11 +289,13 @@ class smartController extends Controller
             $ide = $da_ide;
             $nilai_ide = $this->ai_cek_ide($ide,$jmlBaris);
 
-            $existingRecord = nilai_alternatif::where('nama',$nama)->first();
+            $existingRecord = nilai_alternatif::where('nama',$nama)
+            ->where('lab', $da_lab)
+            ->first();
             $data = [
                 'nama'=>$nama,
                 'nilai_sertif_prestasi'=>$nilai_lomba,
-                // 'nilai_sertif_organisasi'=>
+                'nilai_sertif_organisasi'=>$nilai_organisasi,
                 'nilai_tulis'=>$nilai_tulis,
                 'nilai_wawancara'=>$nilai_wawancara,
                 'nilai_keckom'=>$nilai_keckom,
@@ -345,7 +390,9 @@ class smartController extends Controller
             $uti_kontribusi_ide = ($max_ide != $min_ide) ? ($nilai_kontribusi_ide - $min_ide) / ($max_ide - $min_ide) : 0;
 
             // Calculate the normalized values for other columns similarly
-            $existingRecord = utilitas::where('nama', $nama)->first();
+            $existingRecord = utilitas::where('nama',$nama)
+            ->where('lab', $lab)
+            ->first();
             $data = [
                 'nama'=>$nama,
                 'uti_sertif_prestasi'=>$uti_sp,
@@ -373,7 +420,7 @@ class smartController extends Controller
     public function ai_nilai_akhir(){
         $norm_sp = normalisasi::where('norm_kriteria', 'Mengikuti Kompetisi/Lomba')
                             ->where('lab', 'Laboratorium Artificial Intelligence')->value('normalisasi');
-        // $norm_so = normalisasi::where('norm_kriteria', 'Pengalaman Organisasi')->value('normalisasi');
+        $norm_so = normalisasi::where('norm_kriteria', 'Mengikuti Organisasi/Kepanitiaan')->value('normalisasi');
         // $norm_tulis = normalisasi::where('norm_kriteria', 'Tes Tulis')->value('normalisasi');
         $norm_wawancara = normalisasi::where('norm_kriteria', 'Tes Wawancara')
                                         ->where('lab', 'Laboratorium Artificial Intelligence')->value('normalisasi');
@@ -393,8 +440,8 @@ class smartController extends Controller
             $nama = $item2->nama;
             $sp = $item2->uti_sertif_prestasi;
             $na_sp = $sp * $norm_sp;
-            // $so = $item2->uti_sertif_organisasi;
-            // $na_so = $so * $norm_so;
+            $so = $item2->uti_sertif_organisasi;
+            $na_so = $so * $norm_so;
             $wawancara = $item2->uti_wawancara;
             $na_wawancara = $wawancara * $norm_wawancara;
             $keckom = $item2->uti_keckom;
@@ -409,12 +456,16 @@ class smartController extends Controller
             $na_ide = $ide * $norm_ide;
             $lab = $item2->lab;
 
+            $total = $na_sp+$na_so+$na_wawancara+$na_keckom+$na_kb+$na_pkb+$na_datmin+$na_ide;
+
             
-            $existingRecord = nilai_akhir::where('nama', $nama)->first();
+            $existingRecord = nilai_akhir::where('nama',$nama)
+            ->where('lab', $lab)
+            ->first();
             $data = [
                 'nama'=>$nama,
                 'na_sertif_prestasi'=>$na_sp,
-                // 'na_sertif_organisasi'=>$na_so,
+                'na_sertif_organisasi'=>$na_so,
                 // 'na_tulis'=>$na_tulis,
                 'na_wawancara'=>$na_wawancara,
                 'na_keckom'=>$na_keckom,
@@ -422,7 +473,8 @@ class smartController extends Controller
                 'na_pkb'=>$na_pkb,
                 'na_datmin'=>$na_datmin,
                 'na_kontribusi_ide'=>$na_ide,
-                'lab'=>$lab
+                'lab'=>$lab,
+                'total'=>$total
             ];
             if(!$existingRecord){
                 nilai_akhir::create($data);

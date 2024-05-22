@@ -54,17 +54,23 @@
         <div>
             <h4>Hasil Seleksi</h2>
         </div>
-        <table class="table table-striped" style="width: 100vw;">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="">No</th>
-                    <th class="">NIM</th>
                     <th class="">Nama</th>
                     <th class="">Laboratorium</th>
                 </tr>
             </thead>
             <tbody>
                 
+                @foreach ($total as $index => $item)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $item->nama }}</td>
+                    <td>{{ $item->lab }}</td>
+                </tr>
+                @endforeach
                 
             </tbody>
         </table>
@@ -84,10 +90,10 @@
             {{-- <h5 class="card-title">LAB PC</h5> --}}
             {{-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> --}}
             <!-- Button to open the modal -->
-            {{-- <a href='{{ url('/formlab') }}' class="btn btn-warning btn-sm">Daftar</a>
-          </div>
+            {{-- <a href='{{ url('/formlab') }}' class="btn btn-warning btn-sm">Daftar</a> --}}
+          {{-- </div>
         </div>
-      </div> --}}
+      </div> --}} 
   
       <!-- Add more similar columns as needed -->
       
@@ -121,22 +127,22 @@
             <a href='{{ url('/formlab') }}' class="btn btn-warning btn-sm">Daftar</a>
           </div>
         </div>
-      </div> --}}
+      </div>
   
       <!-- Add more similar columns as needed -->
       
-    {{-- </div>
-  </div>
+    </div>
+  </div> --}}
 
   <!-- Modal -->
-  <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  {{-- <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="detailsModalLabel">Details</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div> --}}
-        {{-- <div class="modal-body">
+        </div>
+        <div class="modal-body">
           <!-- Details content -->
           <form action='' method='post'>
             @csrf

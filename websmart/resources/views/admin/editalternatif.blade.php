@@ -57,6 +57,32 @@
                 <input type="text" class="form-control" name='nilai_tulis' id="tulis">
             </div>
         </div>
+        @elseif(Auth::check() && Auth::user()->name === 'aslab it')
+        <div class="mb-3 row">
+            <label for="testulis" class="col-sm-2 col-form-label">Nilai Tes Tulis</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name='nilai_tulis' id="tulis">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="itnilai_mengajar" class="col-sm-2 col-form-label">Kemampuan Mengajar</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name='itnilai_mengajar' id="itnilai_mengajar">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="itnilai_probsolv" class="col-sm-2 col-form-label">Problem Solving</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name='itnilai_probsolv' id="itnilai_probsolv">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="itnilai_timemj" class="col-sm-2 col-form-label">Time Manajement</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name='itnilai_timemj' id="itnilai_timemj">
+            </div>
+        </div>
+
         @endif
         <div class="mb-3 row">
             <label for="submit" class="col-sm-2 col-form-label"></label>

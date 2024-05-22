@@ -25,7 +25,8 @@ class nilai_akhir extends Model
         'napc_sd',
         'napc_paa',
         'napc_project',
-        'napc_tanggung_jawab'
+        'napc_tanggung_jawab',
+        'total'
     ];
     protected $table = 'tb_nilai_akhir';
     public $timestamps = false;

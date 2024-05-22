@@ -18,8 +18,15 @@ class nilai_alternatif extends Model
         'nilai_keckom',
         'nilai_kb',
         'nilai_pkb',
+        'nilai_datmin',
         'lab',
-        'nilai_kontribusi_ide'
+        'nilai_kontribusi_ide',
+        'nilaipc_tanggungjawab',
+        'nilaipc_project',
+        'nilaipc_ppla',
+        'nilaipc_sd',
+        'nilaipc_paa',
+        'status'
     ];
     protected $table = 'tb_nilai_alternatif';
     public $timestamps = false;

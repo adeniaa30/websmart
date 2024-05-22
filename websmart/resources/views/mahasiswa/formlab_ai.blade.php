@@ -56,9 +56,14 @@
                 </div>
 
                 <div class="mb-3 row">
-                    <label for="so" class="col-sm-2 col-form-label">Upload Sertifikat Organisasi/Kepanitiaan</label>
+                    <label for="so" class="col-sm-2 col-form-label"> Organisasi Yang Diikuti</label>
                     <div class="col-sm-10">
-                        <input type="file" class="form-control" name='sertif_organisasi[]' id="sertif_organisasi" multiple accept=".pdf">
+                        <input type="text" class="form-control" name='organisasi' id="organisasi">
+                        <select name="status_organisasi" id="status_organisasi" class="form-control">
+                            <option disable selected>Status Keanggotaan</option>
+                            <option value="Sebagai Pengurus">Sebagai Pengurus</option>
+                            <option value="Bukan Pengurus">Bukan Pengurus</option>
+                        </select>
                     </div>
                 </div>
                 <div class="mb-3 row">

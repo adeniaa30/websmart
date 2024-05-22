@@ -111,7 +111,40 @@
                     </tbody>
                 </table>
                 {{ $data_lab_ai->links() }}
+                @elseif (Auth::check() && Auth::user()->name === 'aslab it')
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1">No</th>
+                            <th class="col-md-3">Laboratorium</th>
+                            <th class="col-md-3">Nama Kriteria</th>
+                            <th class="col-md-1">Bobot</th>
+                            <th class="col-md-2">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data_lab_it as $index => $item)
+                            
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item->lab }}</td>
+                            <td>{{ $item->kriteria }}</td>
+                            <td>{{ $item->bobot }}</td>
+                            <td>
+                                <a href='{{ url('admin/'.$item->kriteria.'/edit_kriteria') }}' class="btn btn-warning btn-sm">Edit</a>
+                                <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->kriteria.'/del_kriteria') }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                {{ $data_lab_it->links() }}
                 @endif
+
           </div>
           <!-- AKHIR DATA -->
 @endsection

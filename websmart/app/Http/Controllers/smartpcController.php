@@ -56,25 +56,28 @@ class smartpcController extends Controller
         $result = [];
         $hasil = [];
         $nilai = nilai_akhir::all(); // Fetch all rows from the table
+        $total = nilai_akhir::where('lab', 'Laboratorium Pertanian Cerdas')
+            ->orderBy('total', 'desc')
+            ->get();
+
         // $i = $nilai->firstItem();
 
-        foreach ($nilai as $index => $item) {
-            $final = $item->na_sertif_prestasi + $item->na_tulis + $item->na_wawancara + $item->napc_ppl + $item->napc_sd + $item->napc_paa + $item->napc_tanggung_jawab + $item->napc_project;
-            // $i+=1;
-            $result[$index] = $final;
-        }
+        // foreach ($nilai as $index => $item) {
+        //     $final = $item->na_sertif_prestasi + $item->na_tulis + $item->na_wawancara + $item->napc_ppl + $item->napc_sd + $item->napc_paa + $item->napc_tanggung_jawab + $item->napc_project;
+        //     // $i+=1;
+        //     $result[$index] = $final;
+        // }
 
-        arsort($result); 
 
-        $prevValue = null;
-        $prevRank = 0;
-        foreach ($result as $index => $value) {
-            if ($value !== $prevValue) {
-                $prevRank++;
-            }
-            $rank[$index] = $prevRank;
-            $prevValue = $value;
-        }
+        // $prevValue = null;
+        // $prevRank = 0;
+        // foreach ($result as $index => $value) {
+        //     if ($value !== $prevValue) {
+        //         $prevRank++;
+        //     }
+        //     $rank[$index] = $prevRank;
+        //     $prevValue = $value;
+        // }
 
         // foreach ($result as $index => $value) {
         //     $hasil[] = "Index: $index, Result: $value, Rank: " . $rank[$index];
@@ -115,7 +118,7 @@ class smartpcController extends Controller
             'cmax'=> $cmax,
             'uti' => $uti,
             'na' => $na,
-            'result' => $result,
+            'total' => $total,
             'rank' => $rank,
         ]);
     }
@@ -195,12 +198,16 @@ class smartpcController extends Controller
         if($ppla == 'A'){
             $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah (PC)')
                                 ->where('subkriteria', 'A')->value('nilai');
+            return $hasil;
         }
         if($ppla == 'AB'){
             $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah (PC)')
                                 ->where('subkriteria', 'AB')->value('nilai');
+            return $hasil;
+        }else{
+            $hasil = 0;
+            return $hasil;
         }
-        return $hasil;
     }
 
     public function pc_cek_sd($sd){
@@ -213,6 +220,8 @@ class smartpcController extends Controller
             $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah (PC)')
                                 ->where('subkriteria', 'AB')->value('nilai');
             return $hasil;
+        }else{
+            $hasil = 0;
         }
     }
 
@@ -225,6 +234,9 @@ class smartpcController extends Controller
         if($paa == 'AB'){
             $hasil = subkriteria::where('kriteria', 'Nilai Mata Kuliah (PC)')
                                 ->where('subkriteria', 'AB')->value('nilai');
+            return $hasil;
+        }else{
+            $hasil = 0;
             return $hasil;
         }
     }
@@ -389,6 +401,7 @@ class smartpcController extends Controller
             $tanggungjawab = $item2->utipc_tanggung_jawab;
             $na_tanggungjawab = $tanggungjawab * $norm_tanggungjawab;
             $lab = $item2->lab;
+            $total = $na_sp+$na_wawancara+$na_tulis+$na_ppla+$na_sd+$na_paa+$na_project+$na_tanggungjawab;
 
             
             $existingRecord = nilai_akhir::where('nama', $nama)->first();
@@ -403,7 +416,8 @@ class smartpcController extends Controller
                 'napc_paa'=>$na_paa,
                 'napc_project'=>$na_project,
                 'napc_tanggung_jawab'=>$na_tanggungjawab,
-                'lab'=>$lab
+                'lab'=>$lab,
+                'total'=>$total
             ];
             if(!$existingRecord){
                 nilai_akhir::create($data);
@@ -416,61 +430,10 @@ class smartpcController extends Controller
     }
 
     public function testpc(){
-        $data = data_alternatif::where('da_lab', 'Laboratorium Pertanian Cerdas')->get();
-        $da_lab = data_alternatif::where('da_lab', 'Laboratorium Pertanian Cerdas')->value('da_lab');
-        // $da_kom = data_alternatif::where('da_lab', 'Laboratorium Pertanian Cerdas')->value('ai_komunikasi_kerja');
-        // $da_ide = data_alternatif::where('da_lab', 'Laboratorium Pertanian Cerdas')->value('ide_project');
-        
-        $processedNames = [];
-        $result = [];
-        foreach($data as $item){
-            $nama = $item->da_nama;
-            $jmlData = data_alternatif::where('da_nama', $nama)->get();
-            $jmlBaris = count($jmlData);
-            if (in_array($nama, $processedNames)) {
-                continue;
-            }
-            $processedNames[] = $nama;
-            $sertiflomba = $item->da_sertif_prestasi;
-            $nilai_lomba = $this->pc_cek_sertiflomba($sertiflomba,$jmlBaris);
-            $nilai_tulis = $item->da_nilai_tulis;
-            $nilai_wawancara = $item->da_nilai_wawancara;
-            $ppla = $item->pc_ppla;
-            $nilai_ppla = $this->pc_cek_ppla($ppla);
-            $sd = $item->pc_sd;
-            $nilai_sd = $this->pc_cek_sd($sd);
-            $paa = $item->pc_paa;
-            $nilai_paa = $this->pc_cek_paa($paa);
-            $lab = $da_lab;
-            $tanggungjawab = $item->pc_tanggung_jawab;
-            $nilai_tj = $this->pc_cek_tj($tanggungjawab);
-            $project = $item->pc_link_project;
-            $nilai_project = $this->pc_cek_project($project,$jmlBaris);
+        $total = nilai_akhir::where('lab', 'Laboratorium Artificial Intelligence')
+        ->orderBy('total')->get();
+        return $total;
 
-            $existingRecord = nilai_alternatif::where('nama',$nama)->get();
-            $data = [
-                'nama'=>$nama,
-                'nilai_sertif_prestasi'=>$nilai_lomba,
-                // 'nilai_sertif_organisasi'=>
-                'nilai_tulis'=>$nilai_tulis,
-                'nilai_wawancara'=>$nilai_wawancara,
-                'nilaipc_tanggungjawab'=>$nilai_tj,
-                'nilaipc_project'=>$nilai_project,
-                'nilaipc_ppla'=>$nilai_ppla,
-                'nilaipc_sd'=>$nilai_sd,
-                'nilaipc_paa'=>$nilai_paa,
-                'lab'=>$lab,
-            ];
-
-            if(!$existingRecord){
-                nilai_alternatif::create($data);
-                return 'insert data berhasil';
-            }elseif($existingRecord){
-                $existingRecord->update($data);
-            }
-            $result[] = $nama.' '.$lab.' '.$nilai_lomba.' '.$nilai_tulis.' '.$nilai_wawancara.' '.$nilai_tj.' '.$nilai_project.' '.$nilai_ppla.' '.$nilai_sd.' '.$nilai_paa;
-        }
-        return $result;
     }
 
 }

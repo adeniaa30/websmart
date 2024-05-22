@@ -52,7 +52,7 @@ Route::get('/loginmhs',[ LoginMhsController::class, 'loginmhs'])->name('loginmhs
 Route::post('/authmhs',[ LoginMhsController::class, 'authmhs'])->name('authmhs');
 
 Route::post('/logoutmhs',[LoginMhsController::class, 'logoutmhs'])->name('logoutmhs');
-Route::get('/',[LoginMhsController::class, 'loginmhs'])->name('loginmhs');
+// Route::get('/',[LoginMhsController::class, 'loginmhs'])->name('loginmhs');
 Route::get('/dashboardMahasiswa',[LoginMhsController::class, 'dashmhs'])->name('dashmhs');
 
 // ADMIN
@@ -70,13 +70,19 @@ Route::get('/alternatif', [adminController::class, 'alternatif'])->name('alterna
 
 Route::post('/store_alternatif', [adminController::class, 'store'])->name('store_alternatif');
 
+Route::get('admin/{id}/edit_da', [AdminController::class, 'edit_da'])->name('edit_da');
+
 Route::put('/update_alternatif/{id}', [adminController::class, 'update'])->name('update_alternatif');
+
+Route::post('/update_status/{id}', [adminController::class, 'update_status'])->name('update_status');
 
 Route::post('/store_kriteria', [adminController::class, 'storeKriteria'])->name('store_kriteria');
 
 Route::put('/update_kriteria/{id}', [adminController::class, 'update_kriteria'])->name('update_kriteria');
 
 Route::get('admin/{id}/edit_kriteria', [AdminController::class, 'edit_kriteria']);
+
+Route::get('edit_al/{id}', [AdminController::class, 'edit'])->name('edit_al');
 
 Route::delete('admin/{id}/del_kriteria', [AdminController::class, 'del_kriteria']);
 
@@ -102,6 +108,10 @@ Route::get('/spk', function () {
 Route::get('/dashboardmhs', function () {
     return view('mahasiswa.dashMahasiswa');
 });
+
+Route::GET('/search', [mahasiswaController::class, 'search'])->name('search');
+
+Route::get('/show_search', [mahasiswaController::class, 'show_search'])->name('show_search');
 
 Route::GET('/formlab', [mahasiswaController::class, 'formlab'])->name('formlab');
 

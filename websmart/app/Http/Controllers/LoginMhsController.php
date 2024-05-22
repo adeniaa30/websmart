@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\alternatif;
 use App\Models\lab;
+use App\Models\nilai_akhir;
 use App\Models\usermhs;
 
 class LoginMhsController extends Controller
@@ -20,15 +21,12 @@ class LoginMhsController extends Controller
     }
 
     public function dashmhs(Request $request){
-        $nim = $request->input('nim');
-        $data = usermhs::where('nim', $nim)->value('nim');
+
         $distinct_nama_lab = lab::distinct('nama_lab')->pluck('nama_lab');
-        $lab_pc = lab::where('nama_lab', 'Laboratorium Pertanian Cerdas')->value('nama_lab');
+        $tahun = nilai_akhir::selectRaw('YEAR(date) as year')->distinct()->pluck('year');
         return view('mahasiswa.dashMahasiswa',[
-            'data'=>$data,
             'distinct_nama_lab' => $distinct_nama_lab,
-            'lab_pc' => $lab_pc, 
-            'nim' => $nim
+            'tahun' => $tahun,
         ]);
     }
 

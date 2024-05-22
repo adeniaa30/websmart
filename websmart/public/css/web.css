@@ -4,8 +4,9 @@
     height: 170px;
     flex-shrink: 0;
     border-radius: 7px;
-border: 1px solid rgba(172, 172, 172, 0.50);
-background: #F4F1F1;
+    border: 1px solid rgba(172, 172, 172, 0.50);
+    background: #F4F1F1;
+    margin-bottom: 30px;
 }
 .kotak2{
     width: 489px;
@@ -28,4 +29,13 @@ background: #D9EDF7;
 }
 .teks2{
     padding: 17;
+}
+.sidebar{
+    position: fixed;
+}
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
 }

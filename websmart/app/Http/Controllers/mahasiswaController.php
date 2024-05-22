@@ -5,6 +5,7 @@ use App\Models\alternatif;
 use App\Models\data_alternatif;
 use App\Models\data_lab_ai;
 use App\Models\Lab;
+use App\Models\nilai_akhir;
 use App\Models\usermhs;
 use Illuminate\Http\Request;
 
@@ -34,8 +35,10 @@ class mahasiswaController extends Controller
         $nim = $request->input('nim');
         $data = usermhs::where('nim', $nim)->value('nim');
         $data = alternatif::where('nim',$katakunci);
-        // $jumlahbaris = 4;
-        return view('mahasiswa.formlab', ['nim' => $nim]);
+        $jumlahbaris = 4;
+        return view('mahasiswa.formlab', 
+        ['nim' => $nim]
+    );
         
         // return view('mahasiswa.formlab');
     }
@@ -88,6 +91,14 @@ class mahasiswaController extends Controller
                 'ipk' => $ipk,
                 'lab'=>$lab
             ]);
+        }elseif($lab == 'Laboratorium Infrastruktur Teknologi'){
+            return view('mahasiswa.formlab_it', [
+                'nim'=>$nim,
+                'nama'=>$nama,
+                'prodi'=>$prodi,
+                'ipk' => $ipk,
+                'lab'=>$lab
+            ]);
         } else{
             return ('view halaman gagal.');
         }
@@ -116,46 +127,52 @@ class mahasiswaController extends Controller
             }
 
             // Collect paths for sertif_organisasi
-            if ($request->hasFile('sertif_organisasi')) {
-                foreach ($request->file('sertif_organisasi') as $file) {
-                    $path = $file->store('sertif_organisasi');
-                    $pdfPathsOrganisasi[] = $path;
-                }
-            }
+            // if ($request->hasFile('sertif_organisasi')) {
+            //     foreach ($request->file('sertif_organisasi') as $file) {
+            //         $path = $file->store('sertif_organisasi');
+            //         $pdfPathsOrganisasi[] = $path;
+            //     }
+            // }
 
             if ($request->hasFile('khs')) {
-                    $path = $file->store('khs');
+                    $path = $request->file('khs')->store('khs');
                     $pdfPathsKHS = $path;
                 
             }
 
             $maxCount = max(count($pdfPathsLomba), count($pdfPathsOrganisasi), count($request->ide));
-            for ($index = 0; $index < $maxCount; $index++) {
+            // $existingRecord = data_alternatif::where('da_nama', $request->nama)->first();
+            // if(!$existingRecord){
+                for ($index = 0; $index < $maxCount; $index++) {
 
-                $sertifLomba = $pdfPathsLomba[$index] ?? null;
-                $sertifOrganisasi = $pdfPathsOrganisasi[$index] ?? null;
-                $ide = $request->ide[$index] ?? null;
+                    $sertifLomba = $pdfPathsLomba[$index] ?? null;
+                    // $sertifOrganisasi = $pdfPathsOrganisasi[$index] ?? null;
+                    $ide = $request->ide[$index] ?? null;
+                        
+                        $data = [
+                            'da_nim'=>$request->nim,
+                            'da_nama'=>$request->nama,
+                            'da_prodi'=>$request->prodi,
+                            'da_ipk'=>$request->ipk,
+                            'da_lab'=>$request->lab,
+                            // 'da_sertif_prestasi'=>json_encode($filenames),
+                            'da_sertif_prestasi'=>$sertifLomba,
+                            'da_organisasi'=>$request->organisasi,
+                            'status_org'=>$request->status_organisasi,
+                            'khs'=>$pdfPathsKHS,
+                            'nilai_keckom'=>$request->nilai_keckom,
+                            'nilai_kb'=>$request->nilai_kb,
+                            'nilai_pkb'=>$request->nilai_pkb,
+                            'nilai_datmin'=>$request->nilai_datmin,
+                            'ide_project'=>$ide
+                        ];
+                    data_alternatif::create($data);
                     
-                    $data = [
-                        'da_nim'=>$request->nim,
-                        'da_nama'=>$request->nama,
-                        'da_prodi'=>$request->prodi,
-                        'da_ipk'=>$request->ipk,
-                        'da_lab'=>$request->lab,
-                        // 'da_sertif_prestasi'=>json_encode($filenames),
-                        'da_sertif_prestasi'=>$sertifLomba,
-                        'da_sertif_organisasi'=>$sertifOrganisasi,
-                        'khs'=>$pdfPathsKHS,
-                        'nilai_keckom'=>$request->nilai_keckom,
-                        'nilai_kb'=>$request->nilai_kb,
-                        'nilai_pkb'=>$request->nilai_pkb,
-                        'nilai_datmin'=>$request->nilai_datmin,
-                        'ide_project'=>$ide
-                    ];
-                data_alternatif::create($data);
-                
-            }
-                return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');
+                }
+                    return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');
+            // }else{
+            //     return 'data sudah ada';
+            // }
             
                 
         }elseif($request->lab == 'Laboratorium Pertanian Cerdas'){
@@ -173,35 +190,101 @@ class mahasiswaController extends Controller
                 }
             }
             if ($request->hasFile('khs')) {
-                $path = $file->store('khs');
+                $path = $request->file('khs')->store('khs');
                 $pdfPathsKHS = $path;
             }
                 // Ensure we don't go out of bounds for the arrays
                 $maxCount = max(count($pdfPathsLomba), count($request->link_project));
-                for ($index = 0; $index < $maxCount; $index++) {
-                    $sertifLomba = $pdfPathsLomba[$index] ?? null;
-                    $link_project = $request->link_project[$index] ?? null;
-                    //kolom bisa berubah sesuai kriteria lab
+                // $existingRecord = data_alternatif::where('da_nama', $request->nama)->first();
+                // if(!$existingRecord){
+                    for ($index = 0; $index < $maxCount; $index++) {
+                        $sertifLomba = $pdfPathsLomba[$index] ?? null;
+                        $link_project = $request->link_project[$index] ?? null;
+                        //kolom bisa berubah sesuai kriteria lab
+                        $data = [
+                            'da_nim'=>$request->nim,
+                            'da_nama'=>$request->nama,
+                            'da_prodi'=>$request->prodi,
+                            'da_ipk'=>$request->ipk,
+                            'da_lab'=>$request->lab,
+                            'khs'=>$pdfPathsKHS,
+                            'da_sertif_prestasi'=>$sertifLomba,
+                            'pc_link_project'=>$link_project,
+                            'pc_ppla'=>$request->nilai_matkul_ppla,
+                            'pc_sd'=>$request->nilai_matkul_sd,
+                            'pc_paa'=>$request->nilai_matkul_paa,
+                            'pc_tanggung_jawab'=>$request->tanggung_jawab,
+                        ];
+                    data_alternatif::create($data);
+                    }
+                    return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');    
+                // }else{
+                //     return 'data sudah ada';
+                // }
+            }elseif($request->lab == 'Laboratorium Infrastruktur Teknologi'){
+                if ($request->hasFile('khs')) {
+                    $path = $request->file('khs')->store('khs');
+                    $pdfPathsKHS = $path;
+                }
+                if ($request->has('organisasi') && is_array($request->organisasi)) {
+                    // Get the count of the 'organisasi' array
+                    $organisasiCount = count($request->organisasi);
+                }
+                for ($index = 0; $index < $organisasiCount; $index++) {
+                    $organisasi = $request->organisasi[$index] ?? null;
                     $data = [
                         'da_nim'=>$request->nim,
                         'da_nama'=>$request->nama,
                         'da_prodi'=>$request->prodi,
                         'da_ipk'=>$request->ipk,
                         'da_lab'=>$request->lab,
+                        'da_organisasi'=>$organisasi,
                         'khs'=>$pdfPathsKHS,
-                        'da_sertif_prestasi'=>$sertifLomba,
-                        'pc_link_project'=>$link_project,
-                        'pc_ppla'=>$request->nilai_matkul_ppla,
-                        'pc_sd'=>$request->nilai_matkul_sd,
-                        'pc_paa'=>$request->nilai_matkul_paa,
-                        'pc_tanggung_jawab'=>$request->tanggung_jawab,
+                        'itnilai_sop'=>$request->nilai_sop,
+                        'itnilai_jarkom'=>$request->nilai_jarkom,
+                        'itnilai_dmj'=>$request->nilai_dmj,
+                        'itnilai_rns'=>$request->nilai_rns,
                     ];
                 data_alternatif::create($data);
+
                 }
-                return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');
+
+                return view('mahasiswa.linktest_it');
             }
             
         }
+
+        public function search(Request $request){
+            $query = nilai_akhir::query();
+            if ($request->filled('year')) {
+                $year = $request->year;
+                $query->whereRaw('YEAR(date) = ?', [$year]);
+            }
+    
+            if ($request->filled('lab')) {
+                $query->where('lab', $request->lab);
+            }
+                
+            //GIMANA CARANY BIAR YG MUNCUL ITU UDAH URUT SESUAI NILAI $HASIL
+            $total = nilai_akhir::where('lab', 'Laboratorium Pertanian Cerdas')
+            ->orderBy('total', 'desc')
+            ->get();
+    
+            $tahun = nilai_akhir::selectRaw('YEAR(date) as year')->distinct()->pluck('year');
+            $distinct_nama_lab = lab::distinct('nama_lab')->pluck('nama_lab');
+            return view('mahasiswa.show_search', [
+                'tahun'=>$tahun,
+                'total' => $total,
+                'distinct_nama_lab'=>$distinct_nama_lab
+            ]);
+            // return view('dashmhs', [
+            //     'results'=> $results
+            // ]);
+        }
+
+        public function show_search(Request $request){
+        }
+
     
 
     

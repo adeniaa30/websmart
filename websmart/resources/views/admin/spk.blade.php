@@ -14,27 +14,29 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th class="">No</th>
+                    <th class="">Rangking</th>
                     <th class="">Nama</th>
                     <th class="">Nilai Akhir</th>
-                    <th class="">Rangking</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $i = $na->firstItem() ?>
-                <?php $j = 0 ?>
-                @foreach($na as $item)
+                <?php 
+                    // $i = $na->firstItem() 
+                    ?>
+                <?php 
+                // $j = 0 
+                ?>
+                @foreach($total as $index => $item)
                 <tr>
-                    <td>{{ $i }}</td>
+                    <td>{{ $index + 1 }}</td>
                     <td>{{ $item->nama }}</td>
-                    <td>{{ $result[$j] }}</td>
-                     <td>{{ $rank[$j] }}</td> 
+                    <td>{{ $item->total }}</td>
                 </tr>
                 <?php 
-                $i++ 
+                // $i++ 
                 ?>
                 <?php
-                $j++;
+                // $j++;
                 ?>
                 @endforeach
             </tbody>
@@ -252,7 +254,7 @@
                     {{-- <td>{{ $item->na_matkuly }}</td>
                     <td>{{ $item->na_matkulz }}</td> --}}
                     <td>
-                        {{ $result[$j] }} <!-- Access corresponding element from $result array -->
+                        {{ $item->total }} <!-- Access corresponding element from $result array -->
                     </td>
                 <?php $i++ ?>
                 <?php $j++ ?>

@@ -28,13 +28,16 @@ class adminController extends Controller
             $data = kriteria::paginate($jumlahbaris);
             $data_lab_pc = kriteria::where('lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
             $data_lab_ai = kriteria::where('lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
+            $data_lab_it = kriteria::where('lab', 'Laboratorium Infrastruktur Teknologi')->paginate($jumlahbaris);
+
         }
 
         return view('admin.kriteria', [
             'data' => $data,
             'nama_lab' => $nama_lab,
             'data_lab_pc' => $data_lab_pc,
-            'data_lab_ai' => $data_lab_ai
+            'data_lab_ai' => $data_lab_ai,
+            'data_lab_it' => $data_lab_it,
         ]);
     }
 
@@ -42,6 +45,7 @@ class adminController extends Controller
         // Fetch distinct values from the 'kriteria' column
         $krit_pc = Kriteria::where('lab', 'Laboratorium Pertanian Cerdas')->pluck('kriteria');
         $krit_ai = Kriteria::where('lab', 'Laboratorium Artificial Intelligence')->pluck('kriteria');
+        $krit_it = Kriteria::where('lab', 'Laboratorium Infrastruktur Teknologi')->pluck('kriteria');
         $subkriteria = $request->input('subkriteria');
 
         // Fetch paginated results from the 'subkriteria' model
@@ -57,15 +61,17 @@ class adminController extends Controller
             $data = Subkriteria::paginate($jumlahbaris);
             $data_lab_pc = subkriteria::where('s_lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
             $data_lab_ai = subkriteria::where('s_lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
-
+            $data_lab_it = subkriteria::where('s_lab', 'Laboratorium Infrastruktur Teknologi')->paginate($jumlahbaris);
         }
         return view('admin.subkriteria', [
             'data' => $data, 
             'subkriteria'=>$subkriteria, 
             'krit_pc' => $krit_pc,
             'krit_ai' => $krit_ai,
+            'krit_it' => $krit_it,
             'data_lab_pc' => $data_lab_pc,
-            'data_lab_ai' => $data_lab_ai
+            'data_lab_ai' => $data_lab_ai,
+            'data_lab_it' => $data_lab_it,
 
         ]);
     }
@@ -88,13 +94,15 @@ class adminController extends Controller
             $data_calon = data_alternatif::paginate($jumlahbaris);
             $data_lab_pc = data_alternatif::where('da_lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
             $data_lab_ai = data_alternatif::where('da_lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
+            $data_lab_it = data_alternatif::where('da_lab', 'Laboratorium Infrastruktur Teknologi')->paginate($jumlahbaris);
 
         }
         return view('admin.alternatif', [
             'data' => $data, 
             'data_calon' => $data_calon,
             'data_lab_pc' => $data_lab_pc,
-            'data_lab_ai' => $data_lab_ai
+            'data_lab_ai' => $data_lab_ai,
+            'data_lab_it' => $data_lab_it
         ]);
         
         // return view('admin.alternatif');
@@ -168,13 +176,13 @@ class adminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id){
-        $data2 = data_alternatif::where('da_nim',$id)->first();
+        $alternatifData = alternatif::where('nama',$id)->first();
         $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
-        return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);
+        return redirect()->route('showform',['alternatifData' => $alternatifData, 'distinct_nama_lab' => $distinct_nama_lab]);
     }
 
     public function edit_da($id){
-        $data2 = data_alternatif::where('nim',$id)->first();
+        $data2 = data_alternatif::where('da_nim',$id)->first();
         $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
         return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);
     }
@@ -213,6 +221,23 @@ class adminController extends Controller
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
         }
         return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
+    }elseif(Auth::check() && Auth::user()->name === 'aslab it'){
+        $data = [
+            'itnilai_mengajar'=>$request->itnilai_mengajar,
+            'itnilai_probsolv'=>$request->itnilai_probsolv,
+            'itnilai_timemj'=>$request->itnilai_timemj,
+            'da_nilai_tulis' => $request->nilai_tulis
+        ];
+        $exist = data_alternatif::where('da_nim', $id)->get();
+        if(!$exist){
+            data_alternatif::create($data);
+            return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
+        }elseif($exist){
+            data_alternatif::where('da_nim', $id)->update($data);
+            return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
+        }
+        return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
+
     }
         
     }
@@ -331,6 +356,18 @@ class adminController extends Controller
     public function del_sub($id){
         subkriteria::where('subkriteria',$id)->delete();
         return redirect()->route('subkriteria')->with('success', 'Data Berhasil dihapus!');
+    }
+
+    public function update_status(Request $request, $id)
+    {
+        $data = data_alternatif::where('da_nama', $id)->get();
+        $data->status = $request->input('status');
+        $data2 = [
+            'status'=>$data->status
+        ];
+        data_alternatif::where('da_nama', $id)->update($data2);
+
+        return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
     }
 
     public function store_nilai(Request $request){
