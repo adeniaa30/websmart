@@ -26,6 +26,13 @@ class nilai_alternatif extends Model
         'nilaipc_ppla',
         'nilaipc_sd',
         'nilaipc_paa',
+        'itnilai_sop',
+        'itnilai_jarkom',
+        'itnilai_dmj',
+        'itnilai_rns',
+        'itnilai_mengajar',
+        'itnilai_probsolv',
+        'itnilai_timemj',
         'status'
     ];
     protected $table = 'tb_nilai_alternatif';

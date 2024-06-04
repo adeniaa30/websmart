@@ -7,6 +7,7 @@
 
 @section('konten')
 
+
 <div id="page-wrapper">
     <div class="container-fluid">
             <div class="">
@@ -21,7 +22,7 @@
                     </div>
                   </div>
                 </div>
-    </div>
+</div>
     <form action="{{ url('search') }}" method="GET">
       <div class="row">
           <div class="col-md-4">

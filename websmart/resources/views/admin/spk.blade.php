@@ -6,7 +6,7 @@
 
       {{-- TABEL Nilai Akhir --}}
       
-    @if (Auth::check() && Auth::user()->name === 'aslab ai')
+    {{-- @if (Auth::check() && Auth::user()->name === 'aslab ai') --}}
     <div>
         <h4>Tabel Hasil Seleksi Laboratorium AI</h2>
     </div>
@@ -263,7 +263,7 @@
             </tbody>
         </table>
         {{ $na->links() }}
-       @endif
+       {{-- @endif --}}
   </div>
         </div>
       </div>

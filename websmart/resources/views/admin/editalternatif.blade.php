@@ -3,7 +3,7 @@
 
 @section('konten')
 
-<form action='{{ url('update_alternatif/'.$data2->da_nim) }}' method='post' enctype="multipart/form-data">
+<form action='{{ url('update_alternatif/'.$data2->da_nim.'/'.$data2->da_lab) }}' method='post' enctype="multipart/form-data">
 @csrf
 @method('PUT')
     <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -67,19 +67,32 @@
         <div class="mb-3 row">
             <label for="itnilai_mengajar" class="col-sm-2 col-form-label">Kemampuan Mengajar</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name='itnilai_mengajar' id="itnilai_mengajar">
+                <select name="itnilai_mengajar" id="itnilai_mengajar" class="form-control">
+                    <option disable selected>Pilih Nilai</option>
+                    <option value="Baik">Baik</option>
+                    <option value="Cukup Baik">Cukup Baik</option>
+                </select>
             </div>
         </div>
         <div class="mb-3 row">
             <label for="itnilai_probsolv" class="col-sm-2 col-form-label">Problem Solving</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name='itnilai_probsolv' id="itnilai_probsolv">
+                <select name="itnilai_probsolv" id="itnilai_probsolv" class="form-control">
+                    <option disable selected>Pilih Nilai</option>
+                    <option value="Baik">Baik</option>
+                    <option value="Cukup Baik">Cukup Baik</option>
+                </select>
             </div>
         </div>
         <div class="mb-3 row">
             <label for="itnilai_timemj" class="col-sm-2 col-form-label">Time Manajement</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name='itnilai_timemj' id="itnilai_timemj">
+                <select name="itnilai_timemj" id="itnilai_timemj" class="form-control">
+                    <option disable selected>Pilih Nilai</option>
+                    <option value="Baik">Baik</option>
+                    <option value="Cukup Baik">Cukup Baik</option>
+                </select>
+
             </div>
         </div>
 

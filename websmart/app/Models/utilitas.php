@@ -25,7 +25,15 @@ class utilitas extends Model
         'utipc_sd',
         'utipc_paa',
         'utipc_tanggung_jawab',
-        'utipc_project'
+        'utipc_project',
+        'itnilai_sop',
+        'itnilai_jarkom',
+        'itnilai_dmj',
+        'itnilai_rns',
+        'itnilai_mengajar',
+        'itnilai_probsolv',
+        'itnilai_timemj',
+
     ];
     protected $table = 'tb_utilitas';
     public $timestamps = false;

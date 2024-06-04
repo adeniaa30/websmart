@@ -181,8 +181,12 @@ class adminController extends Controller
         return redirect()->route('showform',['alternatifData' => $alternatifData, 'distinct_nama_lab' => $distinct_nama_lab]);
     }
 
-    public function edit_da($id){
-        $data2 = data_alternatif::where('da_nim',$id)->first();
+    public function edit_da($da_nim,$da_lab){
+        $data2 = data_alternatif::where('da_nim',$da_nim)->where('da_lab',$da_lab)
+        ->first();
+        if (!$data2) {
+            return redirect()->back()->with('error', 'Data not found.');
+        }
         $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
         return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);
     }
@@ -192,18 +196,18 @@ class adminController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
+    public function update(Request $request, $da_nim,$da_lab){
         if(Auth::check() && Auth::user()->name === 'aslab ai'){
 
         $data = [
             'da_nilai_wawancara'=>$request->nilai_wawancara,
         ];
-        $exist = data_alternatif::where('da_nim', $id)->get();
+        $exist = data_alternatif::where('da_nim', $da_nim)->where('da_lab', $da_lab)->get();
         if(!$exist){
             data_alternatif::create($data);
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
         }elseif($exist){
-            data_alternatif::where('da_nim', $id)->update($data);
+            data_alternatif::where('da_nim', $da_nim)->where('da_lab', $da_lab)->update($data);
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
         }
         return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
@@ -212,12 +216,12 @@ class adminController extends Controller
             'da_nilai_wawancara'=>$request->nilai_wawancara,
             'da_nilai_tulis'=>$request->nilai_tulis,
         ];
-        $exist = data_alternatif::where('da_nim', $id)->get();
+        $exist = data_alternatif::where('da_nim', $da_nim)->where('da_lab', $da_lab)->get();
         if(!$exist){
             data_alternatif::create($data);
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
         }elseif($exist){
-            data_alternatif::where('da_nim', $id)->update($data);
+            data_alternatif::where('da_nim', $da_nim)->where('da_lab', $da_lab)->update($data);
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
         }
         return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
@@ -228,12 +232,12 @@ class adminController extends Controller
             'itnilai_timemj'=>$request->itnilai_timemj,
             'da_nilai_tulis' => $request->nilai_tulis
         ];
-        $exist = data_alternatif::where('da_nim', $id)->get();
+        $exist = data_alternatif::where('da_nim', $da_nim)->where('da_lab', $da_lab)->get();
         if(!$exist){
             data_alternatif::create($data);
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
         }elseif($exist){
-            data_alternatif::where('da_nim', $id)->update($data);
+            data_alternatif::where('da_nim', $da_nim)->where('da_lab', $da_lab)->update($data);
             return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
         }
         return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
@@ -242,11 +246,11 @@ class adminController extends Controller
         
     }
 
-    public function del_calon($id){
-        data_alternatif::where('da_nama',$id)->delete();
-        nilai_alternatif::where('nama',$id)->delete();
-        utilitas::where('nama',$id)->delete();
-        nilai_akhir::where('nama',$id)->delete();
+    public function del_calon($da_nama,$da_lab){
+        data_alternatif::where('da_nama',$da_nama)->where('da_lab', $da_lab)->delete();
+        nilai_alternatif::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+        utilitas::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+        nilai_akhir::where('nama',$da_nama)->where('lab', $da_lab)->delete();
         return redirect()->route('alternatif')->with('success', 'Data Berhasil dihapus!');
     }
     
@@ -358,14 +362,14 @@ class adminController extends Controller
         return redirect()->route('subkriteria')->with('success', 'Data Berhasil dihapus!');
     }
 
-    public function update_status(Request $request, $id)
+    public function update_status(Request $request, $da_nama,$da_lab)
     {
-        $data = data_alternatif::where('da_nama', $id)->get();
+        $data = data_alternatif::where('da_nama', $da_nama)->where('da_lab', $da_lab)->get();
         $data->status = $request->input('status');
         $data2 = [
             'status'=>$data->status
         ];
-        data_alternatif::where('da_nama', $id)->update($data2);
+        data_alternatif::where('da_nama', $da_nama)->where('da_lab', $da_lab)->update($data2);
 
         return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
     }

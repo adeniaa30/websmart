@@ -6,7 +6,7 @@
 
       {{-- TABEL Nilai Akhir --}}
       <div>
-        <h4>Tabel Hasil Seleksi Aslab Laboratorium Pertanian Cerdas</h2>
+        <h4>Tabel Hasil Seleksi Aslab Laboratorium Infrastruktur Teknologi</h2>
     </div>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <table class="table table-striped">
@@ -103,14 +103,15 @@
                         <th class="">No</th>
                         <th class="">Laboratorium</th>
                         <th class="">Nama</th>
-                        <th class="">Sertif Lomba</th>
-                        <th class="">Project</th>
-                        <th class="">Tes Tulis</th>
-                        <th class="">Tes Wawancara</th>
-                        <th class="">Matkul PPLA</th>
-                        <th class="">Matkul SD</th>
-                        <th class="">Matkul PAA</th>
-                        <th class="">Bertanggung Jawab</th>
+                        <th class="">Pengalaman</th>
+                        <th class="">Nilai Tes</th>
+                        <th class="">Nilai SO</th>
+                        <th class="">Nilai Jarkom</th>
+                        <th class="">Nilai DMJ</th>
+                        <th class="">Nilai RnS</th>
+                        <th class="">Nilai Mengajar</th>
+                        <th class="">Nilai Probsolv</th>
+                        <th class="">Nilai Timemj</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -121,13 +122,14 @@
                         <td>{{ $item->lab }}</td>
                         <td>{{ $item->nama }}</td>
                         <td>{{ $item->nilai_sertif_prestasi }}</td>
-                        <td>{{ $item->nilaipc_project }}</td>
                         <td>{{ $item->nilai_tulis }}</td>
-                        <td>{{ $item->nilai_wawancara }}</td>
-                        <td>{{ $item->nilaipc_ppla }}</td>
-                        <td>{{ $item->nilaipc_sd }}</td>
-                        <td>{{ $item->nilaipc_paa }}</td>
-                        <td>{{ $item->nilaipc_tanggungjawab }}</td>
+                        <td>{{ $item->itnilai_sop }}</td>
+                        <td>{{ $item->itnilai_jarkom }}</td>
+                        <td>{{ $item->itnilai_dmj }}</td>
+                        <td>{{ $item->itnilai_rns }}</td>
+                        <td>{{ $item->itnilai_mengajar }}</td>
+                        <td>{{ $item->itnilai_probsolv }}</td>
+                        <td>{{ $item->itnilai_timemj }}</td>
                     </tr>
                     <?php $i++ ?>
                     @endforeach
@@ -136,13 +138,14 @@
                         <td>Cmin</td>
                         <td></td>
                         <td>{{ $cmin->min_sp }}</td>
-                        <td>{{ $cmin->min_project }}</td>
                         <td>{{ $cmin->min_tulis }}</td>
-                        <td>{{ $cmin->min_wawancara }}</td>
-                        <td>{{ $cmin->min_ppla }}</td>
-                        <td>{{ $cmin->min_sd }}</td>
-                        <td>{{ $cmin->min_paa }}</td>
-                        <td>{{ $cmin->min_tanggungjawab }}</td>
+                        <td>{{ $cmin->min_sop }}</td>
+                        <td>{{ $cmin->min_jarkom }}</td>
+                        <td>{{ $cmin->min_dmj }}</td>
+                        <td>{{ $cmin->min_rns }}</td>
+                        <td>{{ $cmin->min_mengajar }}</td>
+                        <td>{{ $cmin->min_probsolv }}</td>
+                        <td>{{ $cmin->min_timemj }}</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -150,13 +153,14 @@
                         <td>Cmax</td>
                         <td></td>
                         <td>{{ $cmax->max_sp }}</td>
-                        <td>{{ $cmax->max_project }}</td>
                         <td>{{ $cmax->max_tulis }}</td>
-                        <td>{{ $cmax->max_wawancara }}</td>
-                        <td>{{ $cmax->max_ppla }}</td>
-                        <td>{{ $cmax->max_sd }}</td>
-                        <td>{{ $cmax->max_paa }}</td>
-                        <td>{{ $cmax->max_tanggungjawab }}</td>
+                        <td>{{ $cmax->max_sop }}</td>
+                        <td>{{ $cmax->max_jarkom }}</td>
+                        <td>{{ $cmax->max_dmj }}</td>
+                        <td>{{ $cmax->max_rns }}</td>
+                        <td>{{ $cmax->max_mengajar }}</td>
+                        <td>{{ $cmax->max_probsolv }}</td>
+                        <td>{{ $cmax->max_timemj }}</td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -176,15 +180,16 @@
                     <th class="">No</th>
                     <th class="">Laboratorium</th>
                     <th class="">Nama</th>
-                    <th class="">Sertif Lomba</th>
-                    <th class="">Project</th>
-                    <th class="">Tes Tulis</th>
-                    <th class="">Tes Wawancara</th>
-                    <th class="">Matkul PPLA</th>
-                    <th class="">Matkul SD</th>
-                    <th class="">Matkul PAA</th>
-                    <th class="">Bertanggung Jawab</th>
-                </tr>
+                    <th class="">Pengalaman</th>
+                    <th class="">Nilai SO</th>
+                    <th class="">Nilai Tulis</th>
+                    <th class="">Nilai Jarkom</th>
+                    <th class="">Nilai DMJ</th>
+                    <th class="">Nilai RnS</th>
+                    <th class="">Nilai Mengajar</th>
+                    <th class="">Nilai Probsolv</th>
+                    <th class="">Nilai Timemj</th>
+            </tr>
             </thead>
             <tbody>
                 <?php $i = $uti->firstItem() ?>
@@ -194,14 +199,15 @@
                     <td>{{ $item->lab }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->uti_sertif_prestasi }}</td>
-                    <td>{{ $item->utipc_project }}</td>
                     <td>{{ $item->uti_tulis }}</td>
-                    <td>{{ $item->uti_wawancara }}</td>
-                    <td>{{ $item->utipc_ppla }}</td>
-                    <td>{{ $item->utipc_sd }}</td>
-                    <td>{{ $item->utipc_paa }}</td>
-                    <td>{{ $item->utipc_tanggung_jawab }}</td>
-                </tr>
+                    <td>{{ $item->itnilai_sop }}</td>
+                    <td>{{ $item->itnilai_jarkom }}</td>
+                    <td>{{ $item->itnilai_dmj }}</td>
+                    <td>{{ $item->itnilai_rns }}</td>
+                    <td>{{ $item->itnilai_mengajar }}</td>
+                    <td>{{ $item->itnilai_probsolv }}</td>
+                    <td>{{ $item->itnilai_timemj }}</td>
+            </tr>
                 <?php $i++ ?>
                 @endforeach
             </tbody>
@@ -219,14 +225,15 @@
                     <th class="">No</th>
                     <th class="">Laboratorium</th>
                     <th class="">Nama</th>
-                    <th class="">Sertif Lomba</th>
-                    <th class="">Project</th>
-                    <th class="">Tes Tulis</th>
-                    <th class="">Tes Wawancara</th>
-                    <th class="">Matkul PPLA</th>
-                    <th class="">Matkul SD</th>
-                    <th class="">Matkul PAA</th>
-                    <th class="">Bertanggung Jawab</th>
+                    <th class="">Pengalaman</th>
+                    <th class="">Nilai Tulis</th>
+                    <th class="">Nilai SO</th>
+                    <th class="">Nilai Jarkom</th>
+                    <th class="">Nilai DMJ</th>
+                    <th class="">Nilai RnS</th>
+                    <th class="">Nilai Mengajar</th>
+                    <th class="">Nilai Probsolv</th>
+                    <th class="">Nilai Timemj</th>
                     <th class="">TOTAL</th>
                 </tr>
             </thead>
@@ -241,13 +248,14 @@
                     <td>{{ $item->lab }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->na_sertif_prestasi }}</td>
-                    <td>{{ $item->napc_project }}</td>
                     <td>{{ $item->na_tulis }}</td>
-                    <td>{{ $item->na_wawancara }}</td>
-                    <td>{{ $item->napc_ppla }}</td>
-                    <td>{{ $item->napc_sd }}</td>
-                    <td>{{ $item->napc_paa }}</td>
-                    <td>{{ $item->napc_tanggung_jawab }}</td>
+                    <td>{{ $item->itnilai_sop }}</td>
+                    <td>{{ $item->itnilai_jarkom }}</td>
+                    <td>{{ $item->itnilai_dmj }}</td>
+                    <td>{{ $item->itnilai_rns }}</td>
+                    <td>{{ $item->itnilai_mengajar }}</td>
+                    <td>{{ $item->itnilai_probsolv }}</td>
+                    <td>{{ $item->itnilai_timemj }}</td>
                     {{-- <td>{{ $item->na_matkuly }}</td>
                     <td>{{ $item->na_matkulz }}</td> --}}
                     <td>

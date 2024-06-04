@@ -26,6 +26,13 @@ class nilai_akhir extends Model
         'napc_paa',
         'napc_project',
         'napc_tanggung_jawab',
+        'itnilai_sop',
+        'itnilai_jarkom',
+        'itnilai_dmj',
+        'itnilai_rns',
+        'itnilai_mengajar',
+        'itnilai_probsolv',
+        'itnilai_timemj',
         'total'
     ];
     protected $table = 'tb_nilai_akhir';

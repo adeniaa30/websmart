@@ -3,6 +3,8 @@
 
 @section('konten')
         <!-- START FORM -->
+@if(Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'aslab pc' || Auth::user()->name === 'aslab it')
+
 <form action='{{ url('store_kriteria') }}' method='post'>
 @csrf
     <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -47,7 +49,8 @@
                       <button class="btn btn-secondary" type="submit">Cari</button>
                   </form>
                 </div>
-                @if (Auth::check() && Auth::user()->name === 'aslab pc')
+@endif
+                @if (Auth::check() && Auth::user()->name === 'aslab pc' || Auth::user()->name === 'kalab pertanian cerdas')
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -55,7 +58,9 @@
                             <th class="col-md-3">Laboratorium</th>
                             <th class="col-md-3">Nama Kriteria</th>
                             <th class="col-md-1">Bobot</th>
+                            @if(Auth::user()->name === 'aslab pc')
                             <th class="col-md-2">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -66,6 +71,7 @@
                             <td>{{ $item->lab }}</td>
                             <td>{{ $item->kriteria }}</td>
                             <td>{{ $item->bobot }}</td>
+                            @if(Auth::user()->name === 'aslab pc')
                             <td>
                                 <a href='{{ url('admin/'.$item->kriteria.'/edit_kriteria') }}' class="btn btn-warning btn-sm">Edit</a>
                                 <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->kriteria.'/del_kriteria') }}" method="post">
@@ -74,12 +80,13 @@
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
                                 </form>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
                 {{ $data_lab_pc->links() }}
-                @elseif (Auth::check() && Auth::user()->name === 'aslab ai')
+                @elseif (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab Artificial Intelligence' )
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -87,7 +94,9 @@
                             <th class="col-md-3">Laboratorium</th>
                             <th class="col-md-3">Nama Kriteria</th>
                             <th class="col-md-1">Bobot</th>
+                            @if(Auth::check() && Auth::user()->name === 'aslab ai')
                             <th class="col-md-2">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -98,6 +107,7 @@
                             <td>{{ $item->lab }}</td>
                             <td>{{ $item->kriteria }}</td>
                             <td>{{ $item->bobot }}</td>
+                            @if(Auth::check() && Auth::user()->name === 'aslab ai')
                             <td>
                                 <a href='{{ url('admin/'.$item->kriteria.'/edit_kriteria') }}' class="btn btn-warning btn-sm">Edit</a>
                                 <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->kriteria.'/del_kriteria') }}" method="post">
@@ -106,6 +116,7 @@
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
                                 </form>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

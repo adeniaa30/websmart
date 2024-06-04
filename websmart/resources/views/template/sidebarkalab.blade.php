@@ -34,19 +34,19 @@
                         <a href="{{ url('subkriteria') }}" class="nav-link px-0 align-middle {{ Request::is('subkriteria*') ? 'active' : '' }}">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Data Sub Kriteria</span> </a>
                     </li>
-                    @if (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab Artificial Intelligence')
+                    @if (Auth::check() && Auth::user()->name === 'aslab ai' && Auth::user()->name === 'kalab Artificial Intelligence')
                     <li>
                         <a href="{{ url('smart') }}" class="nav-link px-0 align-middle {{ Request::is('smart*') ? 'active' : '' }}">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
                     </li>
-                    @elseif (Auth::check() && Auth::user()->name === 'aslab pc' || Auth::user()->name === 'kalab pertanian cerdas')
+                    @elseif (Auth::check() && Auth::user()->name === 'aslab pc' && Auth::user()->name === 'kalab pertanian cerdas')
                     <li>
                         <a href="{{ url('smartpc') }}" class="nav-link px-0 align-middle {{ Request::is('smartpc*') ? 'active' : '' }}">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
                     </li>
-                    @elseif(Auth::check() && Auth::user()->name === 'aslab it')
+                    @elseif(Auth::check() && Auth::user()->name === 'aslab it' && Auth::user()->name === 'kalab infratek')
                     <li>
-                        <a href="{{ url('smartit') }}" class="nav-link px-0 align-middle ">
+                        <a href="#" class="nav-link px-0 align-middle ">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
                     </li>
 

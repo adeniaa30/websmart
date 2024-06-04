@@ -18,16 +18,13 @@ class smartpcController extends Controller
         $jumlahbaris = 10;
         $totalSum = kriteria::where('lab', 'Laboratorium Pertanian Cerdas')->sum('bobot');
         $kriterias = kriteria::where('lab', 'Laboratorium Pertanian Cerdas')->get();
-
         foreach ($kriterias as $kriteria) {
             $normBobot = $kriteria->bobot;
             $normKriteria = $kriteria->kriteria;
             $normalisasi = $kriteria->bobot / $totalSum;
             $lab = kriteria::where('kriteria', $normKriteria)->value('lab');
             $existingRecord = normalisasi::where('norm_kriteria', $normKriteria)->first();
-
             if (!$existingRecord) {
-                // If no existing record found, proceed with insertion
                 $isi = [
                     'norm_kriteria' => $normKriteria,
                     'norm_bobot' => $normBobot,
@@ -36,9 +33,6 @@ class smartpcController extends Controller
                 ];
                 Normalisasi::create($isi);
             } else {
-                // Handle duplication: Skip insertion, log, or perform other actions
-                // For example, you can log the duplication or skip the insertion
-                // Log::info('Duplicate record found for norm_kriteria: ' . $normKriteria);
             }
         }
         $this->pc_insertnilai();
@@ -155,7 +149,7 @@ class smartpcController extends Controller
             $project = $item->pc_link_project;
             $nilai_project = $this->pc_cek_project($project,$jmlBaris);
 
-            $existingRecord = nilai_alternatif::where('nama',$nama)->first();
+            $existingRecord = nilai_alternatif::where('nama',$nama)->where('lab', $lab)->first();
             $data = [
                 'nama'=>$nama,
                 'nilai_sertif_prestasi'=>$nilai_lomba,
@@ -305,7 +299,9 @@ class smartpcController extends Controller
             DB::raw('MIN(nilaipc_tanggungjawab) as min_tanggungjawab'),
             DB::raw('MAX(nilaipc_tanggungjawab) as max_tanggungjawab'),
             // Add more columns as needed
-        )->first();
+        )
+        ->where('lab', $lab)
+        ->first();
 
         if ($minMaxValues) {
             // Extract min and max values for each column

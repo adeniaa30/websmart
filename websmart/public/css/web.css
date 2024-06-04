@@ -39,3 +39,20 @@ background: #D9EDF7;
     align-items: center;
     height: 100vh; /* Full height of the viewport */
 }
+.nav-pills .nav-link.active {
+    width: 100%;
+}
+#myCarousel .carousel-inner {
+    width: 100%;
+    height: 100vh; /* Full height */
+}
+
+#myCarousel .carousel-item {
+    height: 100vh; /* Full height */
+}
+
+#myCarousel .carousel-item img {
+    object-fit: cover; /* Cover the container */
+    width: 100%;
+    height: 100vh; /* Full height */
+}

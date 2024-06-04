@@ -115,10 +115,6 @@ class mahasiswaController extends Controller
             ]);
 
             $pdfPathsLomba = [];
-            $pdfPathsOrganisasi = [];
-            // $pdfPathsKHS = [];
-
-            // Collect paths for sertif_lomba
             if ($request->hasFile('sertif_lomba')) {
                 foreach ($request->file('sertif_lomba') as $file) {
                     $path = $file->store('sertif_prestasi');
@@ -126,28 +122,23 @@ class mahasiswaController extends Controller
                 }
             }
 
-            // Collect paths for sertif_organisasi
-            // if ($request->hasFile('sertif_organisasi')) {
-            //     foreach ($request->file('sertif_organisasi') as $file) {
-            //         $path = $file->store('sertif_organisasi');
-            //         $pdfPathsOrganisasi[] = $path;
-            //     }
-            // }
-
             if ($request->hasFile('khs')) {
                     $path = $request->file('khs')->store('khs');
                     $pdfPathsKHS = $path;
                 
             }
 
-            $maxCount = max(count($pdfPathsLomba), count($pdfPathsOrganisasi), count($request->ide));
-            // $existingRecord = data_alternatif::where('da_nama', $request->nama)->first();
-            // if(!$existingRecord){
+            $maxCount = max(count($pdfPathsLomba), count($request->ide), count($request->organisasi));
+            $existingRecord = data_alternatif::where('da_nama', $request->nama)->where('da_lab', $request->lab)->first();
+            if(!$existingRecord){
                 for ($index = 0; $index < $maxCount; $index++) {
 
                     $sertifLomba = $pdfPathsLomba[$index] ?? null;
                     // $sertifOrganisasi = $pdfPathsOrganisasi[$index] ?? null;
                     $ide = $request->ide[$index] ?? null;
+                    $organisasi= $request->organisasi[$index] ?? null;
+                    $status_organisasi = $request->status_organisasi[$index] ?? null;
+                    $status_prestasi = $request->status_prestasi[$index] ?? null;
                         
                         $data = [
                             'da_nim'=>$request->nim,
@@ -157,8 +148,9 @@ class mahasiswaController extends Controller
                             'da_lab'=>$request->lab,
                             // 'da_sertif_prestasi'=>json_encode($filenames),
                             'da_sertif_prestasi'=>$sertifLomba,
-                            'da_organisasi'=>$request->organisasi,
-                            'status_org'=>$request->status_organisasi,
+                            'status_pres'=>$status_prestasi,
+                            'da_organisasi'=>$organisasi,
+                            'status_org'=>$status_organisasi,
                             'khs'=>$pdfPathsKHS,
                             'nilai_keckom'=>$request->nilai_keckom,
                             'nilai_kb'=>$request->nilai_kb,
@@ -170,9 +162,9 @@ class mahasiswaController extends Controller
                     
                 }
                     return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');
-            // }else{
-            //     return 'data sudah ada';
-            // }
+            }elseif($existingRecord){
+                return 'data sudah ada';
+            }
             
                 
         }elseif($request->lab == 'Laboratorium Pertanian Cerdas'){
@@ -195,8 +187,8 @@ class mahasiswaController extends Controller
             }
                 // Ensure we don't go out of bounds for the arrays
                 $maxCount = max(count($pdfPathsLomba), count($request->link_project));
-                // $existingRecord = data_alternatif::where('da_nama', $request->nama)->first();
-                // if(!$existingRecord){
+                $existingRecord = data_alternatif::where('da_nama', $request->nama)->where('da_lab', $request->lab)->first();
+                if(!$existingRecord){
                     for ($index = 0; $index < $maxCount; $index++) {
                         $sertifLomba = $pdfPathsLomba[$index] ?? null;
                         $link_project = $request->link_project[$index] ?? null;
@@ -217,10 +209,11 @@ class mahasiswaController extends Controller
                         ];
                     data_alternatif::create($data);
                     }
+                    return view('mahasiswa.berhasil');
                     return redirect()->route('dashmhs')->with('success', 'Data Berhasil Ditambahkan!');    
-                // }else{
-                //     return 'data sudah ada';
-                // }
+                }else{
+                    return 'data sudah ada';
+                }
             }elseif($request->lab == 'Laboratorium Infrastruktur Teknologi'){
                 if ($request->hasFile('khs')) {
                     $path = $request->file('khs')->store('khs');
@@ -230,26 +223,30 @@ class mahasiswaController extends Controller
                     // Get the count of the 'organisasi' array
                     $organisasiCount = count($request->organisasi);
                 }
-                for ($index = 0; $index < $organisasiCount; $index++) {
-                    $organisasi = $request->organisasi[$index] ?? null;
-                    $data = [
-                        'da_nim'=>$request->nim,
-                        'da_nama'=>$request->nama,
-                        'da_prodi'=>$request->prodi,
-                        'da_ipk'=>$request->ipk,
-                        'da_lab'=>$request->lab,
-                        'da_organisasi'=>$organisasi,
-                        'khs'=>$pdfPathsKHS,
-                        'itnilai_sop'=>$request->nilai_sop,
-                        'itnilai_jarkom'=>$request->nilai_jarkom,
-                        'itnilai_dmj'=>$request->nilai_dmj,
-                        'itnilai_rns'=>$request->nilai_rns,
-                    ];
-                data_alternatif::create($data);
-
+                $existingRecord = data_alternatif::where('da_nama', $request->nama)->where('da_lab', $request->lab)->first();
+                if(!$existingRecord){
+                    for ($index = 0; $index < $organisasiCount; $index++) {
+                        $organisasi = $request->organisasi[$index] ?? null;
+                        $data = [
+                            'da_nim'=>$request->nim,
+                            'da_nama'=>$request->nama,
+                            'da_prodi'=>$request->prodi,
+                            'da_ipk'=>$request->ipk,
+                            'da_lab'=>$request->lab,
+                            'da_organisasi'=>$organisasi,
+                            'khs'=>$pdfPathsKHS,
+                            'itnilai_sop'=>$request->nilai_sop,
+                            'itnilai_jarkom'=>$request->nilai_jarkom,
+                            'itnilai_dmj'=>$request->nilai_dmj,
+                            'itnilai_rns'=>$request->nilai_rns,
+                        ];
+                    data_alternatif::create($data);
+                    }
+                return view('mahasiswa.linktest_it');
+                }else{
+                    return 'data sudah ada';
                 }
 
-                return view('mahasiswa.linktest_it');
             }
             
         }
@@ -266,7 +263,7 @@ class mahasiswaController extends Controller
             }
                 
             //GIMANA CARANY BIAR YG MUNCUL ITU UDAH URUT SESUAI NILAI $HASIL
-            $total = nilai_akhir::where('lab', 'Laboratorium Pertanian Cerdas')
+            $total = nilai_akhir::where('lab', $request->lab)
             ->orderBy('total', 'desc')
             ->get();
     

@@ -3,7 +3,12 @@
 
 @section('konten')
 
-    <!-- START FORM -->
+ <!-- START FORM -->
+ @if (Auth::check() && 
+Auth::user()->name === 'aslab pc' ||
+Auth::user()->name === 'aslab ai' ||
+Auth::user()->name === 'aslab it'
+) 
 <form action='{{ url('store_alternatif') }}' method='post'>
 @csrf
     <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -13,7 +18,7 @@
                 <input type="text" class="form-control" name='nim' id="nim">
             </div>
         </div>
-        <div class="mb-3 row">
+        <div class="mb-3 row"> 
             <label for="nama" class="col-sm-2 col-form-label">Nama</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" name='nama' id="nama">
@@ -41,47 +46,12 @@
             <div class="col-sm-10"><button type="submit" class="btn btn-primary" name="submit">Submit</button></div>
         </div>
       </form>
-    </div>
+    </div> 
+@endif
     <!-- AKHIR FORM -->
-        <!-- START DATA -->
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-                <!-- FORM PENCARIAN -->
-          
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th class="">No</th>
-                            <th class="">NIM</th>
-                            <th class="">Nama</th>
-                            <th class="">Program Studi</th>
-                            <th class="">IPK</th>
-                            <th class="">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <?php $i = $data->firstItem() ?>
-                        @foreach ($data as $item)
-                        <tr>
-                            <td>{{ $i }}</td>
-                            <td>{{ $item->nim }}</td>
-                            <td>{{ $item->nama }}</td>
-                            <td>{{ $item->prodi }}</td>
-                            <td>{{ $item->ipk }}</td>
-                            <td>
-                                <a href='{{ url('edit_al/'.$item->nama) }}' class="btn btn-warning btn-sm">Tambahkan Mahasiswa</a>
-                            </td>
-                        </tr>
-                        <?php $i++ ?>
-                        @endforeach
-                        
-                    </tbody>
-                </table>
-                {{ $data->links() }}
-          </div>
 
           <!-- Display Laboratory Name Based on User Name -->
-        @if (Auth::check() && Auth::user()->name === 'aslab pc')
+          @if (Auth::check() && Auth::user()->name === 'aslab pc' || Auth::user()->name === 'kalab pertanian cerdas' )
         <div>
             <div class="my-3 p-3 bg-body rounded shadow-sm">
                 <div>
@@ -104,11 +74,12 @@
                             <th class="">Nilai Wawancara</th>
                             <th class="">Bertanggung Jawab</th>
                             <th class="">Status</th>
+                            @if(Auth::check() && Auth::user()->name === 'aslab pc' )
                             <th class="">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
-                        
                         @foreach ($data_lab_pc as $index => $item)
                         <tr>
                             <td>{{ $index + 1 }}</td>
@@ -137,16 +108,17 @@
                                     <span class="badge bg-secondary">Pending</span>
                                 @endif
                             </td>
+                            @if(Auth::check() && Auth::user()->name === 'aslab pc' )
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="d-flex">
-                                        <form id="approveForm_{{ $item->da_nama }}" action="{{ url('update_status/'.$item->da_nama) }}" method="post" style="display:inline;">
+                                        <form id="approveForm_{{ $item->da_nama }}" action="{{ url('update_status/'.$item->da_nama.'/'.$item->da_lab) }}" method="post" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="status" value="1">
                                             <button type="submit" class="btn btn-sm btn-success approveBtn" data-nama="{{ $item->da_nama }}">                                                <i class="fas fa-check"></i>
                                             </button>
                                         </form>
-                                        <form id="rejectForm_{{ $item->da_nama }}" action="{{ url('update_status/'. $item->da_nama) }}" method="post" style="display:inline;">
+                                        <form id="rejectForm_{{ $item->da_nama }}" action="{{ url('update_status/'. $item->da_nama.'/'.$item->da_lab) }}" method="post" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="status" value="2">
                                             <button type="submit" class="btn btn-sm btn-danger rejectBtn" data-nama="{{ $item->da_nama }}">
@@ -155,8 +127,8 @@
                                         </form>
                                     </div>
                                     <div class="d-flex">
-                                        <a href='{{ url('admin/'.$item->da_nim.'/edit_da') }}' class="btn btn-warning btn-sm">Edit</a>
-                                        <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nama.'/del_calon') }}" method="post">
+                                        <a href='{{ url('admin/'.$item->da_nim.'/'.$item->da_lab.'/edit_da') }}' class="btn btn-warning btn-sm">Edit</a>
+                                        <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nama.'/'.$item->da_lab.'/del_calon') }}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
@@ -165,15 +137,43 @@
 
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                         
                     </tbody>
                 </table>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        @foreach($data_lab_pc as $item)
+                            if ("{{ $item->status }}" == "2") {
+                                document.querySelectorAll('.approveBtn[data-nama="{{ $item->da_nama }}"]').forEach(function(btn) {
+                                    btn.style.display = 'none';
+                                });
+                                document.querySelectorAll('.rejectBtn[data-nama="{{ $item->da_nama }}"]').forEach(function(btn) {
+                                    btn.style.display = 'none';
+                                });                            
+                            }
+                            document.querySelectorAll('.rejectBtn[data-nama="{{ $item->da_nama }}"]').forEach(function(btn) {
+                                btn.closest('form').addEventListener('submit', function(event) {
+                                    event.preventDefault();  // Prevent the default form submission
+                                    document.querySelectorAll('.approveBtn[data-nama="{{ $item->da_nama }}"]').forEach(function(btn) {
+                                        btn.style.display = 'none';
+                                    });
+                                    document.querySelectorAll('.rejectBtn[data-nama="{{ $item->da_nama }}"]').forEach(function(btn) {
+                                        btn.style.display = 'none';
+                                    });
+                                    this.submit();  // Submit the form programmatically
+                                });
+                            });
+                        @endforeach
+                    });
+                </script>
+
                 {{ $data_lab_pc->links() }}
             </div>
         </div>
-        @elseif (Auth::check() && Auth::user()->name === 'aslab ai')
+        @elseif (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab Artificial Intelligence' )
         <div>
             <div class="my-3 p-3 bg-body rounded shadow-sm">
                 <div>
@@ -191,15 +191,18 @@
                             <th class="">Nilai PKB</th>
                             <th class="">Nilai Datmin</th>
                             <th class="">Sertif Prestasi</th>
+                            <th class="">Status</th>
                             <th class="">Status Organisasi</th>
                             <th class="">Wawancara</th>
                             <th class="">Ide Project</th>
                             <th class="">Status</th>
+                            @if (Auth::check() && Auth::user()->name === 'aslab ai')
+
                             <th class="">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        
+                            @endif
                         @foreach ($data_lab_ai as $index => $item)
                         <tr>
                             <td>{{ $index + 1 }}</td>
@@ -216,6 +219,9 @@
                                 <a href="{{ route('showpdf_sertifprestasi', ['id' => $item->id]) }}" target="_blank">Sertif Prestasi{{ $item->id }}</a>                            
                             </td>
                             <td>
+                                {{ $item->status_pres }}
+                            </td>
+                            <td>
                                 {{ $item->status_org }}
                             </td>
                             <td>{{ $item->da_nilai_wawancara }}</td>
@@ -229,16 +235,17 @@
                                     <span class="badge bg-secondary">Pending</span>
                                 @endif
                             </td>
+                            @if (Auth::check() && Auth::user()->name === 'aslab ai')
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="d-flex">
-                                        <form id="approveForm_{{ $item->da_nama }}" action="{{ url('update_status/'.$item->da_nama) }}" method="post" style="display:inline;">
+                                        <form id="approveForm_{{ $item->da_nama }}" action="{{ url('update_status/'.$item->da_nama.'/'.$item->da_lab) }}" method="post" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="status" value="1">
                                             <button type="submit" class="btn btn-sm btn-success approveBtn" data-nama="{{ $item->da_nama }}">                                                <i class="fas fa-check"></i>
                                             </button>
                                         </form>
-                                        <form id="rejectForm_{{ $item->da_nama }}" action="{{ url('update_status/'. $item->da_nama) }}" method="post" style="display:inline;">
+                                        <form id="rejectForm_{{ $item->da_nama }}" action="{{ url('update_status/'. $item->da_nama.'/'.$item->da_lab) }}" method="post" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="status" value="2">
                                             <button type="submit" class="btn btn-sm btn-danger rejectBtn" data-nama="{{ $item->da_nama }}">
@@ -247,8 +254,8 @@
                                         </form>
                                     </div>
                                     <div class="d-flex">
-                                        <a href='{{ url('admin/'.$item->da_nim.'/edit_da') }}' class="btn btn-warning btn-sm">Edit</a>
-                                        <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nama.'/del_calon') }}" method="post">
+                                        <a href='{{ url('admin/'.$item->da_nim.'/'.$item->da_lab.'/edit_da') }}' class="btn btn-warning btn-sm">Edit</a>
+                                        <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nama.'/'.$item->da_lab.'/del_calon') }}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
@@ -256,6 +263,7 @@
                                     </div>
 
                             </div>
+                            @endif
                             </td>
                         </tr>
                         @endforeach
@@ -350,13 +358,13 @@
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="d-flex">
-                                        <form id="approveForm_{{ $item->da_nama }}" action="{{ url('update_status/'.$item->da_nama) }}" method="post" style="display:inline;">
+                                        <form id="approveForm_{{ $item->da_nama }}" action="{{ url('update_status/'.$item->da_nama.'/'.$item->da_lab) }}" method="post" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="status" value="1">
                                             <button type="submit" class="btn btn-sm btn-success approveBtn" data-nama="{{ $item->da_nama }}">                                                <i class="fas fa-check"></i>
                                             </button>
                                         </form>
-                                        <form id="rejectForm_{{ $item->da_nama }}" action="{{ url('update_status/'. $item->da_nama) }}" method="post" style="display:inline;">
+                                        <form id="rejectForm_{{ $item->da_nama }}" action="{{ url('update_status/'. $item->da_nama.'/'.$item->da_lab) }}" method="post" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="status" value="2">
                                             <button type="submit" class="btn btn-sm btn-danger rejectBtn" data-nama="{{ $item->da_nama }}">
@@ -365,8 +373,8 @@
                                         </form>
                                     </div>
                                     <div class="d-flex">
-                                        <a href='{{ url('admin/'.$item->da_nim.'/edit_da') }}' class="btn btn-warning btn-sm">Edit</a>
-                                        <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nama.'/del_calon') }}" method="post">
+                                        <a href='{{ url('admin/'.$item->da_nim.'/'.$item->da_lab.'/edit_da') }}' class="btn btn-warning btn-sm">Edit</a>
+                                        <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->da_nama.'/'.$item->da_lab.'/del_calon') }}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
@@ -382,7 +390,7 @@
                 </table>
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
-                        @foreach($data_lab_ai as $item)
+                        @foreach($data_lab_it as $item)
                             if ("{{ $item->status }}" == "2") {
                                 document.querySelectorAll('.approveBtn[data-nama="{{ $item->da_nama }}"]').forEach(function(btn) {
                                     btn.style.display = 'none';
@@ -410,6 +418,8 @@
             </div>
         </div>
         @endif
+
+
 
 
         

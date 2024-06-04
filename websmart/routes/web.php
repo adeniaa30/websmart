@@ -7,6 +7,7 @@ use App\Http\Controllers\LoginMhsController;
 use App\Http\Controllers\mahasiswaController;
 use App\Http\Controllers\smartController;
 use App\Http\Controllers\smartpcController;
+use App\Http\Controllers\smartITController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -70,11 +71,11 @@ Route::get('/alternatif', [adminController::class, 'alternatif'])->name('alterna
 
 Route::post('/store_alternatif', [adminController::class, 'store'])->name('store_alternatif');
 
-Route::get('admin/{id}/edit_da', [AdminController::class, 'edit_da'])->name('edit_da');
+Route::get('admin/{da_nim}/{da_lab}/edit_da', [AdminController::class, 'edit_da'])->name('edit_da');
 
-Route::put('/update_alternatif/{id}', [adminController::class, 'update'])->name('update_alternatif');
+Route::put('/update_alternatif/{da_nim}/{da_lab}', [adminController::class, 'update'])->name('update_alternatif');
 
-Route::post('/update_status/{id}', [adminController::class, 'update_status'])->name('update_status');
+Route::post('/update_status/{da_nama}/{da_lab}', [adminController::class, 'update_status'])->name('update_status');
 
 Route::post('/store_kriteria', [adminController::class, 'storeKriteria'])->name('store_kriteria');
 
@@ -94,7 +95,7 @@ Route::put('/update_sub/{id}', [adminController::class, 'update_sub'])->name('up
 
 Route::delete('admin/{id}/del_sub', [AdminController::class, 'del_sub']);
 
-Route::delete('admin/{id}/del_calon', [AdminController::class, 'del_calon']);
+Route::delete('admin/{da_nama}/{da_lab}/del_calon', [AdminController::class, 'del_calon']);
 
 Route::get('/nilai', [adminController::class, 'nilai'])->name('nilai');
 
@@ -131,9 +132,14 @@ Route::GET('/smart', [smartController::class, 'smart'])->name('smart');
 
 Route::GET('/smartpc', [smartpcController::class, 'smart'])->name('smartpc');
 
+Route::GET('/smartit', [smartITController::class, 'smart'])->name('smartit');
+
 Route::GET('/test', [smartController::class, 'test'])->name('test');
 
 Route::GET('/testpc', [smartpcController::class, 'testpc'])->name('testpc');
+
+Route::GET('/testit', [smartITController::class, 'testit'])->name('testit');
+
 
 //CREATE DATA MAHASISWA
 // Route::resource("/alternatif", adminController::class);
