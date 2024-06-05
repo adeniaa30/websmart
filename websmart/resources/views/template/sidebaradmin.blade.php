@@ -49,6 +49,11 @@
                         <a href="{{ url('smartit') }}" class="nav-link px-0 align-middle ">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
                     </li>
+                    @elseif(Auth::check() && Auth::user()->name === 'aslab rpl')
+                    <li>
+                        <a href="{{ url('smartrpl') }}" class="nav-link px-0 align-middle ">
+                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
+                    </li>
 
                     @endif
                 </ul>

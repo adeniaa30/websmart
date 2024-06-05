@@ -7,7 +7,8 @@
  @if (Auth::check() && 
 Auth::user()->name === 'aslab pc' ||
 Auth::user()->name === 'aslab ai' ||
-Auth::user()->name === 'aslab it'
+Auth::user()->name === 'aslab it' ||
+Auth::user()->name === 'aslab rpl'
 ) 
 <form action='{{ url('store_alternatif') }}' method='post'>
 @csrf
@@ -417,6 +418,134 @@ Auth::user()->name === 'aslab it'
                 {{ $data_lab_it->links() }}
             </div>
         </div>
+        @elseif (Auth::check() && Auth::user()->name === 'aslab rpl')
+        <div>
+            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                <div>
+                    <h4>Data Calon Aslab</h2>
+                </div>
+                <table class="table table-striped" style="width: 100vw;">
+                    <thead>
+                        <tr>
+                            <th class="">No</th>
+                            <th class="">NIM</th>
+                            <th class="">Nama</th>
+                            <th class="">KHS</th>
+                            <th class="">algo1</th>
+                            <th class="">pbo</th>
+                            <th class="">pweb</th>
+                            <th class="">uiux</th>
+                            <th class="">ood</th>
+                            <th class="">algo2</th>
+                            <th class="">paa</th>
+                            <th class="">pmobile</th>
+                            <th class="">sbd</th>
+                            <th class="">tkti</th>
+                            <th class="">adpl</th>
+                            <th class="">mpti</th>
+                            <th class="">ppla</th>
+                            <th class="">Status</th>
+                            <th class="">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        @foreach ($data_lab_rpl as $index => $item)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item->nim }}</td>
+                            <td>{{ $item->nama }}</td>
+                            <td>
+                                <a href="{{ route('showpdf_khs', ['id' => $item->id]) }}" target="_blank">KHS</a>                            
+                            </td>
+                            <td>{{ $item->algo1 }}</td>
+                            <td>{{ $item->pbo}}</td>
+                            <td>{{ $item->sqpl }}</td>
+                            <td>{{ $item->pweb }}</td>
+                            <td>
+                                {{ $item->uiux }}
+                            </td>
+                            <td>{{ $item->ood }}</td>
+                            <td>{{ $item->algo2 }}</td>
+                            <td>{{ $item->paa }}</td>
+                            <td>{{ $item->pmobile }}</td>
+                            <td>{{ $item->sbd }}</td>
+                            <td>{{ $item->tkti }}</td>
+                            <td>{{ $item->adpl }}</td>
+                            <td>{{ $item->mpti }}</td>
+                            <td>{{ $item->ppla }}</td>
+                            <td>
+                                @if($item->status == 1)
+                                    <span class="badge bg-success">Checked</span>
+                                @elseif($item->status == 2)
+                                    <span class="badge bg-danger">Rejected</span>
+                                @else
+                                    <span class="badge bg-secondary">Pending</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex">
+                                        <form id="approveForm_{{ $item->nama }}" action="{{ url('update_status/'.$item->nama.'/'.$item->lab) }}" method="post" style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="status" value="1">
+                                            <button type="submit" class="btn btn-sm btn-success approveBtn" data-nama="{{ $item->da_nama }}">                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+                                        <form id="rejectForm_{{ $item->nama }}" action="{{ url('update_status/'. $item->nama.'/'.$item->lab) }}" method="post" style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="status" value="2">
+                                            <button type="submit" class="btn btn-sm btn-danger rejectBtn" data-nama="{{ $item->nama }}">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="d-flex">
+                                        <a href='{{ url('admin/'.$item->nim.'/'.$item->lab.'/edit_da') }}' class="btn btn-warning btn-sm">Edit</a>
+                                        <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->nama.'/'.$item->lab.'/del_calon') }}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
+                                        </form>
+                                    </div>
+
+                            </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                        
+                    </tbody>
+                </table>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        @foreach($data_lab_rpl as $item)
+                            if ("{{ $item->status }}" == "2") {
+                                document.querySelectorAll('.approveBtn[data-nama="{{ $item->nama }}"]').forEach(function(btn) {
+                                    btn.style.display = 'none';
+                                });
+                                document.querySelectorAll('.rejectBtn[data-nama="{{ $item->nama }}"]').forEach(function(btn) {
+                                    btn.style.display = 'none';
+                                });                            
+                            }
+                            document.querySelectorAll('.rejectBtn[data-nama="{{ $item->nama }}"]').forEach(function(btn) {
+                                btn.closest('form').addEventListener('submit', function(event) {
+                                    event.preventDefault();  // Prevent the default form submission
+                                    document.querySelectorAll('.approveBtn[data-nama="{{ $item->nama }}"]').forEach(function(btn) {
+                                        btn.style.display = 'none';
+                                    });
+                                    document.querySelectorAll('.rejectBtn[data-nama="{{ $item->nama }}"]').forEach(function(btn) {
+                                        btn.style.display = 'none';
+                                    });
+                                    this.submit();  // Submit the form programmatically
+                                });
+                            });
+                        @endforeach
+                    });
+                </script>
+                {{ $data_lab_rpl->links() }}
+            </div>
+        </div>
+
         @endif
 
 

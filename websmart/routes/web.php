@@ -8,6 +8,7 @@ use App\Http\Controllers\mahasiswaController;
 use App\Http\Controllers\smartController;
 use App\Http\Controllers\smartpcController;
 use App\Http\Controllers\smartITController;
+use App\Http\Controllers\smartRPLController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -133,6 +134,8 @@ Route::GET('/smart', [smartController::class, 'smart'])->name('smart');
 Route::GET('/smartpc', [smartpcController::class, 'smart'])->name('smartpc');
 
 Route::GET('/smartit', [smartITController::class, 'smart'])->name('smartit');
+
+Route::GET('/smartrpl', [smartRPLController::class, 'smart'])->name('smartrpl');
 
 Route::GET('/test', [smartController::class, 'test'])->name('test');
 

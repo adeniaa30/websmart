@@ -29,6 +29,7 @@ class adminController extends Controller
             $data_lab_pc = kriteria::where('lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
             $data_lab_ai = kriteria::where('lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
             $data_lab_it = kriteria::where('lab', 'Laboratorium Infrastruktur Teknologi')->paginate($jumlahbaris);
+            $data_lab_rpl = kriteria::where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->paginate($jumlahbaris);
 
         }
 
@@ -38,6 +39,7 @@ class adminController extends Controller
             'data_lab_pc' => $data_lab_pc,
             'data_lab_ai' => $data_lab_ai,
             'data_lab_it' => $data_lab_it,
+            'data_lab_rpl' => $data_lab_rpl
         ]);
     }
 
@@ -46,6 +48,7 @@ class adminController extends Controller
         $krit_pc = Kriteria::where('lab', 'Laboratorium Pertanian Cerdas')->pluck('kriteria');
         $krit_ai = Kriteria::where('lab', 'Laboratorium Artificial Intelligence')->pluck('kriteria');
         $krit_it = Kriteria::where('lab', 'Laboratorium Infrastruktur Teknologi')->pluck('kriteria');
+        $krit_rpl = Kriteria::where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->pluck('kriteria');
         $subkriteria = $request->input('subkriteria');
 
         // Fetch paginated results from the 'subkriteria' model
@@ -62,6 +65,8 @@ class adminController extends Controller
             $data_lab_pc = subkriteria::where('s_lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
             $data_lab_ai = subkriteria::where('s_lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
             $data_lab_it = subkriteria::where('s_lab', 'Laboratorium Infrastruktur Teknologi')->paginate($jumlahbaris);
+            $data_lab_rpl = subkriteria::where('s_lab', 'Laboratorium Rekayasa Perangkat Lunak')->paginate($jumlahbaris);
+
         }
         return view('admin.subkriteria', [
             'data' => $data, 
@@ -69,9 +74,11 @@ class adminController extends Controller
             'krit_pc' => $krit_pc,
             'krit_ai' => $krit_ai,
             'krit_it' => $krit_it,
+            'krit_rpl' => $krit_rpl,
             'data_lab_pc' => $data_lab_pc,
             'data_lab_ai' => $data_lab_ai,
             'data_lab_it' => $data_lab_it,
+            'data_lab_rpl' => $data_lab_rpl
 
         ]);
     }
@@ -95,14 +102,15 @@ class adminController extends Controller
             $data_lab_pc = data_alternatif::where('da_lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
             $data_lab_ai = data_alternatif::where('da_lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
             $data_lab_it = data_alternatif::where('da_lab', 'Laboratorium Infrastruktur Teknologi')->paginate($jumlahbaris);
-
+            $data_lab_rpl = data_alternatif::where('da_lab', 'Laboratorium Rekayasa Perangkat Lunak')->paginate($jumlahbaris);
         }
         return view('admin.alternatif', [
             'data' => $data, 
             'data_calon' => $data_calon,
             'data_lab_pc' => $data_lab_pc,
             'data_lab_ai' => $data_lab_ai,
-            'data_lab_it' => $data_lab_it
+            'data_lab_it' => $data_lab_it,
+            'data_lab_rpl' => $data_lab_rpl
         ]);
         
         // return view('admin.alternatif');

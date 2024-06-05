@@ -3,7 +3,11 @@
 
 @section('konten')
     <!-- START FORM -->
-@if(Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'aslab pc' || Auth::user()->name === 'aslab it')
+@if(Auth::check() && Auth::user()->name === 'aslab ai' || 
+Auth::user()->name === 'aslab pc' || 
+Auth::user()->name === 'aslab it' ||
+Auth::user()->name === 'aslab rpl'
+)
 
 <form action='{{ url('store_sub') }}' method='post'>
 @csrf
@@ -29,6 +33,13 @@
                 <select name="kriteria" id="kriteria" class="form-control">
                     <option disable selected>Pilih Kriteria</option>
                     @foreach ($krit_it as $kriteria)
+                    <option value="{{ $kriteria }}">{{ $kriteria }}</option>
+                    @endforeach
+                </select>
+                @elseif(Auth::check() && Auth::user()->name === 'aslab rpl')
+                <select name="kriteria" id="kriteria" class="form-control">
+                    <option disable selected>Pilih Kriteria</option>
+                    @foreach ($krit_rpl as $kriteria)
                     <option value="{{ $kriteria }}">{{ $kriteria }}</option>
                     @endforeach
                 </select>
@@ -164,6 +175,39 @@
                     </tbody>
                 </table>
                 {{ $data_lab_it->links() }}
+                @elseif(Auth::check() && Auth::user()->name === 'aslab rpl')
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="">No</th>
+                            <th class="">Laboratorium</th>
+                            <th class="">Kriteria</th>
+                            <th class="">Keterangan Subkriteria</th>
+                            <th class="">Nilai</th>
+                            <th class="">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data_lab_rpl as $index => $item)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item->s_lab }}</td>
+                            <td>{{ $item->kriteria }}</td>
+                            <td>{{ $item->subkriteria }}</td>
+                            <td>{{ $item->nilai }}</td>
+                            <td>
+                                <a href='{{ url('admin/'.$item->id.'/edit_sub') }}' class="btn btn-warning btn-sm">Edit</a>
+                                <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->subkriteria.'/del_sub') }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                {{ $data_lab_rpl->links() }}
 
                 @endif
           </div>
