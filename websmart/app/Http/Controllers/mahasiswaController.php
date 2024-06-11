@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\alternatif;
 use App\Models\data_alternatif;
 use App\Models\data_lab_ai;
+use App\Models\data_rpl;
 use App\Models\Lab;
 use App\Models\nilai_akhir;
 use App\Models\usermhs;
@@ -93,6 +94,14 @@ class mahasiswaController extends Controller
             ]);
         }elseif($lab == 'Laboratorium Infrastruktur Teknologi'){
             return view('mahasiswa.formlab_it', [
+                'nim'=>$nim,
+                'nama'=>$nama,
+                'prodi'=>$prodi,
+                'ipk' => $ipk,
+                'lab'=>$lab
+            ]);
+        }elseif($lab == 'Laboratorium Rekayasa Perangkat Lunak'){
+            return view('mahasiswa.formlab_rpl', [
                 'nim'=>$nim,
                 'nama'=>$nama,
                 'prodi'=>$prodi,
@@ -246,7 +255,61 @@ class mahasiswaController extends Controller
                 }else{
                     return 'data sudah ada';
                 }
+            }elseif($request->lab == 'Laboratorium Rekayasa Perangkat Lunak'){
+                $request->validate([
+                    'portofolio.*' => 'required|mimes:pdf|max:2048',
+                ]);
+    
+                if ($request->hasFile('khs')) {
+                    $path = $request->file('khs')->store('khs');
+                    $pdfPathsKHS = $path;
+                }
+                if ($request->hasFile('portofolio')) {
+                    foreach ($request->file('portofolio') as $file) {
+                        $path = $file->store('portofolio');
+                        $pdfPathsPortofolio[] = $path;
+                    }
+                }
+                    if ($request->has('portofolio') && is_array($request->portofolio)) {
+                    // Get the count of the 'portofolio' array
+                    $portofolioCount = count($pdfPathsPortofolio);
+                }
+                $existingRecord = data_rpl::where('nama', $request->nama)->where('lab', $request->lab)->first();
+                if(!$existingRecord){
+                    for ($index = 0; $index < $portofolioCount; $index++) {
+                        $portofolio = $pdfPathsPortofolio[$index] ?? null;
+                        $data = [
+                            'nim'=>$request->nim,
+                            'nama'=>$request->nama,
+                            'lab'=>$request->lab,
+                            'portofolio'=>$portofolio,
+                            'khs'=>$pdfPathsKHS,
+                            'algo1'=>$request->nilai_algo1,
+                            'pbo'=>$request->nilai_pbo,
+                            'sql'=>$request->nilai_sql,
+                            'pweb'=>$request->nilai_pweb,
+                            'paa'=>$request->nilai_paa,
+                            'uiux'=>$request->nilai_uiux,
+                            'ood'=>$request->nilai_ood,
+                            'algo2'=>$request->nilai_algo2,
+                            'pmobile'=>$request->nilai_pmobile,
+                            'sbd'=>$request->nilai_sbd,
+                            'tkti'=>$request->nilai_tkti,
+                            'adpl'=>$request->nilai_adpl,
+                            'mpti'=>$request->nilai_mpti,
+                            'ppla'=>$request->nilai_ppla,
+                            'div1'=>$request->div1,
+                            'div2'=>$request->div2,
+                            'pertanyaan_divisi'=>$request->pertanyaan_divisi,
+                            'mbkm'=>$request->mbkm,
 
+                        ];
+                    data_rpl::create($data);
+                    }
+                return view('mahasiswa.berhasil');
+                }else{
+                    return 'data sudah ada';
+                }
             }
             
         }

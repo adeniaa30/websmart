@@ -78,6 +78,8 @@ Route::put('/update_alternatif/{da_nim}/{da_lab}', [adminController::class, 'upd
 
 Route::post('/update_status/{da_nama}/{da_lab}', [adminController::class, 'update_status'])->name('update_status');
 
+Route::post('/update_status_rpl/{nama}/{lab}', [adminController::class, 'update_status_rpl'])->name('update_status_rpl');
+
 Route::post('/store_kriteria', [adminController::class, 'storeKriteria'])->name('store_kriteria');
 
 Route::put('/update_kriteria/{id}', [adminController::class, 'update_kriteria'])->name('update_kriteria');
@@ -128,6 +130,10 @@ Route::get('/pdf/sp/{id}', [adminController::class, 'showpdf_sertifprestasi'])->
 Route::get('/pdf/so/{id}', [adminController::class, 'showpdf_sertiforganisasi'])->name('showpdf_sertiforganisasi');
 
 Route::get('/pdf/khs/{id}', [adminController::class, 'showpdf_khs'])->name('showpdf_khs');
+
+Route::get('/pdf/khs/{id}', [adminController::class, 'showpdf_khs_rpl'])->name('showpdf_khs_rpl');
+
+Route::get('/pdf/portofolio/{id}', [adminController::class, 'showpdf_portofolio'])->name('showpdf_portofolio');
 
 Route::GET('/smart', [smartController::class, 'smart'])->name('smart');
 

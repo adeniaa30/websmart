@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\alternatif;
 use App\Models\data_alternatif;
+use App\Models\data_rpl;
 use App\Models\kriteria;
 use App\Models\lab;
 use App\Models\nilai_akhir;
@@ -102,7 +103,7 @@ class adminController extends Controller
             $data_lab_pc = data_alternatif::where('da_lab', 'Laboratorium Pertanian Cerdas')->paginate($jumlahbaris);
             $data_lab_ai = data_alternatif::where('da_lab', 'Laboratorium Artificial Intelligence')->paginate($jumlahbaris);
             $data_lab_it = data_alternatif::where('da_lab', 'Laboratorium Infrastruktur Teknologi')->paginate($jumlahbaris);
-            $data_lab_rpl = data_alternatif::where('da_lab', 'Laboratorium Rekayasa Perangkat Lunak')->paginate($jumlahbaris);
+            $data_lab_rpl = data_rpl::where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->paginate($jumlahbaris);
         }
         return view('admin.alternatif', [
             'data' => $data, 
@@ -135,6 +136,22 @@ class adminController extends Controller
     public function showpdf_khs($id)
     {
         $pdf = data_alternatif::findOrFail($id);
+        $filePath = storage_path('app/' . $pdf->khs);
+
+        return response()->file($filePath);
+    }
+
+    public function showpdf_portofolio($id)
+    {
+        $pdf = data_rpl::findOrFail($id);
+        $filePath = storage_path('app/' . $pdf->portofolio);
+
+        return response()->file($filePath);
+    }
+
+    public function showpdf_khs_rpl($id)
+    {
+        $pdf = data_rpl::findOrFail($id);
         $filePath = storage_path('app/' . $pdf->khs);
 
         return response()->file($filePath);
@@ -190,13 +207,23 @@ class adminController extends Controller
     }
 
     public function edit_da($da_nim,$da_lab){
-        $data2 = data_alternatif::where('da_nim',$da_nim)->where('da_lab',$da_lab)
-        ->first();
-        if (!$data2) {
-            return redirect()->back()->with('error', 'Data not found.');
+        if($da_lab == 'Laboratorium Rekayasa Perangkat Lunak'){
+            $data2 = data_rpl::where('nim',$da_nim)->where('lab',$da_lab)
+            ->first();
+            if (!$data2) {
+                return redirect()->back()->with('error', 'Data not found.');
+            }
+            $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
+            return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);    
+        }else{
+            $data2 = data_alternatif::where('da_nim',$da_nim)->where('da_lab',$da_lab)
+            ->first();
+            if (!$data2) {
+                return redirect()->back()->with('error', 'Data not found.');
+            }
+            $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
+            return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);    
         }
-        $distinct_nama_lab = Lab::distinct('nama_lab')->pluck('nama_lab');
-        return view('admin.editalternatif',['data2' => $data2, 'distinct_nama_lab' => $distinct_nama_lab]);
     }
 
     /**
@@ -250,6 +277,30 @@ class adminController extends Controller
         }
         return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
 
+    }elseif(Auth::check() && Auth::user()->name === 'aslab rpl'){
+        $da_nim = $request->input('nim');
+        $da_lab = $request->input('lab');
+        $data = [
+            'visi'=>$request->visi,
+            'wawasan'=>$request->wawasan,
+            'komitmen'=>$request->komitmen,
+            'fairness' => $request->fairness,
+            'teamwork' => $request->teamwork,
+            'potensi' => $request->potensi,
+            'analisis' => $request->analisis,
+            'technical' => $request->technical,
+        ];
+        $exist = data_rpl::where('nim', $da_nim)->where('lab', $da_lab)->get();
+        if(!$exist){
+            data_rpl::create($data);
+            return redirect()->route('alternatif')->with('success', 'Data Berhasil Ditambahkan!');
+        }elseif($exist){
+            data_rpl::where('nim', $da_nim)->where('lab', $da_lab)->update($data);
+            return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
+        }
+        return redirect()->route('alternatif')->with('error', 'Data Sudah Ada');
+    }else{
+        return 'update gagal';
     }
         
     }
@@ -378,6 +429,18 @@ class adminController extends Controller
             'status'=>$data->status
         ];
         data_alternatif::where('da_nama', $da_nama)->where('da_lab', $da_lab)->update($data2);
+
+        return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
+    }
+
+    public function update_status_rpl(Request $request, $nama,$lab)
+    {
+        $data = data_rpl::where('nama', $nama)->where('lab', $lab)->get();
+        $data->status = $request->input('status');
+        $data2 = [
+            'status'=>$data->status
+        ];
+        data_rpl::where('nama', $nama)->where('lab', $lab)->update($data2);
 
         return redirect()->route('alternatif')->with('success', 'Data Berhasil Diupdate!');
     }

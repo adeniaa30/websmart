@@ -431,8 +431,12 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">NIM</th>
                             <th class="">Nama</th>
                             <th class="">KHS</th>
+                            <th class="">Portofolio</th>
+                            <th class="">Div 1</th>
+                            <th class="">Div 2</th>
                             <th class="">algo1</th>
                             <th class="">pbo</th>
+                            <th class="">sql</th>
                             <th class="">pweb</th>
                             <th class="">uiux</th>
                             <th class="">ood</th>
@@ -444,6 +448,16 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">adpl</th>
                             <th class="">mpti</th>
                             <th class="">ppla</th>
+                            <th class="">visi</th>
+                            <th class="">wawasan</th>
+                            <th class="">komitmen</th>
+                            <th class="">fairness</th>
+                            <th class="">teamwork</th>
+                            <th class="">potensi</th>
+                            <th class="">analisis</th>
+                            <th class="">technical</th>
+                            <th class="">Pertanyaan</th>
+                            <th class="">mbkm</th>
                             <th class="">Status</th>
                             <th class="">Aksi</th>
                         </tr>
@@ -456,11 +470,16 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->nim }}</td>
                             <td>{{ $item->nama }}</td>
                             <td>
-                                <a href="{{ route('showpdf_khs', ['id' => $item->id]) }}" target="_blank">KHS</a>                            
+                                <a href="{{ route('showpdf_khs_rpl', ['id' => $item->id]) }}" target="_blank">KHS</a>                            
                             </td>
+                            <td>
+                                <a href="{{ route('showpdf_portofolio', ['id' => $item->id]) }}" target="_blank">Portofolio</a>                            
+                            </td>
+                            <td>{{ $item->div1 }}</td>
+                            <td>{{ $item->div2 }}</td>
                             <td>{{ $item->algo1 }}</td>
                             <td>{{ $item->pbo}}</td>
-                            <td>{{ $item->sqpl }}</td>
+                            <td>{{ $item->sql }}</td>
                             <td>{{ $item->pweb }}</td>
                             <td>
                                 {{ $item->uiux }}
@@ -474,6 +493,16 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->adpl }}</td>
                             <td>{{ $item->mpti }}</td>
                             <td>{{ $item->ppla }}</td>
+                            <td>{{ $item->visi }}</td>
+                            <td>{{ $item->wawasan }}</td>
+                            <td>{{ $item->komitmen }}</td>
+                            <td>{{ $item->fairness }}</td>
+                            <td>{{ $item->teamwork }}</td>
+                            <td>{{ $item->potensi }}</td>
+                            <td>{{ $item->analisis }}</td>
+                            <td>{{ $item->technical }}</td>
+                            <td>{{ $item->pertanyaan_divisi }}</td>
+                            <td>{{ $item->mbkm }}</td>
                             <td>
                                 @if($item->status == 1)
                                     <span class="badge bg-success">Checked</span>
@@ -486,13 +515,13 @@ Auth::user()->name === 'aslab rpl'
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="d-flex">
-                                        <form id="approveForm_{{ $item->nama }}" action="{{ url('update_status/'.$item->nama.'/'.$item->lab) }}" method="post" style="display:inline;">
+                                        <form id="approveForm_{{ $item->nama }}" action="{{ url('update_status_rpl/'.$item->nama.'/'.$item->lab) }}" method="post" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="status" value="1">
-                                            <button type="submit" class="btn btn-sm btn-success approveBtn" data-nama="{{ $item->da_nama }}">                                                <i class="fas fa-check"></i>
+                                            <button type="submit" class="btn btn-sm btn-success approveBtn" data-nama="{{ $item->nama }}">                                                <i class="fas fa-check"></i>
                                             </button>
                                         </form>
-                                        <form id="rejectForm_{{ $item->nama }}" action="{{ url('update_status/'. $item->nama.'/'.$item->lab) }}" method="post" style="display:inline;">
+                                        <form id="rejectForm_{{ $item->nama }}" action="{{ url('update_status_rpl/'. $item->nama.'/'.$item->lab) }}" method="post" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="status" value="2">
                                             <button type="submit" class="btn btn-sm btn-danger rejectBtn" data-nama="{{ $item->nama }}">
