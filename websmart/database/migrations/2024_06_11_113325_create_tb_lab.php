@@ -11,7 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('table_tb_lab', 'tb_lab');
+        Schema::create('tb_lab', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_lab');
+        });
     }
 
     /**
@@ -19,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('tb_lab', 'table_tb_lab');
+        Schema::dropIfExists('tb_lab');
+        Schema::table('tb_lab', function (Blueprint $table) {
+            $table->dropColumn('nama_lab');
+        });
     }
 };
