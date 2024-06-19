@@ -53,6 +53,15 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
+                    <label for="pengalaman" class="col-sm-2 col-form-label">Pengalaman</label>
+                    <div class="col-sm-10" id="pengalaman-container">
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" name="pengalaman[]" id="pengalaman">
+                            <button type="button" class="btn btn-success add-pengalaman">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
                     <label for="link_project" class="col-sm-2 col-form-label">Link Portofolio Project</label>
                     <div class="col-sm-10" id="idea-container">
                         <div class="input-group mb-2">
@@ -134,6 +143,42 @@
                         // Event delegation to handle removal of ideas
                         document.getElementById('idea-container').addEventListener('click', function(e) {
                             if (e.target && e.target.classList.contains('remove-idea')) {
+                                e.target.parentElement.remove();
+                            }
+                        });
+                    });
+                </script>     
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', (event) => {
+                        document.querySelector('.add-pengalaman').addEventListener('click', function() {
+                            // Create a new input group
+                            const inputGroup = document.createElement('div');
+                            inputGroup.className = 'input-group mb-2';
+                            
+                            // Create a new input element
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.name = 'pengalaman[]';
+                            input.className = 'form-control';
+                            
+                            // Create a remove button
+                            const removeButton = document.createElement('button');
+                            removeButton.type = 'button';
+                            removeButton.className = 'btn btn-danger remove-pengalaman';
+                            removeButton.textContent = 'Remove';
+                
+                            // Append the input and remove button to the input group
+                            inputGroup.appendChild(input);
+                            inputGroup.appendChild(removeButton);
+                
+                            // Append the input group to the container
+                            document.getElementById('pengalaman-container').appendChild(inputGroup);
+                        });
+                
+                        // Event delegation to handle removal of ideas
+                        document.getElementById('pengalaman-container').addEventListener('click', function(e) {
+                            if (e.target && e.target.classList.contains('remove-pengalaman')) {
                                 e.target.parentElement.remove();
                             }
                         });

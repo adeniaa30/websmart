@@ -7,6 +7,7 @@ use App\Models\data_lab_ai;
 use App\Models\data_rpl;
 use App\Models\Lab;
 use App\Models\nilai_akhir;
+use App\Models\nilaiakhir_rpl;
 use App\Models\usermhs;
 use Illuminate\Http\Request;
 
@@ -195,12 +196,13 @@ class mahasiswaController extends Controller
                 $pdfPathsKHS = $path;
             }
                 // Ensure we don't go out of bounds for the arrays
-                $maxCount = max(count($pdfPathsLomba), count($request->link_project));
+                $maxCount = max(count($pdfPathsLomba), count($request->link_project),count($request->pengalaman) );
                 $existingRecord = data_alternatif::where('da_nama', $request->nama)->where('da_lab', $request->lab)->first();
                 if(!$existingRecord){
                     for ($index = 0; $index < $maxCount; $index++) {
                         $sertifLomba = $pdfPathsLomba[$index] ?? null;
                         $link_project = $request->link_project[$index] ?? null;
+                        $pengalaman = $request->pengalaman[$index] ?? null;
                         //kolom bisa berubah sesuai kriteria lab
                         $data = [
                             'da_nim'=>$request->nim,
@@ -211,6 +213,7 @@ class mahasiswaController extends Controller
                             'khs'=>$pdfPathsKHS,
                             'da_sertif_prestasi'=>$sertifLomba,
                             'pc_link_project'=>$link_project,
+                            'pc_pengalaman'=>$pengalaman,
                             'pc_ppla'=>$request->nilai_matkul_ppla,
                             'pc_sd'=>$request->nilai_matkul_sd,
                             'pc_paa'=>$request->nilai_matkul_paa,
@@ -256,9 +259,9 @@ class mahasiswaController extends Controller
                     return 'data sudah ada';
                 }
             }elseif($request->lab == 'Laboratorium Rekayasa Perangkat Lunak'){
-                $request->validate([
-                    'portofolio.*' => 'required|mimes:pdf|max:2048',
-                ]);
+                // $request->validate([
+                //     'portofolio.*' => 'required|mimes:pdf|max:2048',
+                // ]);
     
                 if ($request->hasFile('khs')) {
                     $path = $request->file('khs')->store('khs');
@@ -270,19 +273,52 @@ class mahasiswaController extends Controller
                         $pdfPathsPortofolio[] = $path;
                     }
                 }
-                    if ($request->has('portofolio') && is_array($request->portofolio)) {
+                if ($request->has('portofolio') && is_array($request->portofolio)) {
                     // Get the count of the 'portofolio' array
                     $portofolioCount = count($pdfPathsPortofolio);
+                }else{
+                    $portofolioCount = 0;
                 }
+                // $maxcount = max($portofolioCount, count($pdfPathsKHS));
                 $existingRecord = data_rpl::where('nama', $request->nama)->where('lab', $request->lab)->first();
                 if(!$existingRecord){
-                    for ($index = 0; $index < $portofolioCount; $index++) {
-                        $portofolio = $pdfPathsPortofolio[$index] ?? null;
+                    if($portofolioCount>0){
+                        for ($index = 0; $index < $portofolioCount; $index++) {
+                            $portofolio = $pdfPathsPortofolio[$index] ?? null;
+                            $data = [
+                                'nim'=>$request->nim,
+                                'nama'=>$request->nama,
+                                'lab'=>$request->lab,
+                                'portofolio'=>$portofolio,
+                                'khs'=>$pdfPathsKHS,
+                                'algo1'=>$request->nilai_algo1,
+                                'pbo'=>$request->nilai_pbo,
+                                'sql'=>$request->nilai_sql,
+                                'pweb'=>$request->nilai_pweb,
+                                'paa'=>$request->nilai_paa,
+                                'uiux'=>$request->nilai_uiux,
+                                'ood'=>$request->nilai_ood,
+                                'algo2'=>$request->nilai_algo2,
+                                'pmobile'=>$request->nilai_pmobile,
+                                'sbd'=>$request->nilai_sbd,
+                                'tkti'=>$request->nilai_tkti,
+                                'adpl'=>$request->nilai_adpl,
+                                'mpti'=>$request->nilai_mpti,
+                                'ppla'=>$request->nilai_ppla,
+                                'div1'=>$request->div1,
+                                'div2'=>$request->div2,
+                                'pertanyaan_divisi'=>$request->pertanyaan_divisi,
+                                'mbkm'=>$request->mbkm,
+    
+                            ];
+                        data_rpl::create($data);
+                        }    
+                    }else{
                         $data = [
                             'nim'=>$request->nim,
                             'nama'=>$request->nama,
                             'lab'=>$request->lab,
-                            'portofolio'=>$portofolio,
+                            // 'portofolio'=>$portofolio,
                             'khs'=>$pdfPathsKHS,
                             'algo1'=>$request->nilai_algo1,
                             'pbo'=>$request->nilai_pbo,
@@ -315,32 +351,48 @@ class mahasiswaController extends Controller
         }
 
         public function search(Request $request){
-            $query = nilai_akhir::query();
-            if ($request->filled('year')) {
-                $year = $request->year;
-                $query->whereRaw('YEAR(date) = ?', [$year]);
-            }
-    
+            
+            // Initialize base query
+            $query = null;
+
+            // Check if lab is specified in the request
             if ($request->filled('lab')) {
-                $query->where('lab', $request->lab);
-            }
+                // Determine which model to use based on the value of 'lab'
+                if ($request->lab == 'Laboratorium Rekayasa Perangkat Lunak') {
+                    $query = nilaiakhir_rpl::query();
+                } else {
+                    $query = nilai_akhir::query();
+                }
+
+                // Apply filters based on the lab
+                if ($request->filled('year')) {
+                    $year = $request->year;
+                    $query->whereYear('date', $year);
+                }
                 
-            //GIMANA CARANY BIAR YG MUNCUL ITU UDAH URUT SESUAI NILAI $HASIL
-            $total = nilai_akhir::where('lab', $request->lab)
-            ->orderBy('total', 'desc')
-            ->get();
-    
-            $tahun = nilai_akhir::selectRaw('YEAR(date) as year')->distinct()->pluck('year');
+                $query->where('lab', $request->lab);
+            } else {
+                // Default to fetching data from nilai_akhir if 'lab' is not specified
+                $query = nilai_akhir::query();
+
+                if ($request->filled('year')) {
+                    $year = $request->year;
+                    $query->whereYear('date', $year);
+                }
+            }
+
+            // Fetch the total records based on the filtered query
+            $total = $query->orderBy('total', 'desc')->get();
+
+            // Fetch distinct years and distinct lab names for dropdowns
+            $tahun = $query->selectRaw('YEAR(date) as year')->distinct()->pluck('year');
             $distinct_nama_lab = lab::distinct('nama_lab')->pluck('nama_lab');
+
             return view('mahasiswa.show_search', [
-                'tahun'=>$tahun,
+                'tahun' => $tahun,
                 'total' => $total,
-                'distinct_nama_lab'=>$distinct_nama_lab
-            ]);
-            // return view('dashmhs', [
-            //     'results'=> $results
-            // ]);
-        }
+                'distinct_nama_lab' => $distinct_nama_lab
+            ]);        }
 
         public function show_search(Request $request){
         }

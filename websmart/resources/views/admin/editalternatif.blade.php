@@ -60,6 +60,13 @@ Auth::user()->name === 'aslab pc'
         </div>
         @elseif(Auth::check() && Auth::user()->name === 'aslab pc')
         <div class="mb-3 row">
+            <label for="sertif_lomba" class="col-sm-2 col-form-label">Upload Sertifikat Lomba</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control" name='sertif_lomba[]' id="sertif_lomba" multiple accept=".pdf">
+                <div id="file-preview"></div>
+            </div>
+        </div>
+        <div class="mb-3 row">
             <label for="teswawancara" class="col-sm-2 col-form-label">Nilai Tes Wawancara</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" name='nilai_wawancara' id="teswawancara">

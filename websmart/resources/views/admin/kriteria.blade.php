@@ -90,7 +90,7 @@ Auth::user()->name === 'aslab rpl'
                     </tbody>
                 </table>
                 {{ $data_lab_pc->links() }}
-                @elseif (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab Artificial Intelligence' )
+                @elseif (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab artificial intelligence' )
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -126,7 +126,7 @@ Auth::user()->name === 'aslab rpl'
                     </tbody>
                 </table>
                 {{ $data_lab_ai->links() }}
-                @elseif (Auth::check() && Auth::user()->name === 'aslab it')
+                @elseif (Auth::check() && Auth::user()->name === 'aslab it' || Auth::user()->name === 'kalab infrastruktur teknologi' )
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -134,7 +134,9 @@ Auth::user()->name === 'aslab rpl'
                             <th class="col-md-3">Laboratorium</th>
                             <th class="col-md-3">Nama Kriteria</th>
                             <th class="col-md-1">Bobot</th>
+                            @if(Auth::check() && Auth::user()->name === 'aslab it')
                             <th class="col-md-2">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -145,6 +147,7 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->lab }}</td>
                             <td>{{ $item->kriteria }}</td>
                             <td>{{ $item->bobot }}</td>
+                            @if(Auth::check() && Auth::user()->name === 'aslab it')
                             <td>
                                 <a href='{{ url('admin/'.$item->kriteria.'/edit_kriteria') }}' class="btn btn-warning btn-sm">Edit</a>
                                 <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->kriteria.'/del_kriteria') }}" method="post">
@@ -153,12 +156,13 @@ Auth::user()->name === 'aslab rpl'
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
                                 </form>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
                 {{ $data_lab_it->links() }}
-                @elseif (Auth::check() && Auth::user()->name === 'aslab rpl')
+                @elseif (Auth::check() && Auth::user()->name === 'aslab rpl' || Auth::user()->name === 'kalab rekayasa perangkat lunak' )
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -166,7 +170,9 @@ Auth::user()->name === 'aslab rpl'
                             <th class="col-md-3">Laboratorium</th>
                             <th class="col-md-3">Nama Kriteria</th>
                             <th class="col-md-1">Bobot</th>
+                            @if(Auth::check() && Auth::user()->name === 'aslab rpl')
                             <th class="col-md-2">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -177,6 +183,7 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->lab }}</td>
                             <td>{{ $item->kriteria }}</td>
                             <td>{{ $item->bobot }}</td>
+                            @if(Auth::check() && Auth::user()->name === 'aslab rpl')
                             <td>
                                 <a href='{{ url('admin/'.$item->kriteria.'/edit_kriteria') }}' class="btn btn-warning btn-sm">Edit</a>
                                 <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->kriteria.'/del_kriteria') }}" method="post">
@@ -185,6 +192,7 @@ Auth::user()->name === 'aslab rpl'
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
                                 </form>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

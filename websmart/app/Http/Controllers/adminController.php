@@ -54,7 +54,7 @@ class adminController extends Controller
 
         // Fetch paginated results from the 'subkriteria' model
         $katakunci = $request->katakunci;
-        $jumlahbaris = 10;
+        $jumlahbaris = 15;
 
         if (strlen($katakunci)) {
             $data = Subkriteria::where('kriteria', 'like', '%' . $katakunci . '%')
@@ -149,12 +149,12 @@ class adminController extends Controller
         return response()->file($filePath);
     }
 
-    public function showpdf_khs_rpl($id)
+    public function showpdf_khs_rpl($id,$nim)
     {
-        $pdf = data_rpl::findOrFail($id);
+        $pdf = data_rpl::where('id', $id)->where('nim', $nim)->firstOrFail();
         $filePath = storage_path('app/' . $pdf->khs);
-
-        return response()->file($filePath);
+    
+        return response()->file($filePath);    
     }
 
     public function nilai(){

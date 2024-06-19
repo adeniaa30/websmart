@@ -26,6 +26,7 @@ class utilitas extends Model
         'utipc_paa',
         'utipc_tanggung_jawab',
         'utipc_project',
+        'utipc_pengalaman',
         'itnilai_sop',
         'itnilai_jarkom',
         'itnilai_dmj',

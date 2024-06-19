@@ -60,6 +60,7 @@
                     <th class="">No</th>
                     <th class="">Nama</th>
                     <th class="">Laboratorium</th>
+                    <th class="">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,6 +70,14 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->lab }}</td>
+                    <td>
+                      @if($item->status == 'LOLOS')
+                          <span class="badge bg-success">LOLOS</span>
+                      @elseif($item->status == 'GAGAL')
+                          <span class="badge bg-danger">GAGAL</span>
+                      @endif
+                  </td>
+
                 </tr>
                 @endforeach
                 

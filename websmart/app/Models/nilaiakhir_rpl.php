@@ -35,7 +35,8 @@ class nilaiakhir_rpl extends Model
         'analisis',
         'technical',
         'portofolio',
-        'total'
+        'total',
+        'status'
 
     ];
     protected $table = 'tb_nilaiakhir_rpl';

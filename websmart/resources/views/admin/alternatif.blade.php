@@ -70,6 +70,7 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">Nilai Matkul Sistem Digital</th>
                             <th class="">Nilai Matkul PAA</th>
                             <th class="">Sertif Lomba</th>
+                            <th class="">Pengalaman</th>
                             <th class="">Link Portofolio</th>
                             <th class="">Nilai Tes Tulis</th>
                             <th class="">Nilai Wawancara</th>
@@ -96,6 +97,7 @@ Auth::user()->name === 'aslab rpl'
                             <td>
                                 <a href="{{ route('showpdf_sertifprestasi', ['id' => $item->id]) }}" target="_blank">Sertif Prestasi{{ $item->id }}</a>                            
                             </td>
+                            <td>{{ $item->pc_pengalaman }}</td>
                             <td><a href="{{ $item->pc_link_project }}" target="_blank" rel="noopener noreferrer">{{ $item->pc_link_project }}</a></td>
                             <td>{{ $item->da_nilai_tulis }}</td>
                             <td>{{ $item->da_nilai_wawancara }}</td>
@@ -174,7 +176,7 @@ Auth::user()->name === 'aslab rpl'
                 {{ $data_lab_pc->links() }}
             </div>
         </div>
-        @elseif (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab Artificial Intelligence' )
+        @elseif (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab artificial intelligence' )
         <div>
             <div class="my-3 p-3 bg-body rounded shadow-sm">
                 <div>
@@ -300,7 +302,7 @@ Auth::user()->name === 'aslab rpl'
                 {{ $data_lab_ai->links() }}
             </div>
         </div>
-        @elseif (Auth::check() && Auth::user()->name === 'aslab it')
+        @elseif (Auth::check() && Auth::user()->name === 'aslab it' ||Auth::user()->name === 'kalab infrastruktur teknologi' )
         <div>
             <div class="my-3 p-3 bg-body rounded shadow-sm">
                 <div>
@@ -323,7 +325,9 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">K.Probsolv</th>
                             <th class="">K.TimeMj</th>
                             <th class="">Status</th>
+                            @if (Auth::check() && Auth::user()->name === 'aslab it')
                             <th class="">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -356,6 +360,7 @@ Auth::user()->name === 'aslab rpl'
                                     <span class="badge bg-secondary">Pending</span>
                                 @endif
                             </td>
+                            @if(Auth::check() && Auth::user()->name === 'aslab it')
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="d-flex">
@@ -384,6 +389,7 @@ Auth::user()->name === 'aslab rpl'
 
                             </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                         
@@ -418,7 +424,7 @@ Auth::user()->name === 'aslab rpl'
                 {{ $data_lab_it->links() }}
             </div>
         </div>
-        @elseif (Auth::check() && Auth::user()->name === 'aslab rpl')
+        @elseif (Auth::check() && Auth::user()->name === 'aslab rpl' || Auth::check() && Auth::user()->name === 'kalab rekayasa perangkat lunak')
         <div>
             <div class="my-3 p-3 bg-body rounded shadow-sm">
                 <div>
@@ -459,7 +465,9 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">Pertanyaan</th>
                             <th class="">mbkm</th>
                             <th class="">Status</th>
+                            @if(Auth::check() && Auth::user()->name === 'aslab rpl')
                             <th class="">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -470,7 +478,7 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->nim }}</td>
                             <td>{{ $item->nama }}</td>
                             <td>
-                                <a href="{{ route('showpdf_khs_rpl', ['id' => $item->id]) }}" target="_blank">KHS</a>                            
+                                <a href="{{ route('showpdf_khs_rpl', ['id' => $item->id, 'nim' => $item->nim]) }}" target="_blank">KHS</a>                            
                             </td>
                             <td>
                                 <a href="{{ route('showpdf_portofolio', ['id' => $item->id]) }}" target="_blank">Portofolio</a>                            
@@ -512,6 +520,7 @@ Auth::user()->name === 'aslab rpl'
                                     <span class="badge bg-secondary">Pending</span>
                                 @endif
                             </td>
+                            @if(Auth::check() && Auth::user()->name === 'aslab rpl')
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="d-flex">
@@ -540,6 +549,7 @@ Auth::user()->name === 'aslab rpl'
 
                             </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                         

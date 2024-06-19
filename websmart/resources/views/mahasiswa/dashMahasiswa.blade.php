@@ -62,6 +62,7 @@
                     <th class="">NIM</th>
                     <th class="">Nama</th>
                     <th class="">Laboratorium</th>
+                    <th class="">Status</th>
                 </tr>
             </thead>
             <tbody>

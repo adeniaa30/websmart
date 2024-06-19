@@ -131,23 +131,34 @@ Route::get('/pdf/so/{id}', [adminController::class, 'showpdf_sertiforganisasi'])
 
 Route::get('/pdf/khs/{id}', [adminController::class, 'showpdf_khs'])->name('showpdf_khs');
 
-Route::get('/pdf/khs/{id}', [adminController::class, 'showpdf_khs_rpl'])->name('showpdf_khs_rpl');
+Route::get('/pdf/khs/{id}/{nim}', [adminController::class, 'showpdf_khs_rpl'])->name('showpdf_khs_rpl');
 
 Route::get('/pdf/portofolio/{id}', [adminController::class, 'showpdf_portofolio'])->name('showpdf_portofolio');
 
 Route::GET('/smart', [smartController::class, 'smart'])->name('smart');
 
+Route::POST('/kategori_hasil_ai', [smartController::class, 'kategori_hasil'])->name('kategori_hasil_ai');
+
 Route::GET('/smartpc', [smartpcController::class, 'smart'])->name('smartpc');
+
+Route::POST('/kategori_hasil_pc', [smartpcController::class, 'kategori_hasil'])->name('kategori_hasil_pc');
 
 Route::GET('/smartit', [smartITController::class, 'smart'])->name('smartit');
 
+Route::POST('/kategori_hasil_it', [smartITController::class, 'kategori_hasil'])->name('kategori_hasil_it');
+
 Route::GET('/smartrpl', [smartRPLController::class, 'smart'])->name('smartrpl');
+
+Route::POST('/kategori_hasil_rpl', [smartRPLController::class, 'kategori_hasil'])->name('kategori_hasil_rpl');
 
 Route::GET('/test', [smartController::class, 'test'])->name('test');
 
 Route::GET('/testpc', [smartpcController::class, 'testpc'])->name('testpc');
 
 Route::GET('/testit', [smartITController::class, 'testit'])->name('testit');
+
+Route::GET('/testrpl', [smartRPLController::class, 'testrpl'])->name('testrpl');
+
 
 
 //CREATE DATA MAHASISWA

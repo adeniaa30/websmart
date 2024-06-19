@@ -23,6 +23,7 @@ class nilai_alternatif extends Model
         'nilai_kontribusi_ide',
         'nilaipc_tanggungjawab',
         'nilaipc_project',
+        'nilaipc_pengalaman',
         'nilaipc_ppla',
         'nilaipc_sd',
         'nilaipc_paa',

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class smartITController extends Controller
 {
     public function smart(){
-        $jumlahbaris = 10;
+        $jumlahbaris = 20;
         $totalSum = kriteria::where('lab', 'Laboratorium Infrastruktur Teknologi')->sum('bobot');
         $kriterias = kriteria::where('lab', 'Laboratorium Infrastruktur Teknologi')->get();
 
@@ -27,7 +27,6 @@ class smartITController extends Controller
             $existingRecord = normalisasi::where('norm_kriteria', $normKriteria)->first();
 
             if (!$existingRecord) {
-                // If no existing record found, proceed with insertion
                 $isi = [
                     'norm_kriteria' => $normKriteria,
                     'norm_bobot' => $normBobot,
@@ -35,11 +34,7 @@ class smartITController extends Controller
                     'lab' => $lab
                 ];
                 Normalisasi::create($isi);
-            } else {
-                // Handle duplication: Skip insertion, log, or perform other actions
-                // For example, you can log the duplication or skip the insertion
-                // Log::info('Duplicate record found for norm_kriteria: ' . $normKriteria);
-            }
+            } 
         }
         $this->it_insertnilai();
         $this->it_utilitas();
@@ -57,7 +52,7 @@ class smartITController extends Controller
         $hasil = [];
         $nilai = nilai_akhir::all(); // Fetch all rows from the table
         $total = nilai_akhir::where('lab', 'Laboratorium Infrastruktur Teknologi')
-            ->orderBy('total', 'desc')
+        ->orderBy('total', 'desc')
             ->get();
 
         $cmin = nilai_alternatif::where('lab', 'Laboratorium Infrastruktur Teknologi')
@@ -94,6 +89,31 @@ class smartITController extends Controller
             'total' => $total,
             'rank' => $rank,
         ]);
+    }
+
+    public function kategori_hasil(Request $request){
+        $lolos = $request->input('lolos');
+    
+        $data = nilai_akhir::where('lab', 'Laboratorium Infrastruktur Teknologi')
+        ->orderBy('total', 'desc')
+        ->get(); 
+
+        $counter = 0;
+        
+        foreach ($data as $item) {
+            if ($counter < $lolos) {
+                $status = 'LOLOS';
+            } else {
+                $status = 'GAGAL';
+            }
+            $item->status = $status;
+            $item->save();
+            
+            $counter+=1;
+        }
+        
+        // Return a view or redirect to show categorized data
+        return redirect()->route('smartit')->with('success', 'Data Berhasil Diupdate!');    
     }
 
     public function it_insertnilai(){
@@ -322,7 +342,6 @@ class smartITController extends Controller
         ->first();
 
         if ($minMaxValues) {
-            // Extract min and max values for each column
             $min_sp = $minMaxValues->min_sp;
             $max_sp = $minMaxValues->max_sp;
             $min_tulis = $minMaxValues->min_tulis;
@@ -341,7 +360,6 @@ class smartITController extends Controller
             $max_probsolv = $minMaxValues->max_probsolv;
             $min_timemj = $minMaxValues->min_timemj;
             $max_timemj = $minMaxValues->max_timemj;
-            // Extract min and max values for other columns similarly
 
             $uti_sp = ($max_sp != $min_sp) ? ($itnilai_pengalaman - $min_sp) / ($max_sp - $min_sp) : 0;
             $uti_tulis = ($max_tulis != $min_tulis) ? ($nilai_tulis - $min_tulis) / ($max_tulis - $min_tulis) : 0;

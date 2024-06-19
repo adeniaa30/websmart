@@ -8,8 +8,20 @@
       <div>
         <h4>Tabel Hasil Seleksi Aslab Laboratorium Artificial Intelligence</h2>
     </div>
-    @if (Auth::check() && Auth::user()->name === 'aslab ai')
+    {{-- @if (Auth::check() && Auth::user()->name === 'aslab ai') --}}
     <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <form method="POST" action="{{ url('kategori_hasil_ai') }}">
+            @csrf
+            <div class="mb-3 row">
+                <label for="lolos" class="col-sm-2 col-form-label">Masukkan angka penerimaan aslab : </label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" name='lolos' id="lolos">
+                </div>
+                <label for="submit" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10"><button type="submit" class="btn btn-primary" name="submit">SUBMIT</button></div>
+            </div>
+        </form>    
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -17,6 +29,7 @@
                     <th class="">Nama</th>
                     <th class="">Nilai Akhir</th>
                     <th class="">Rangking</th>
+                    <th class="">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +40,15 @@
                     <td>{{ $i }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $result[$j] }}</td>
-                     <td>{{ $rank[$j] }}</td> 
+                    <td>{{ $rank[$j] }}</td> 
+                    <td>
+                        @if($item->status == 'LOLOS')
+                            <span class="badge bg-success">LOLOS</span>
+                        @elseif($item->status == 'GAGAL')
+                            <span class="badge bg-danger">GAGAL</span>
+                        @endif
+                    </td>
+
                 </tr>
                 <?php 
                 $i++ 
@@ -245,7 +266,7 @@
             </tbody>
         </table>
         {{ $na->links() }}
-       @endif
+       {{-- @endif --}}
   </div>
         </div>
       </div>

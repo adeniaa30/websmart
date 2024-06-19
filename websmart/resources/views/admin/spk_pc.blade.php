@@ -9,28 +9,40 @@
         <h4>Tabel Hasil Seleksi Aslab Laboratorium Pertanian Cerdas</h2>
     </div>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <form method="POST" action="{{ url('kategori_hasil_pc') }}">
+            @csrf
+            <div class="mb-3 row">
+                <label for="lolos" class="col-sm-2 col-form-label">Masukkan angka penerimaan aslab : </label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" name='lolos' id="lolos">
+                </div>
+                <label for="submit" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10"><button type="submit" class="btn btn-primary" name="submit">SUBMIT</button></div>
+            </div>
+        </form>    
+
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="">Ranking</th>
                     <th class="">Nama</th>
                     <th class="">Nilai Akhir</th>
-                    {{-- <th class="">Rangking</th> --}}
+                    <th class="">Status</th>
                 </tr>
             </thead>
             <tbody>
-                <?php 
-                    // $i = $total->firstItem() 
-                ?>
-                <?php 
-                // $j = 0 
-                ?>
                 @foreach($total as $index => $item)
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->total }}</td>
-                     {{-- <td>{{ $rank[$j] }}</td>  --}}
+                    <td>
+                        @if($item->status == 'LOLOS')
+                            <span class="badge bg-success">LOLOS</span>
+                        @elseif($item->status == 'GAGAL')
+                            <span class="badge bg-danger">GAGAL</span>
+                        @endif
+                    </td>
                 </tr>
                 <?php 
                 // $i++ 
@@ -105,6 +117,7 @@
                         <th class="">Nama</th>
                         <th class="">Sertif Lomba</th>
                         <th class="">Project</th>
+                        <th class="">Pengalaman</th>
                         <th class="">Tes Tulis</th>
                         <th class="">Tes Wawancara</th>
                         <th class="">Matkul PPLA</th>
@@ -122,6 +135,7 @@
                         <td>{{ $item->nama }}</td>
                         <td>{{ $item->nilai_sertif_prestasi }}</td>
                         <td>{{ $item->nilaipc_project }}</td>
+                        <td>{{ $item->nilaipc_pengalaman }}</td>
                         <td>{{ $item->nilai_tulis }}</td>
                         <td>{{ $item->nilai_wawancara }}</td>
                         <td>{{ $item->nilaipc_ppla }}</td>
@@ -137,6 +151,7 @@
                         <td></td>
                         <td>{{ $cmin->min_sp }}</td>
                         <td>{{ $cmin->min_project }}</td>
+                        <td>{{ $cmin->min_pengalaman }}</td>
                         <td>{{ $cmin->min_tulis }}</td>
                         <td>{{ $cmin->min_wawancara }}</td>
                         <td>{{ $cmin->min_ppla }}</td>
@@ -151,6 +166,7 @@
                         <td></td>
                         <td>{{ $cmax->max_sp }}</td>
                         <td>{{ $cmax->max_project }}</td>
+                        <td>{{ $cmax->max_pengalaman }}</td>
                         <td>{{ $cmax->max_tulis }}</td>
                         <td>{{ $cmax->max_wawancara }}</td>
                         <td>{{ $cmax->max_ppla }}</td>
@@ -178,6 +194,7 @@
                     <th class="">Nama</th>
                     <th class="">Sertif Lomba</th>
                     <th class="">Project</th>
+                    <th class="">Pengalaman</th>
                     <th class="">Tes Tulis</th>
                     <th class="">Tes Wawancara</th>
                     <th class="">Matkul PPLA</th>
@@ -195,6 +212,7 @@
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->uti_sertif_prestasi }}</td>
                     <td>{{ $item->utipc_project }}</td>
+                    <td>{{ $item->utipc_pengalaman }}</td>
                     <td>{{ $item->uti_tulis }}</td>
                     <td>{{ $item->uti_wawancara }}</td>
                     <td>{{ $item->utipc_ppla }}</td>
@@ -221,6 +239,7 @@
                     <th class="">Nama</th>
                     <th class="">Sertif Lomba</th>
                     <th class="">Project</th>
+                    <th class="">Pengalaman</th>
                     <th class="">Tes Tulis</th>
                     <th class="">Tes Wawancara</th>
                     <th class="">Matkul PPLA</th>
@@ -242,6 +261,7 @@
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->na_sertif_prestasi }}</td>
                     <td>{{ $item->napc_project }}</td>
+                    <td>{{ $item->napc_pengalaman }}</td>
                     <td>{{ $item->na_tulis }}</td>
                     <td>{{ $item->na_wawancara }}</td>
                     <td>{{ $item->napc_ppla }}</td>

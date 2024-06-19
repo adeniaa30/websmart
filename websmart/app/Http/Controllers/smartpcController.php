@@ -90,6 +90,7 @@ class smartpcController extends Controller
         ->selectRaw('MIN(nilaipc_sd) as min_sd')
         ->selectRaw('MIN(nilaipc_paa) as min_paa')
         ->selectRaw('MIN(nilaipc_project) as min_project')
+        ->selectRaw('MIN(nilaipc_pengalaman) as min_pengalaman')
         ->selectRaw('MIN(nilaipc_tanggungjawab) as min_tanggungjawab')
         ->first();
         $cmax = nilai_alternatif::where('lab', 'Laboratorium Pertanian Cerdas')
@@ -101,6 +102,7 @@ class smartpcController extends Controller
         ->selectRaw('MAX(nilaipc_sd) as max_sd')
         ->selectRaw('MAX(nilaipc_paa) as max_paa')
         ->selectRaw('MAX(nilaipc_project) as max_project')
+        ->selectRaw('MAX(nilaipc_pengalaman) as max_pengalaman')
         ->selectRaw('MAX(nilaipc_tanggungjawab) as max_tanggungjawab')
         ->first();
 
@@ -115,6 +117,31 @@ class smartpcController extends Controller
             'total' => $total,
             'rank' => $rank,
         ]);
+    }
+
+    public function kategori_hasil(Request $request){
+        $lolos = $request->input('lolos');
+    
+        $data = nilai_akhir::where('lab', 'Laboratorium Pertanian Cerdas')
+        ->orderBy('total', 'desc')
+        ->get(); 
+
+        $counter = 0;
+        
+        foreach ($data as $item) {
+            if ($counter < $lolos) {
+                $status = 'LOLOS';
+            } else {
+                $status = 'GAGAL';
+            }
+            $item->status = $status;
+            $item->save();
+            
+            $counter+=1;
+        }
+        
+        // Return a view or redirect to show categorized data
+        return redirect()->route('smartpc')->with('success', 'Data Berhasil Diupdate!');    
     }
 
     public function pc_insertnilai(){
@@ -148,6 +175,8 @@ class smartpcController extends Controller
             $nilai_tj = $this->pc_cek_tj($tanggungjawab);
             $project = $item->pc_link_project;
             $nilai_project = $this->pc_cek_project($project,$jmlBaris);
+            $pengalaman = $item->pc_pengalaman;
+            $nilai_pengalaman = $this->pc_cek_pengalaman($pengalaman,$jmlBaris);
 
             $existingRecord = nilai_alternatif::where('nama',$nama)->where('lab', $lab)->first();
             $data = [
@@ -158,6 +187,7 @@ class smartpcController extends Controller
                 'nilai_wawancara'=>$nilai_wawancara,
                 'nilaipc_tanggungjawab'=>$nilai_tj,
                 'nilaipc_project'=>$nilai_project,
+                'nilaipc_pengalaman'=>$nilai_pengalaman,
                 'nilaipc_ppla'=>$nilai_ppla,
                 'nilaipc_sd'=>$nilai_sd,
                 'nilaipc_paa'=>$nilai_paa,
@@ -183,6 +213,9 @@ class smartpcController extends Controller
         } elseif($sertiflomba !== null && $jmlBaris>1){
             $hasil= subkriteria::where('kriteria', 'Partisipasi Lomba (PC)')
                                     ->where('subkriteria', '>1')->value('nilai');
+        }else{
+            $hasil = 0;
+            return $hasil;
         }
     
     return $hasil; 
@@ -216,6 +249,7 @@ class smartpcController extends Controller
             return $hasil;
         }else{
             $hasil = 0;
+            return $hasil;
         }
     }
 
@@ -248,6 +282,9 @@ class smartpcController extends Controller
             $hasil = subkriteria::where('kriteria', 'Tanggung Jawab (PC)')
                                 ->where('subkriteria', 'cukup')->value('nilai');
             return $hasil;
+        }else{
+            $hasil = 0;
+            return $hasil;
         }
     }
 
@@ -258,6 +295,21 @@ class smartpcController extends Controller
         }elseif($project !== null && $jmlBaris>=1){
             $hasil = subkriteria::where('kriteria', 'Portofolio Project (PC)')
                                 ->where('subkriteria', '>=1')->value('nilai');
+        }else{
+            $hasil = 0;
+        }
+    return $hasil;
+    }
+
+    public function pc_cek_pengalaman($pengalaman,$jmlBaris){
+        if($pengalaman == null){
+            $hasil = subkriteria::where('kriteria', 'Pengalaman (PC)')
+                                ->where('subkriteria', '<1')->value('nilai');
+        }elseif($pengalaman !== null && $jmlBaris>=1){
+            $hasil = subkriteria::where('kriteria', 'Pengalaman (PC)')
+                                ->where('subkriteria', '>=1')->value('nilai');
+        }else{
+            $hasil = 0;
         }
     return $hasil;
     }
@@ -273,14 +325,15 @@ class smartpcController extends Controller
             $nilai_sd = $item->nilaipc_sd;
             $nilai_paa = $item->nilaipc_paa;
             $nilai_project = $item->nilaipc_project;
+            $nilai_pengalaman = $item->nilaipc_pengalaman;
             $nilai_tanggungjawab = $item->nilaipc_tanggungjawab;
             $lab = $item->lab;
-            $this->pc_rumus_uti($nama, $nilai_sp, $nilai_tulis, $nilai_wawancara, $nilai_ppla, $nilai_sd, $nilai_paa, $nilai_project, $nilai_tanggungjawab,$lab);
+            $this->pc_rumus_uti($nama, $nilai_sp, $nilai_tulis, $nilai_wawancara, $nilai_ppla, $nilai_sd, $nilai_paa, $nilai_project, $nilai_pengalaman, $nilai_tanggungjawab,$lab);
         }
         return 'isert data berhasil';
     }
 
-    public function pc_rumus_uti($nama, $nilai_sp, $nilai_tulis, $nilai_wawancara, $nilai_ppla, $nilai_sd, $nilai_paa, $nilai_project, $nilai_tanggungjawab,$lab){
+    public function pc_rumus_uti($nama, $nilai_sp, $nilai_tulis, $nilai_wawancara, $nilai_ppla, $nilai_sd, $nilai_paa, $nilai_project, $nilai_pengalaman, $nilai_tanggungjawab,$lab){
         $minMaxValues = nilai_alternatif::select(
             DB::raw('MIN(nilai_sertif_prestasi) as min_sp'),
             DB::raw('MAX(nilai_sertif_prestasi) as max_sp'),
@@ -296,6 +349,8 @@ class smartpcController extends Controller
             DB::raw('MAX(nilaipc_paa) as max_paa'),
             DB::raw('MIN(nilaipc_project) as min_project'),
             DB::raw('MAX(nilaipc_project) as max_project'),
+            DB::raw('MIN(nilaipc_pengalaman) as min_pengalaman'),
+            DB::raw('MAX(nilaipc_pengalaman) as max_pengalaman'),
             DB::raw('MIN(nilaipc_tanggungjawab) as min_tanggungjawab'),
             DB::raw('MAX(nilaipc_tanggungjawab) as max_tanggungjawab'),
             // Add more columns as needed
@@ -319,6 +374,8 @@ class smartpcController extends Controller
             $max_paa = $minMaxValues->max_paa;
             $min_project = $minMaxValues->min_project;
             $max_project = $minMaxValues->max_project;
+            $min_pengalaman = $minMaxValues->min_pengalaman;
+            $max_pengalaman = $minMaxValues->max_pengalaman;
             $min_tanggungjawab = $minMaxValues->min_tanggungjawab;
             $max_tanggungjawab = $minMaxValues->max_tanggungjawab;
             // Extract min and max values for other columns similarly
@@ -329,6 +386,7 @@ class smartpcController extends Controller
             $uti_ppla = ($max_ppla != $min_ppla) ? ($nilai_ppla - $min_ppla) / ($max_ppla - $min_ppla) : 0;
             $uti_sd = ($max_sd != $min_sd) ? ($nilai_sd - $min_sd) / ($max_sd - $min_sd) : 0;
             $uti_project = ($max_project != $min_project) ? ($nilai_project - $min_project) / ($max_project - $min_project) : 0;
+            $uti_pengalaman = ($max_pengalaman != $min_pengalaman) ? ($nilai_pengalaman - $min_pengalaman) / ($max_pengalaman - $min_pengalaman) : 0;
             $uti_paa = ($max_paa != $min_paa) ? ($nilai_paa - $min_paa) / ($max_paa - $min_paa) : 0;
             $uti_tanggungjawab = ($max_tanggungjawab != $min_tanggungjawab) ? ($nilai_tanggungjawab - $min_tanggungjawab) / ($max_tanggungjawab - $min_tanggungjawab) : 0;
 
@@ -343,6 +401,7 @@ class smartpcController extends Controller
                 'utipc_sd'=>$uti_sd,
                 'utipc_paa'=>$uti_paa,
                 'utipc_project'=>$uti_project,
+                'utipc_pengalaman'=>$uti_pengalaman,
                 'utipc_tanggung_jawab'=>$uti_tanggungjawab,
                 'lab'=>$lab
             ];
@@ -364,6 +423,8 @@ class smartpcController extends Controller
         $norm_matkul = normalisasi::where('norm_kriteria', 'Nilai Mata Kuliah (PC)')
                                     ->where('lab', 'Laboratorium Pertanian Cerdas')->value('normalisasi');
         $norm_project = normalisasi::where('norm_kriteria', 'Portofolio Project (PC)')
+                                    ->where('lab', 'Laboratorium Pertanian Cerdas')->value('normalisasi');
+        $norm_pengalaman = normalisasi::where('norm_kriteria', 'Pengalaman (PC)')
                                     ->where('lab', 'Laboratorium Pertanian Cerdas')->value('normalisasi');
         $norm_tulis = normalisasi::where('norm_kriteria', 'Tes Tulis (PC)')
                                     ->where('lab', 'Laboratorium Pertanian Cerdas')->value('normalisasi');
@@ -394,10 +455,12 @@ class smartpcController extends Controller
             $na_paa = $paa * $norm_matkul;
             $project = $item2->utipc_project;
             $na_project = $project * $norm_project;
+            $pengalaman = $item2->utipc_pengalaman;
+            $na_pengalaman = $pengalaman * $norm_pengalaman;
             $tanggungjawab = $item2->utipc_tanggung_jawab;
             $na_tanggungjawab = $tanggungjawab * $norm_tanggungjawab;
             $lab = $item2->lab;
-            $total = $na_sp+$na_wawancara+$na_tulis+$na_ppla+$na_sd+$na_paa+$na_project+$na_tanggungjawab;
+            $total = $na_sp+$na_wawancara+$na_tulis+$na_ppla+$na_sd+$na_paa+$na_project+$na_pengalaman+$na_tanggungjawab;
 
             
             $existingRecord = nilai_akhir::where('nama', $nama)->first();
@@ -411,6 +474,7 @@ class smartpcController extends Controller
                 'napc_sd'=>$na_sd,
                 'napc_paa'=>$na_paa,
                 'napc_project'=>$na_project,
+                'napc_pengalaman'=>$na_pengalaman,
                 'napc_tanggung_jawab'=>$na_tanggungjawab,
                 'lab'=>$lab,
                 'total'=>$total

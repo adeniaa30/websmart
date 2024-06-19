@@ -28,6 +28,7 @@ class data_alternatif extends Model
         'ide_project',
         'pc_tanggung_jawab',
         'pc_link_project',
+        'pc_pengalaman',
         'pc_ppla',
         'pc_sd',
         'pc_paa',

@@ -34,7 +34,7 @@
                         <a href="{{ url('subkriteria') }}" class="nav-link px-0 align-middle {{ Request::is('subkriteria*') ? 'active' : '' }}">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Data Sub Kriteria</span> </a>
                     </li>
-                    @if (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab Artificial Intelligence')
+                    @if (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab artificial intelligence')
                     <li>
                         <a href="{{ url('smart') }}" class="nav-link px-0 align-middle {{ Request::is('smart*') ? 'active' : '' }}">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
@@ -44,12 +44,12 @@
                         <a href="{{ url('smartpc') }}" class="nav-link px-0 align-middle {{ Request::is('smartpc*') ? 'active' : '' }}">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
                     </li>
-                    @elseif(Auth::check() && Auth::user()->name === 'aslab it')
+                    @elseif(Auth::check() && Auth::user()->name === 'aslab it' ||Auth::user()->name === 'kalab infrastruktur teknologi')
                     <li>
                         <a href="{{ url('smartit') }}" class="nav-link px-0 align-middle ">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>
                     </li>
-                    @elseif(Auth::check() && Auth::user()->name === 'aslab rpl')
+                    @elseif(Auth::check() && Auth::user()->name === 'aslab rpl' ||Auth::user()->name === 'kalab rekayasa perangkat lunak')
                     <li>
                         <a href="{{ url('smartrpl') }}" class="nav-link px-0 align-middle ">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proses SPK</span> </a>

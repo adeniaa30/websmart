@@ -25,6 +25,7 @@ class nilai_akhir extends Model
         'napc_sd',
         'napc_paa',
         'napc_project',
+        'napc_pengalaman',
         'napc_tanggung_jawab',
         'itnilai_sop',
         'itnilai_jarkom',
@@ -33,7 +34,8 @@ class nilai_akhir extends Model
         'itnilai_mengajar',
         'itnilai_probsolv',
         'itnilai_timemj',
-        'total'
+        'total',
+        'status'
     ];
     protected $table = 'tb_nilai_akhir';
     public $timestamps = false;

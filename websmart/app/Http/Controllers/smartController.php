@@ -133,6 +133,31 @@ class smartController extends Controller
     }
 
     //START FUNCTION KHUSUS UNTUK LAB AI
+    public function kategori_hasil(Request $request){
+        $lolos = $request->input('lolos');
+    
+        $data = nilai_akhir::where('lab', 'Laboratorium Artificial Intelligence')
+        ->orderBy('total', 'desc')
+        ->get(); 
+
+        $counter = 0;
+        
+        foreach ($data as $item) {
+            if ($counter < $lolos) {
+                $status = 'LOLOS';
+            } else {
+                $status = 'GAGAL';
+            }
+            $item->status = $status;
+            $item->save();
+            
+            $counter+=1;
+        }
+        
+        // Return a view or redirect to show categorized data
+        return redirect()->route('smart')->with('success', 'Data Berhasil Diupdate!');    
+    }
+
     
     public function ai_cek_ide($ide,$jmlBaris){
             if($ide == null){
