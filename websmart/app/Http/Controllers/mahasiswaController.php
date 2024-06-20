@@ -279,17 +279,19 @@ class mahasiswaController extends Controller
                 }else{
                     $portofolioCount = 0;
                 }
-                // $maxcount = max($portofolioCount, count($pdfPathsKHS));
+                $maxCount = count($request->detail_porto);
                 $existingRecord = data_rpl::where('nama', $request->nama)->where('lab', $request->lab)->first();
                 if(!$existingRecord){
                     if($portofolioCount>0){
-                        for ($index = 0; $index < $portofolioCount; $index++) {
+                        for ($index = 0; $index < $maxCount; $index++) {
                             $portofolio = $pdfPathsPortofolio[$index] ?? null;
+                            $detail_porto = $request->detail_porto[$index] ?? null;
                             $data = [
                                 'nim'=>$request->nim,
                                 'nama'=>$request->nama,
                                 'lab'=>$request->lab,
                                 'portofolio'=>$portofolio,
+                                'detail_porto'=>$detail_porto,
                                 'khs'=>$pdfPathsKHS,
                                 'algo1'=>$request->nilai_algo1,
                                 'pbo'=>$request->nilai_pbo,
@@ -314,33 +316,36 @@ class mahasiswaController extends Controller
                         data_rpl::create($data);
                         }    
                     }else{
-                        $data = [
-                            'nim'=>$request->nim,
-                            'nama'=>$request->nama,
-                            'lab'=>$request->lab,
-                            // 'portofolio'=>$portofolio,
-                            'khs'=>$pdfPathsKHS,
-                            'algo1'=>$request->nilai_algo1,
-                            'pbo'=>$request->nilai_pbo,
-                            'sql'=>$request->nilai_sql,
-                            'pweb'=>$request->nilai_pweb,
-                            'paa'=>$request->nilai_paa,
-                            'uiux'=>$request->nilai_uiux,
-                            'ood'=>$request->nilai_ood,
-                            'algo2'=>$request->nilai_algo2,
-                            'pmobile'=>$request->nilai_pmobile,
-                            'sbd'=>$request->nilai_sbd,
-                            'tkti'=>$request->nilai_tkti,
-                            'adpl'=>$request->nilai_adpl,
-                            'mpti'=>$request->nilai_mpti,
-                            'ppla'=>$request->nilai_ppla,
-                            'div1'=>$request->div1,
-                            'div2'=>$request->div2,
-                            'pertanyaan_divisi'=>$request->pertanyaan_divisi,
-                            'mbkm'=>$request->mbkm,
-
-                        ];
-                    data_rpl::create($data);
+                        for ($index = 0; $index < $maxCount; $index++) {
+                            $detail_porto = $request->detail_porto[$index] ?? null;
+                            $data = [
+                                'nim'=>$request->nim,
+                                'nama'=>$request->nama,
+                                'lab'=>$request->lab,
+                                'detail_porto'=>$detail_porto,
+                                'khs'=>$pdfPathsKHS,
+                                'algo1'=>$request->nilai_algo1,
+                                'pbo'=>$request->nilai_pbo,
+                                'sql'=>$request->nilai_sql,
+                                'pweb'=>$request->nilai_pweb,
+                                'paa'=>$request->nilai_paa,
+                                'uiux'=>$request->nilai_uiux,
+                                'ood'=>$request->nilai_ood,
+                                'algo2'=>$request->nilai_algo2,
+                                'pmobile'=>$request->nilai_pmobile,
+                                'sbd'=>$request->nilai_sbd,
+                                'tkti'=>$request->nilai_tkti,
+                                'adpl'=>$request->nilai_adpl,
+                                'mpti'=>$request->nilai_mpti,
+                                'ppla'=>$request->nilai_ppla,
+                                'div1'=>$request->div1,
+                                'div2'=>$request->div2,
+                                'pertanyaan_divisi'=>$request->pertanyaan_divisi,
+                                'mbkm'=>$request->mbkm,
+    
+                            ];
+                        data_rpl::create($data);
+                        }    
                     }
                 return view('mahasiswa.berhasil');
                 }else{

@@ -120,6 +120,7 @@
                     <tr>
                         <th class="">No</th>
                         <th class="">Nama</th>
+                        <th class="">Nilai portofolio</th>
                         <th class="">Nilai algo1</th>
                         <th class="">Nilai pbo</th>
                         <th class="">Nilai sql</th>
@@ -142,7 +143,6 @@
                         <th class="">Nilai potensi</th>
                         <th class="">Nilai analisis</th>
                         <th class="">Nilai technical</th>
-                        <th class="">Nilai portofolio</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -151,6 +151,7 @@
                     <tr>
                         <td>{{ $i }}</td>
                         <td>{{ $item->nama }}</td>
+                        <td>{{ $item->portofolio }}</td>
                         <td>{{ $item->algo1 }}</td>
                         <td>{{ $item->pbo}}</td>
                         <td>{{ $item->sql }}</td>
@@ -175,13 +176,13 @@
                         <td>{{ $item->potensi }}</td>
                         <td>{{ $item->analisis }}</td>
                         <td>{{ $item->technical }}</td>
-                        <td>{{ $item->portofolio }}</td>
                 </tr>
                     <?php $i++ ?>
                     @endforeach
                     <tr>
                         <td>Cmin</td>
                         <td></td>
+                        <td>{{ $cmin['min_portofolio'] }}</td>
                         <td>{{ $cmin['min_algo1'] }}</td>
                         <td>{{ $cmin['min_pbo'] }}</td>
                         <td>{{ $cmin['min_sql'] }}</td>
@@ -204,11 +205,11 @@
                         <td>{{ $cmin['min_potensi'] }}</td>
                         <td>{{ $cmin['min_analisis'] }}</td>
                         <td>{{ $cmin['min_technical'] }}</td>
-                        <td>{{ $cmin['min_portofolio'] }}</td>
                     </tr>
                     <tr>
                         <td>Cmax</td>
                         <td></td>
+                        <td>{{ $cmax['max_portofolio'] }}</td>
                         <td>{{ $cmax['max_algo1'] }}</td>
                         <td>{{ $cmax['max_pbo'] }}</td>
                         <td>{{ $cmax['max_sql'] }}</td>
@@ -231,7 +232,6 @@
                         <td>{{ $cmax['max_potensi'] }}</td>
                         <td>{{ $cmax['max_analisis'] }}</td>
                         <td>{{ $cmax['max_technical'] }}</td>
-                        <td>{{ $cmax['max_portofolio'] }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -249,6 +249,7 @@
                 <tr>
                     <th class="">No</th>
                     <th class="">Nama</th>
+                    <th class="">Nilai portofolio</th>
                     <th class="">Nilai algo1</th>
                     <th class="">Nilai pbo</th>
                     <th class="">Nilai sql</th>
@@ -271,7 +272,6 @@
                     <th class="">Nilai potensi</th>
                     <th class="">Nilai analisis</th>
                     <th class="">Nilai technical</th>
-                    <th class="">Nilai portofolio</th>
         </tr>
             </thead>
             <tbody>
@@ -280,6 +280,7 @@
                 <tr>
                     <td>{{ $i }}</td>
                     <td>{{ $item->nama }}</td>
+                    <td>{{ $item->portofolio }}</td>
                     <td>{{ $item->algo1 }}</td>
                     <td>{{ $item->pbo}}</td>
                     <td>{{ $item->sql }}</td>
@@ -304,7 +305,6 @@
                     <td>{{ $item->potensi }}</td>
                     <td>{{ $item->analisis }}</td>
                     <td>{{ $item->technical }}</td>
-                    <td>{{ $item->portofolio }}</td>
         </tr>
                 <?php $i++ ?>
                 @endforeach
@@ -322,6 +322,7 @@
                 <tr>
                     <th class="">No</th>
                     <th class="">Nama</th>
+                    <th class="">Nilai portofolio</th>
                     <th class="">Nilai algo1</th>
                     <th class="">Nilai pbo</th>
                     <th class="">Nilai sql</th>
@@ -344,7 +345,6 @@
                     <th class="">Nilai potensi</th>
                     <th class="">Nilai analisis</th>
                     <th class="">Nilai technical</th>
-                    <th class="">Nilai portofolio</th>
                     <th class="">TOTAL</th>
                 </tr>
             </thead>
@@ -357,6 +357,7 @@
                 <tr>
                     <td>{{ $i }}</td>
                     <td>{{ $item->nama }}</td>
+                    <td>{{ $item->portofolio }}</td>
                     <td>{{ $item->algo1 }}</td>
                     <td>{{ $item->pbo}}</td>
                     <td>{{ $item->sql }}</td>
@@ -381,7 +382,6 @@
                     <td>{{ $item->potensi }}</td>
                     <td>{{ $item->analisis }}</td>
                     <td>{{ $item->technical }}</td>
-                    <td>{{ $item->portofolio }}</td>
                     {{-- <td>{{ $item->na_matkuly }}</td>
                     <td>{{ $item->na_matkulz }}</td> --}}
                     <td>

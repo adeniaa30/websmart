@@ -9,8 +9,11 @@ use App\Models\kriteria;
 use App\Models\lab;
 use App\Models\nilai_akhir;
 use App\Models\nilai_alternatif;
+use App\Models\nilai_rpl;
+use App\Models\nilaiakhir_rpl;
 use App\Models\normalisasi;
 use App\Models\subkriteria;
+use App\Models\uti_rpl;
 use App\Models\utilitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -306,10 +309,17 @@ class adminController extends Controller
     }
 
     public function del_calon($da_nama,$da_lab){
-        data_alternatif::where('da_nama',$da_nama)->where('da_lab', $da_lab)->delete();
-        nilai_alternatif::where('nama',$da_nama)->where('lab', $da_lab)->delete();
-        utilitas::where('nama',$da_nama)->where('lab', $da_lab)->delete();
-        nilai_akhir::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+        if($da_lab == 'Laboratorium Rekayasa Perangkat Lunak'){
+            data_rpl::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+            nilai_rpl::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+            uti_rpl::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+            nilaiakhir_rpl::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+        }else{
+            data_alternatif::where('da_nama',$da_nama)->where('da_lab', $da_lab)->delete();
+            nilai_alternatif::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+            utilitas::where('nama',$da_nama)->where('lab', $da_lab)->delete();
+            nilai_akhir::where('nama',$da_nama)->where('lab', $da_lab)->delete();    
+        }
         return redirect()->route('alternatif')->with('success', 'Data Berhasil dihapus!');
     }
     

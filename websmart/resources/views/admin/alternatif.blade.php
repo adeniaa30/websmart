@@ -438,6 +438,7 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">Nama</th>
                             <th class="">KHS</th>
                             <th class="">Portofolio</th>
+                            <th class="">Detail Porto</th>
                             <th class="">Div 1</th>
                             <th class="">Div 2</th>
                             <th class="">algo1</th>
@@ -483,6 +484,7 @@ Auth::user()->name === 'aslab rpl'
                             <td>
                                 <a href="{{ route('showpdf_portofolio', ['id' => $item->id]) }}" target="_blank">Portofolio</a>                            
                             </td>
+                            <td>{{ $item->detail_porto }}</td>
                             <td>{{ $item->div1 }}</td>
                             <td>{{ $item->div2 }}</td>
                             <td>{{ $item->algo1 }}</td>

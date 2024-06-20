@@ -214,7 +214,7 @@ class smartRPLController extends Controller
             $nilai_analisis = $this->cek_analisis($analisis);
             $technical = $item->technical;
             $nilai_technical = $this->cek_technical($technical);
-            $portofolio = $item->portofolio;
+            $portofolio = $item->detail_porto;
             $nilai_portofolio = $this->cek_portofolio($portofolio, $jmlBaris);
 
 
@@ -448,15 +448,19 @@ class smartRPLController extends Controller
         if ($portofolio == null ) {
             $hasil= subkriteria::where('kriteria', 'Portofolio')
                                     ->where('subkriteria', '0')->value('nilai');
+                                    return $hasil;
         }elseif($portofolio !== null && $jmlBaris==1){
             $hasil= subkriteria::where('kriteria', 'Portofolio')
                                     ->where('subkriteria', '1')->value('nilai');
+                                    return $hasil;
         } elseif($portofolio !== null && $jmlBaris==2){
             $hasil= subkriteria::where('kriteria', 'Portofolio')
                                     ->where('subkriteria', '2')->value('nilai');
+                                    return $hasil;
         }elseif($portofolio !== null && $jmlBaris>2){
             $hasil= subkriteria::where('kriteria', 'Portofolio')
                                     ->where('subkriteria', '>2')->value('nilai');
+                                    return $hasil;
         }else{
             $hasil = 0;
             return $hasil;
@@ -790,129 +794,110 @@ class smartRPLController extends Controller
     }
 
     public function testrpl(){
-        $norm_visi = normalisasi::where('norm_kriteria', 'Visi')
-        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_analisis = normalisasi::where('norm_kriteria', 'Daya Analisis')
-                            ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_fairness = normalisasi::where('norm_kriteria', 'Fairness')
-                        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_komitmen = normalisasi::where('norm_kriteria', 'Komitmen')
-                        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_matkul = normalisasi::where('norm_kriteria', 'Nilai Mata Kuliah (RPL)')
-                        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_portofolio = normalisasi::where('norm_kriteria', 'Portofolio')
-                        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_potensi = normalisasi::where('norm_kriteria', 'Potensi Diri')
-                        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_teamwork = normalisasi::where('norm_kriteria', 'Teamwork')
-                        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_technical = normalisasi::where('norm_kriteria', 'Technical Divisi')
-                        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-        $norm_wawasan = normalisasi::where('norm_kriteria', 'Wawasan')
-                        ->where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('normalisasi');
-
-
-
-        $data = uti_rpl::where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->get();
-        $hasil = [];
-        foreach($data as $item2){
-            $nama = $item2->nama;
-            $nim = $item2->nim;
-            $lab = $item2->lab;
-            $algo1 = $item2->algo1;
-            $na_algo = $algo1 * $norm_matkul;
-            $pbo = $item2->pbo;
-            $na_pbo = $pbo * $norm_matkul;
-            $sql = $item2->sql;
-            $na_sql = $sql * $norm_matkul;
-            $pweb = $item2->pweb;
-            $na_pweb = $pweb * $norm_matkul;
-            $paa = $item2->paa;
-            $na_paa = $paa * $norm_matkul;
-            $uiux = $item2->uiux;
-            $na_uiux = $uiux * $norm_matkul;
-            $ood = $item2->ood;
-            $na_ood = $ood * $norm_matkul;
-            $algo2 = $item2->algo2;
-            $na_algo2 = $algo2 * $norm_matkul;
-            $pmobile = $item2->pmobile;
-            $na_pmobile = $pmobile * $norm_matkul;
-            $sbd = $item2->sbd;
-            $na_sbd = $sbd * $norm_matkul;
-            $tkti = $item2->tkti;
-            $na_tkti = $tkti * $norm_matkul;
-            $adpl = $item2->adpl;
-            $na_adpl = $adpl * $norm_matkul;
-            $mpti = $item2->mpti;
-            $na_mpti = $mpti * $norm_matkul;
-            $ppla = $item2->ppla;
-            $na_ppla = $ppla * $norm_matkul;
-            $visi = $item2->visi;
-            $na_visi = $visi * $norm_visi;
-            $wawasan = $item2->wawasan;
-            $na_wawasan = $wawasan * $norm_wawasan;
-            $komitmen = $item2->komitmen;
-            $na_komitmen = $komitmen * $norm_komitmen;
-            $fairness = $item2->fairness;
-            $na_fairness = $fairness * $norm_fairness;
-            $teamwork = $item2->teamwork;
-            $na_teamwork = $teamwork * $norm_teamwork;
-            $potensi = $item2->potensi;
-            $na_potensi = $potensi * $norm_potensi;
-            $analisis = $item2->analisis;
-            $na_analisis = $analisis * $norm_analisis;
-            $technical = $item2->technical;
-            $na_technical = $technical * $norm_technical;
-            $portofolio = $item2->portofolio;
-            $na_portofolio = $portofolio * $norm_portofolio;
-             $hasil[] = $na_algo .' '. $na_pbo .' '. $na_sql .' '. $na_pweb .' '. $na_paa .' '. $na_uiux .' '. $na_ood .' '. $na_algo2 .' '. $na_pmobile .' '. $na_sbd .' '. $na_tkti .' '. $na_adpl .' '. $na_mpti .' '. $na_ppla .' '. $na_visi .' '. $na_wawasan .' '. $na_komitmen .' '. $na_fairness .' '. $na_teamwork .' '. $na_potensi .' '. $na_analisis .' '. $na_technical .' '. $na_portofolio;
-
-            $total = $na_algo + $na_pbo + $na_sql + $na_pweb + $na_paa + $na_uiux + $na_ood + $na_algo2 + $na_pmobile + $na_sbd + $na_tkti + $na_adpl + $na_mpti + $na_ppla + $na_visi + $na_wawasan + $na_komitmen + $na_fairness + $na_teamwork + $na_potensi + $na_analisis + $na_technical + $na_portofolio;
-
-
-            $existingRecord = nilaiakhir_rpl::where('nama', $nama)->first();
-            $data = [
-            'nama' => $nama,
-            'nim' => $nim,
-            'lab' => $lab,
-            'algo1' => $na_algo,
-            'pbo' => $na_pbo,
-            'sql' => $na_sql,
-            'pweb' => $na_pweb,
-            'paa' => $na_paa,
-            'uiux' => $na_uiux,
-            'ood' => $na_ood,
-            'algo2' => $na_algo2,
-            'pmobile' => $na_pmobile,
-            'sbd' => $na_sbd,
-            'tkti' => $na_tkti,
-            'adpl' => $na_adpl,
-            'mpti' => $na_mpti,
-            'ppla' => $na_ppla,
-            'visi' => $na_visi,
-            'wawasan' => $na_wawasan,
-            'komitmen' => $na_komitmen,
-            'fairness' => $na_fairness,
-            'teamwork' => $na_teamwork,
-            'potensi' => $na_potensi,
-            'analisis' => $na_analisis,
-            'technical' => $na_technical,
-            'portofolio' => $na_portofolio,
-            'total' => $total
-            ];
-            if(!$existingRecord){
-            nilaiakhir_rpl::create($data);
-            return 'insert data berhasil';
-            }elseif($existingRecord){
-            $existingRecord->update($data);
-            }else{
-            return 'gagal menambah data';
+        $data = data_rpl::where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->get();
+        $da_lab = data_rpl::where('lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('lab');
+        // $da_kom = data_alternatif::where('da_lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('ai_komunikasi_kerja');
+        // $da_ide = data_alternatif::where('da_lab', 'Laboratorium Rekayasa Perangkat Lunak')->value('ide_project');
+        
+        $processedNames = [];
+        $result = [];
+        foreach($data as $item){
+            $nama = $item->nama;
+            $nim = $item->nim;
+            $lab = $item->lab;
+            $jmlData = data_rpl::where('nama', $nama)->get();
+            $jmlBaris = count($jmlData);
+            if (in_array($nama, $processedNames)) {
+                continue;
             }
+            $processedNames[] = $nama;
+            $algo1 = $item->algo1;
+            $nilai_algo1 = $this->cek_algo1($algo1);
+            $pbo = $item->pbo;
+            $nilai_pbo = $this->cek_pbo($pbo);
+            $sql = $item->sql;
+            $nilai_sql = $this->cek_sql($sql);
+            $pweb = $item->pweb;
+            $nilai_pweb = $this->cek_pweb($pweb);
+            $paa = $item->paa;
+            $nilai_paa = $this->cek_paa($paa);
+            $uiux = $item->uiux;
+            $nilai_uiux = $this->cek_uiux($uiux);
+            $ood = $item->ood;
+            $nilai_ood = $this->cek_ood($ood);
+            $algo2 = $item->algo2;
+            $nilai_algo2 = $this->cek_algo2($algo2);
+            $pmobile = $item->pmobile;
+            $nilai_pmobile = $this->cek_pmobile($pmobile);
+            $sbd = $item->sbd;
+            $nilai_sbd = $this->cek_sbd($sbd);
+            $tkti = $item->tkti;
+            $nilai_tkti = $this->cek_tkti($tkti);
+            $adpl = $item->adpl;
+            $nilai_adpl = $this->cek_adpl($adpl);
+            $mpti = $item->mpti;
+            $nilai_mpti = $this->cek_mpti($mpti);
+            $ppla = $item->ppla;
+            $nilai_ppla = $this->cek_ppla($ppla);
+            $visi = $item->visi;
+            $nilai_visi = $this->cek_visi($visi);
+            $wawasan = $item->wawasan;
+            $nilai_wawasan = $this->cek_wawasan($wawasan);
+            $komitmen = $item->komitmen;
+            $nilai_komitmen = $this->cek_komitmen($komitmen);
+            $fairness = $item->fairness;
+            $nilai_fairness = $this->cek_fairness($fairness);
+            $teamwork = $item->teamwork;
+            $nilai_teamwork = $this->cek_teamwork($teamwork);
+            $potensi = $item->potensi;
+            $nilai_potensi = $this->cek_potensi($potensi);
+            $analisis = $item->analisis;
+            $nilai_analisis = $this->cek_analisis($analisis);
+            $technical = $item->technical;
+            $nilai_technical = $this->cek_technical($technical);
+            $portofolio = $item->detail_porto;
+            $nilai_portofolio = $this->cek_portofolio($portofolio, $jmlBaris);
+            $result[] = $nama.' '.$nilai_portofolio;
 
-        // $j+=1;
+
+            // $existingRecord = nilai_rpl::where('nama',$nama)->where('lab', $lab)->first();
+            // $data = [
+            //     'nim' => $nim,
+            //     'nama'=>$nama,
+            //     'lab'=>$lab,
+            //     'algo1'=>$nilai_algo1,
+            //     'pbo'=>$nilai_pbo,
+            //     'sql'=>$nilai_sql,
+            //     'pweb'=>$nilai_pweb,
+            //     'paa'=>$nilai_paa,
+            //     'uiux'=>$nilai_uiux,
+            //     'ood'=>$nilai_ood,
+            //     'algo2'=>$nilai_algo2,
+            //     'pmobile'=>$nilai_pmobile,
+            //     'sbd'=>$nilai_sbd,
+            //     'tkti'=>$nilai_tkti,
+            //     'adpl'=>$nilai_adpl,
+            //     'mpti'=>$nilai_mpti,
+            //     'ppla'=>$nilai_ppla,
+            //     'visi'=>$nilai_visi,
+            //     'wawasan'=>$nilai_wawasan,
+            //     'komitmen'=>$nilai_komitmen,
+            //     'fairness'=>$nilai_fairness,
+            //     'teamwork'=>$nilai_teamwork,
+            //     'potensi'=>$nilai_potensi,
+            //     'analisis'=>$nilai_analisis,
+            //     'technical'=>$nilai_technical,
+            //     'portofolio'=>$nilai_portofolio,        
+            // ];
+
+            // if(!$existingRecord){
+            //     nilai_rpl::create($data);
+            //     // return 'insert data berhasil';
+            // }elseif($existingRecord){
+            //     $existingRecord->update($data);
+            // }
         }
-        return $total;
-
+        return $result;
     }
 
 

@@ -35,6 +35,7 @@ class data_rpl extends Model
         'analisis',
         'technical',
         'portofolio',
+        'detail_porto',
         'khs',
         'div1',
         'div2',

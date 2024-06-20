@@ -9,6 +9,7 @@
         <h4>Tabel Hasil Seleksi Aslab Laboratorium Pertanian Cerdas</h2>
     </div>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
+        @if (Auth::check() && Auth::user()->name === 'aslab pc')
         <form method="POST" action="{{ url('kategori_hasil_pc') }}">
             @csrf
             <div class="mb-3 row">
@@ -20,6 +21,7 @@
                 <div class="col-sm-10"><button type="submit" class="btn btn-primary" name="submit">SUBMIT</button></div>
             </div>
         </form>    
+        @endif
 
         <table class="table table-striped">
             <thead>

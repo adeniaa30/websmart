@@ -46,7 +46,15 @@
                             <div id="file-preview"></div>
                         </div>
                     </div>
-
+                    <div class="mb-3 row">
+                        <label for="detail_porto" class="col-sm-2 col-form-label">List Project/Portofolio</label>
+                        <div class="col-sm-10" id="detailporto-container">
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" name="detail_porto[]" id="detail_porto">
+                                <button type="button" class="btn btn-success add-detailporto">Add</button>
+                            </div>
+                        </div>
+                    </div>    
                     <div class="mb-3 row">
                         <label for="portofolio" class="col-sm-2 col-form-label">Upload Portofolio</label>
                         <div class="col-sm-10">
@@ -183,6 +191,42 @@
                         <input type="text" class="form-control" name='nilai_ppla' id="nilai_ppla">
                     </div>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', (event) => {
+                        document.querySelector('.add-detailporto').addEventListener('click', function() {
+                            // Create a new input group
+                            const inputGroup = document.createElement('div');
+                            inputGroup.className = 'input-group mb-2';
+                            
+                            // Create a new input element
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.name = 'detail_porto[]';
+                            input.className = 'form-control';
+                            
+                            // Create a remove button
+                            const removeButton = document.createElement('button');
+                            removeButton.type = 'button';
+                            removeButton.className = 'btn btn-danger remove-detailporto';
+                            removeButton.textContent = 'Remove';
+                
+                            // Append the input and remove button to the input group
+                            inputGroup.appendChild(input);
+                            inputGroup.appendChild(removeButton);
+                
+                            // Append the input group to the container
+                            document.getElementById('detailporto-container').appendChild(inputGroup);
+                        });
+                
+                        // Event delegation to handle removal of ideas
+                        document.getElementById('detailporto-container').addEventListener('click', function(e) {
+                            if (e.target && e.target.classList.contains('remove-detailporto')) {
+                                e.target.parentElement.remove();
+                            }
+                        });
+                    });
+                </script>                
+
             
                 <div class="mb-3 row">
                     <label for="submit" class="col-sm-2 col-form-label"></label>
