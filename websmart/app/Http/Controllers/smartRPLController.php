@@ -416,7 +416,7 @@ class smartRPLController extends Controller
     }
     public function cek_potensi($potensi){
         if (in_array($potensi, ['1', '2', '3', '4', '5'])) {
-            $hasil = subkriteria::where('kriteria', 'Potensi')
+            $hasil = subkriteria::where('kriteria', 'Potensi Diri')
             ->where('subkriteria', $potensi)
             ->value('nilai') ?? 0;
             return $hasil;
@@ -426,7 +426,7 @@ class smartRPLController extends Controller
     }
     public function cek_analisis($analisis){
         if (in_array($analisis, ['1', '2', '3', '4', '5'])) {
-            $hasil = subkriteria::where('kriteria', 'Analisis')
+            $hasil = subkriteria::where('kriteria', 'Daya Analisis')
             ->where('subkriteria', $analisis)
             ->value('nilai') ?? 0;
             return $hasil;
@@ -436,7 +436,7 @@ class smartRPLController extends Controller
     }
     public function cek_technical($technical){
         if (in_array($technical, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])) {
-            $hasil = subkriteria::where('kriteria', 'Technical')
+            $hasil = subkriteria::where('kriteria', 'Technical Divisi')
             ->where('subkriteria', $technical)
             ->value('nilai') ?? 0;
             return $hasil;

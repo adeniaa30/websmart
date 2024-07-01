@@ -3,11 +3,6 @@
 
 @section('konten')
     <!-- START FORM -->
-@if(Auth::check() && Auth::user()->name === 'aslab ai' || 
-Auth::user()->name === 'aslab pc' || 
-Auth::user()->name === 'aslab it' ||
-Auth::user()->name === 'aslab rpl'
-)
 
 <form action='{{ url('store_sub') }}' method='post'>
 @csrf
@@ -15,28 +10,28 @@ Auth::user()->name === 'aslab rpl'
         <div class="mb-3 row">
             <label for="kriteria" class="col-sm-2 col-form-label">Kriteria</label>
             <div class="col-sm-10">
-                @if (Auth::check() && Auth::user()->name === 'aslab pc')
+                @if (Auth::check() && Auth::user()->name === 'aslab pc' || Auth::user()->name === 'kalab pertanian cerdas')
                 <select name="kriteria" id="kriteria" class="form-control">
                     <option disable selected>Pilih Kriteria</option>
                     @foreach ($krit_pc as $kriteria)
                     <option value="{{ $kriteria }}">{{ $kriteria }}</option>
                     @endforeach
                 </select>
-                @elseif (Auth::check() && Auth::user()->name === 'aslab ai')
+                @elseif (Auth::check() && Auth::user()->name === 'aslab ai' || Auth::user()->name === 'kalab artificial intelligence')
                 <select name="kriteria" id="kriteria" class="form-control">
                     <option disable selected>Pilih Kriteria</option>
                     @foreach ($krit_ai as $kriteria)
                     <option value="{{ $kriteria }}">{{ $kriteria }}</option>
                     @endforeach
                 </select>
-                @elseif(Auth::check() && Auth::user()->name === 'aslab it')
+                @elseif(Auth::check() && Auth::user()->name === 'aslab it' || Auth::user()->name === 'kalab infrastruktur teknologi')
                 <select name="kriteria" id="kriteria" class="form-control">
                     <option disable selected>Pilih Kriteria</option>
                     @foreach ($krit_it as $kriteria)
                     <option value="{{ $kriteria }}">{{ $kriteria }}</option>
                     @endforeach
                 </select>
-                @elseif(Auth::check() && Auth::user()->name === 'aslab rpl')
+                @elseif(Auth::check() && Auth::user()->name === 'aslab rpl' || Auth::user()->name === 'kalab rekayasa perangkat lunak')
                 <select name="kriteria" id="kriteria" class="form-control">
                     <option disable selected>Pilih Kriteria</option>
                     @foreach ($krit_rpl as $kriteria)
@@ -64,7 +59,6 @@ Auth::user()->name === 'aslab rpl'
         </div>
       </form>
     </div>
-@endif
     <!-- AKHIR FORM -->
         <!-- START DATA -->
         <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -77,9 +71,7 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">Kriteria</th>
                             <th class="">Keterangan Subkriteria</th>
                             <th class="">Nilai</th>
-                            @if(Auth::user()->name === 'aslab pc')
                             <th class="">Aksi</th>
-                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -90,7 +82,6 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->kriteria }}</td>
                             <td>{{ $item->subkriteria }}</td>
                             <td>{{ $item->nilai }}</td>
-                            @if(Auth::user()->name === 'aslab pc')
                             <td>
                                 <a href='{{ url('admin/'.$item->id.'/edit_sub') }}' class="btn btn-warning btn-sm">Edit</a>
                                 <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->subkriteria.'/del_sub') }}" method="post">
@@ -99,7 +90,6 @@ Auth::user()->name === 'aslab rpl'
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
                                 </form>
                             </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>
@@ -114,9 +104,7 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">Kriteria</th>
                             <th class="">Keterangan Subkriteria</th>
                             <th class="">Nilai</th>
-                            @if(Auth::user()->name === 'aslab ai')
                             <th class="">Aksi</th>
-                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -127,7 +115,6 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->kriteria }}</td>
                             <td>{{ $item->subkriteria }}</td>
                             <td>{{ $item->nilai }}</td>
-                            @if(Auth::user()->name === 'aslab ai')
                             <td>
                                 <a href='{{ url('admin/'.$item->id.'/edit_sub') }}' class="btn btn-warning btn-sm">Edit</a>
                                 <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->subkriteria.'/del_sub') }}" method="post">
@@ -136,7 +123,6 @@ Auth::user()->name === 'aslab rpl'
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
                                 </form>
                             </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>
@@ -151,9 +137,7 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">Kriteria</th>
                             <th class="">Keterangan Subkriteria</th>
                             <th class="">Nilai</th>
-                            @if(Auth::check() && Auth::user()->name === 'aslab it')
                             <th class="">Aksi</th>
-                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -164,7 +148,6 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->kriteria }}</td>
                             <td>{{ $item->subkriteria }}</td>
                             <td>{{ $item->nilai }}</td>
-                            @if(Auth::check() && Auth::user()->name === 'aslab it')
                             <td>
                                 <a href='{{ url('admin/'.$item->id.'/edit_sub') }}' class="btn btn-warning btn-sm">Edit</a>
                                 <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->subkriteria.'/del_sub') }}" method="post">
@@ -173,7 +156,6 @@ Auth::user()->name === 'aslab rpl'
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
                                 </form>
                             </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>
@@ -188,9 +170,7 @@ Auth::user()->name === 'aslab rpl'
                             <th class="">Kriteria</th>
                             <th class="">Keterangan Subkriteria</th>
                             <th class="">Nilai</th>
-                            @if(Auth::check() && Auth::user()->name === 'aslab rpl')
                             <th class="">Aksi</th>
-                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -201,7 +181,6 @@ Auth::user()->name === 'aslab rpl'
                             <td>{{ $item->kriteria }}</td>
                             <td>{{ $item->subkriteria }}</td>
                             <td>{{ $item->nilai }}</td>
-                            @if(Auth::check() && Auth::user()->name === 'aslab rpl')
                             <td>
                                 <a href='{{ url('admin/'.$item->id.'/edit_sub') }}' class="btn btn-warning btn-sm">Edit</a>
                                 <form onsubmit="return confirm('Anda yakin ingin menghapus data ini?')" class="d-inline" action=" {{ url('admin/'.$item->subkriteria.'/del_sub') }}" method="post">
@@ -210,7 +189,6 @@ Auth::user()->name === 'aslab rpl'
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
                                 </form>
                             </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>

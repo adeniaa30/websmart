@@ -4,8 +4,9 @@
 @section('konten')
             
 
-      {{-- TABEL Nilai Akhir --}}
-      <div>
+    {{-- TABEL Nilai Akhir --}}
+
+    <div>
         <h4>Tabel Hasil Seleksi Aslab Laboratorium Rekayasa Perangkat Lunak</h2>
     </div>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -66,6 +67,11 @@
   </button>
   <!-- Modal -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <style>
+        .modal-xl {
+            --bs-modal-width: 2000px;
+        }
+    </style>
     <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -120,7 +126,7 @@
                     <tr>
                         <th class="">No</th>
                         <th class="">Nama</th>
-                        <th class="">Nilai portofolio</th>
+                        <th class="">Nilai porto</th>
                         <th class="">Nilai algo1</th>
                         <th class="">Nilai pbo</th>
                         <th class="">Nilai sql</th>
@@ -136,13 +142,13 @@
                         <th class="">Nilai mpti</th>
                         <th class="">Nilai ppla</th>
                         <th class="">Nilai visi</th>
-                        <th class="">Nilai wawasan</th>
-                        <th class="">Nilai komitmen</th>
-                        <th class="">Nilai fairness</th>
-                        <th class="">Nilai teamwork</th>
-                        <th class="">Nilai potensi</th>
-                        <th class="">Nilai analisis</th>
-                        <th class="">Nilai technical</th>
+                        <th class="">Nilai wwsn</th>
+                        <th class="">Nilai kmtmn</th>
+                        <th class="">Nilai frns</th>
+                        <th class="">Nilai tw</th>
+                        <th class="">Nilai ptn</th>
+                        <th class="">Nilai anls</th>
+                        <th class="">Nilai tech</th>
                     </tr>
                 </thead>
                 <tbody>
